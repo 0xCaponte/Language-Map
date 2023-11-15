@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import '../app.postcss';
 	import { XCompanySolid, GithubSolid, GlobeOutline } from 'flowbite-svelte-icons';
 </script>

@@ -9,11 +9,13 @@ import type Statistics from './statistics';
 class Language {
 	
 	// Properties
+	name : String; 
 	statistics: Statistics;
 	countries: Country[];
 
 	// Constructors
-	constructor(statistics: Statistics, countries: Country[]) {
+	constructor(name: String, statistics: Statistics, countries: Country[]) {
+		this.name = name;
 		this.statistics = statistics;
 		this.countries = countries;
 	}

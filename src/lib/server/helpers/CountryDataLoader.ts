@@ -56,6 +56,7 @@ class CountryDataLoader {
 	 * @param item - A single country data object.
 	 */
 	private populateCountryMap(item: CountryData): void {
+		
 		const { common, official } = item.name;
 		const languages = Array.from(
 			new Set(Object.values(item.languages).map((lang) => lang.toLowerCase()))
@@ -81,9 +82,11 @@ class CountryDataLoader {
 		Object.values(item.languages)
 			.map((lang) => lang.toLowerCase())
 			.forEach((language) => {
+
 				let languageData = this.languageMap.get(language);
+				
 				if (!languageData) {
-					languageData = new Language(new Statistics(0, 0), []);
+					languageData = new Language(language, new Statistics(0, 0), []);
 					this.languageMap.set(language, languageData);
 				}
 				languageData.statistics.totalSpeakers += item.population;
