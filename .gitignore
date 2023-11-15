@@ -1,0 +1,41 @@
+# dependencies
+/node_modules
+
+# testing
+/coverage
+
+# production
+/build
+/dist
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# SvelteKit & Tailwind specific
+.hmr
+.svelte-kit
+.svelte
+.tailwindcss
+
+# OS generated files
+Thumbs.db
+Desktop.ini
+
+# Yarn
+.yarn
+.yarn-cache
+
+# npm
+npm-debug.log*
+package-lock.json

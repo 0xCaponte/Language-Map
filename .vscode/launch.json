@@ -1,0 +1,31 @@
+{
+    // server - runs dev server in dev mode, allowing for breakpoints on server side code.
+    // chrome - uses Chrome and allows for breakpoints for client side code.
+    // Both (Client & Server) - debugging for both the server side and the client side.
+	
+    "version": "0.2.0",
+	"configurations": [
+		{
+			"name": "server",
+			"request": "launch",
+			"runtimeArgs": ["run-script", "dev"],
+			"runtimeExecutable": "npm",
+			"skipFiles": ["<node_internals>/**"],
+			"type": "node",
+			"console": "integratedTerminal"
+		},
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "chrome",
+            "url": "http://localhost:5173",
+            "webRoot": "${workspaceFolder}"
+        }
+	],
+	"compounds": [
+		{
+			"name": "Both (Client & Server)",
+			"configurations": ["server", "chrome"]
+		}
+	]
+}
