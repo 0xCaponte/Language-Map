@@ -5,13 +5,13 @@
 	import type Language from '$lib/model/language';
 	import DebounceHelper from '$lib/helpers/DebounceHelper';
 
-	// Debounced fetch execution
-	let debounceHelper = new DebounceHelper();
-	const debouncedFetchLanguageData = debounceHelper.debounce(fetchLanguageData);
-
 	// Properties that can be customized
 	export let placeholder: string = 'What Languages Do You Speak?';
 	export let helper: string = 'Separate languages with space or a comma';
+
+	// Debounced fetch execution
+	let debounceHelper = new DebounceHelper();
+	const debouncedFetchLanguageData = debounceHelper.debounce(fetchLanguageData);
 
 	/**
 	 * Parses the input from the language input bar and returns an array of Language objects.

@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Helper Class to debounce (delay) the execution of functions
+ */
+
 class DebounceHelper {
 	private timeout: any;
 	private waitTime: number;
