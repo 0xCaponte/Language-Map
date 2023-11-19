@@ -1,6 +1,7 @@
 <script lang="ts">
 	import CommunicationStats from '$lib/components/CommunicationStats.svelte';
     import LanguageBar from '$lib/components/LanguageBar.svelte';
+	import WorldMap from '$lib/components/WorldMap.svelte';
 </script>
 <div class="flex flex-col min-h-screen">
 
@@ -14,7 +15,7 @@
       
         <!-- Map -->
         <div class="bg-blue-100 shadow rounded-lg flex-grow m-2 p-4">
-            <div class="text-lg">Map content (80%)</div>
+            <WorldMap />
         </div>
 
         <!-- Languages -->
