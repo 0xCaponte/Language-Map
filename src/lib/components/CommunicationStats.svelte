@@ -9,14 +9,16 @@
 	let countryDataHelper = new CountryDataHelper();
 	const formatter = new FormatHelper();
 
-	let languages: Language[];
+	let unMember = true;
 
 	// Reactive subscription to the store
+	let languages: Language[];
 	$: languages = $selectedLanguages;
 
 	// Reactive totals
 	let totals: Language;
 	$: if (languages) {
+		languages = countryDataHelper.getFilteredCountries(languages, unMember);
 		totals = countryDataHelper.getLanguageSummary(languages);
 	}
 </script>
