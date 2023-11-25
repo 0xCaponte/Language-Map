@@ -24,10 +24,20 @@
 	onMount(async () => {
 		const world = await json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json');
 
+
+		// Filter out Antarctica (id '010')
 		rawCountries = feature(world, world.objects.countries);
 		rawCountries = rawCountries.features;
+		rawCountries = rawCountries.filter((country: { id: string }) => country.id !== '010');
 
-		borders = mesh(world, world.objects.countries, (a: any, b: any) => a !== b);
+		// Excluse Antarctica for the borders
+		const countriesWithoutAntarctica = {
+			...world.objects.countries,
+			geometries: world.objects.countries.geometries.filter((geo: any) => geo.id !== '010')
+		};
+
+		// Generate borders excluding Antarctica
+		borders = mesh(world, countriesWithoutAntarctica, (a: any, b: any) => a !== b);
 
 		updateCountries();
 	});

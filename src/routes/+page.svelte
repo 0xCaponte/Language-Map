@@ -13,12 +13,12 @@
 	<!-- Main Content and Sidebar -->
 	<div class="flex flex-grow">
 		<!-- Map -->
-		<div class="shadow rounded-lg flex-grow m-2 p-4">
+		<div class="flex-grow m-2 p-4">
 			<WorldMap />
 		</div>
 
 		<!-- Languages -->
-		<div class="shadow rounded-lg flex-none w-1/5 m-2 p-4">
+		<div class="flex-none w-1/5 m-2 p-4">
 			<CommunicationStats />
 		</div>
 	</div>
