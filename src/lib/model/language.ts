@@ -8,12 +8,12 @@ import type Statistics from './statistics';
 
 class Language {
 	// Properties
-	name: String;
+	name: string;
 	statistics: Statistics;
 	countries: Country[];
 
 	// Constructors
-	constructor(name: String, statistics: Statistics, countries: Country[]) {
+	constructor(name: string, statistics: Statistics, countries: Country[]) {
 		this.name = name;
 		this.statistics = statistics;
 		this.countries = countries;
@@ -30,12 +30,7 @@ class Language {
 	 * @returns
 	 */
 	hasCountryById(countryId: string): boolean {
-		for (const country of this.countries) {
-			if (country.countryId === countryId) {
-				return true;
-			}
-		}
-		return false;
+		return this.countries.some((country) => country.countryId === countryId);
 	}
 }
 

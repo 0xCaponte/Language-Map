@@ -21,12 +21,7 @@ export class CountryDataHelper {
 		languages.forEach((language) => {
 			// Filter countries based on unMember parameter
 			let filteredCountries = language.countries.filter((country) => country.unMember === unMember);
-
-			let newLanguage: Language = {
-				...language,
-				countries: filteredCountries
-			};
-
+			let newLanguage = new Language(language.name, language.statistics, filteredCountries);			
 			filteredData.push(newLanguage);
 		});
 

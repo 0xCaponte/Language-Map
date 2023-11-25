@@ -2,9 +2,12 @@
 	import { Input, Helper } from 'flowbite-svelte';
 	import { selectedLanguages } from '$lib/store';
 
-	import type Language from '$lib/model/language';
 	import DebounceHelper from '$lib/helpers/DebounceHelper';
-
+	import Language from '$lib/model/language';
+	import type Country from '$lib/model/country';
+	import type Statistics from '$lib/model/statistics';
+	import { ColoringHelper } from '$lib/helpers/ColoringHelper';
+	
 	// Properties that can be customized
 	export let placeholder: string = 'What Languages Do You Speak?';
 	export let helper: string = 'Separate languages with space or a comma';
@@ -43,7 +46,17 @@
 		});
 
 		if (response.ok) {
-			let languages: Language[] = await response.json();
+			let languageData = await response.json();
+
+			let languages = languageData.map(
+				(lang: { name: string; statistics: Statistics; countries: Country[] }) =>
+					new Language(lang.name, lang.statistics, lang.countries)
+			);
+
+			// Initialize the colors
+        	ColoringHelper.assignColors(languages);
+   
+			// Set languages in the store
 			selectedLanguages.set(languages);
 		}
 	}
