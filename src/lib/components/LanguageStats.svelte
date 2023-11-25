@@ -9,15 +9,17 @@
 </script>
 
 {#if language}
-	<div class="list-container">
-		<div class="flex items-center mb-2">
-			<span class="dot mr-2" />
-			<span class="font-semibold"> {language.name} </span>
+	<div class="list-container py-3">
+		<div class="flex items-center font-semibold mb-2">
+			<span class="font-semibold">{formatter.capitalize(language.name)}</span>
+		</div>
+		<div class="flex items-center font-semibold">
 			<span class="">
 				{language.statistics.numberOfCountries}
 				{language.statistics.numberOfCountries === 1 ? 'Country' : 'Countries'}
 			</span>
-			<span class=""> {formatter.formatNumber(language.statistics.totalSpeakers)}</span>
+			<span class=""> -- </span>
+			<span class=""> {formatter.formatNumber(language.statistics.totalSpeakers)} people </span>
 		</div>
 
 		<ul>

@@ -26,10 +26,11 @@
 <span class="font-semibold">
 	People you can communicate with: {formatter.formatNumber(totals.statistics.totalSpeakers)}
 </span>
+<br />
 <span class="font-semibold">
 	Countries you can communicate in: {totals.statistics.numberOfCountries}
 </span>
-
+<br />
 {#each languages as language}
 	<LanguageStats {language} />
 {/each}
