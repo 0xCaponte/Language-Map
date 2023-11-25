@@ -3,6 +3,7 @@
  */
 
 interface CountryData {
+	ccn3: string;
 	name: {
 		common: string;
 		official: string;

@@ -7,6 +7,7 @@
 class Country {
 
     // Properties
+	countryId: string; // ISO 3166-1 
 	commonName: string;
 	officialName: string;
 	independent: boolean;
@@ -16,6 +17,7 @@ class Country {
 
     // Constructors
 	constructor(
+		countryId: string,
 		commonName: string,
 		officialName: string,
 		independent: boolean,
@@ -23,6 +25,7 @@ class Country {
 		population: number,
 		languages: string[]
 	) {
+		this.countryId = countryId;
 		this.commonName = commonName;
 		this.officialName = officialName;
 		this.independent = independent;

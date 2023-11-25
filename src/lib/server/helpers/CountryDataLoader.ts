@@ -61,6 +61,7 @@ class CountryDataLoader {
 			new Set(Object.values(item.languages).map((lang) => lang.toLowerCase()))
 		).sort();
 		const country = new Country(
+			item.ccn3,
 			common,
 			official,
 			item.independent,
