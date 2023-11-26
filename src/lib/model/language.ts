@@ -4,7 +4,7 @@
  */
 
 import type Country from './country';
-import type Statistics from './statistics';
+import Statistics from './statistics';
 
 class Language {
 	// Properties
@@ -15,7 +15,7 @@ class Language {
 	// Constructors
 	constructor(name: string, statistics: Statistics, countries: Country[]) {
 		this.name = name;
-		this.statistics = statistics;
+		this.statistics = new Statistics(statistics);
 		this.countries = countries;
 	}
 

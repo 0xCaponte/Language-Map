@@ -5,6 +5,7 @@
 
 	// Properties that can be customized
 	export let language: Language;
+	export let unMember: boolean;
 
 	// Reactive subscription to the store
 	let languageColor: string;
@@ -26,6 +27,7 @@
 			toggleCollapse();
 		}
 	}
+
 </script>
 
 {#if language}
@@ -38,16 +40,19 @@
 			on:keydown={handleKeydown}
 			style="cursor: pointer;"
 		>
-			<span class="circle" style="background-color: {languageColor};" />
-			<span class="font-semibold">{formatter.capitalize(language.name)}</span>
-		</div>
-		<div class="flex items-center font-semibold">
-			<span class="">
-				{language.statistics.numberOfCountries}
-				{language.statistics.numberOfCountries === 1 ? 'Country' : 'Countries'}
-			</span>
-			<span class=""> -- </span>
-			<span class=""> {formatter.formatNumber(language.statistics.totalSpeakers)} people </span>
+			<div>
+				<span class="circle" style="background-color: {languageColor};" />
+				<span class="font-semibold">{formatter.capitalize(language.name)}</span>
+			</div>
+			
+			<div class="flex items-center font-semibold">
+				<span class="">
+					{language.statistics.getCountries(unMember)}
+					{language.statistics.getCountries(unMember) === 1 ? 'Country' : 'Countries'}
+				</span>
+				<span class=""> -- </span>
+				<span class=""> {formatter.formatNumber(language.statistics.getSpeakers(unMember))} people </span>
+			</div>
 		</div>
 
 		{#if !isCollapsed}

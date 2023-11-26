@@ -32,6 +32,7 @@ export class ColoringHelper {
 	 * @param languages
 	 */
 	public static assignColors(languages: Language[]): void {
+		
 		const countryMapping = new Map<string, string>();
 		const laguageMapping = new Map<string, string>();
 

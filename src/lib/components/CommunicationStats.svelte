@@ -9,6 +9,7 @@
 	let countryDataHelper = new CountryDataHelper();
 	const formatter = new FormatHelper();
 
+	// Filter is data for all or for just UN countries is used
 	let unMember = true;
 
 	// Reactive subscription to the store
@@ -17,6 +18,8 @@
 
 	// Reactive totals
 	let totals: Language;
+
+	// Reactive update
 	$: if (languages) {
 		languages = countryDataHelper.getFilteredCountries(languages, unMember);
 		totals = countryDataHelper.getLanguageSummary(languages);
@@ -24,13 +27,13 @@
 </script>
 
 <span class="font-semibold">
-	People you can communicate with: {formatter.formatNumber(totals.statistics.totalSpeakers)}
+	People you can communicate with: {formatter.formatNumber(totals.statistics.getSpeakers(unMember))}
 </span>
 <br />
 <span class="font-semibold">
-	Countries you can communicate in: {totals.statistics.numberOfCountries}
+	Countries you can communicate in: {totals.statistics.getCountries(unMember)}
 </span>
 <br />
 {#each languages as language}
-	<LanguageStats {language} />
+	<LanguageStats {language} {unMember} />
 {/each}

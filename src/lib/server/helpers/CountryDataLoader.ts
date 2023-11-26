@@ -85,11 +85,18 @@ class CountryDataLoader {
 				let languageData = this.languageMap.get(language);
 
 				if (!languageData) {
-					languageData = new Language(language, new Statistics(0, 0), []);
+					languageData = new Language(language, new Statistics(0, 0, 0, 0), []);
 					this.languageMap.set(language, languageData);
 				}
+
+				if (item.unMember) {
+					languageData.statistics.totalUNSpeakers += item.population;
+					languageData.statistics.numberOfUNCountries += 1;
+				}
+
 				languageData.statistics.totalSpeakers += item.population;
 				languageData.statistics.numberOfCountries += 1;
+				
 				languageData.countries.push(country);
 			});
 	}

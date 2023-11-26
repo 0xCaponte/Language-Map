@@ -7,21 +7,26 @@ import Language from '$lib/model/language';
 import Statistics from '$lib/model/statistics';
 
 export class CountryDataHelper {
-
 	/**
-	 * Filters the countries of a language based on the UN membership statud desired. 
-	 * 
-	 * @param languages 
-	 * @param unMember 
-	 * @returns 
+	 * Filters the countries of a language based on the UN membership statud desired.
+	 *
+	 * @param languages
+	 * @param unMember
+	 * @returns
 	 */
 	public getFilteredCountries(languages: Language[], unMember: boolean): Language[] {
 		let filteredData: Language[] = [];
 
 		languages.forEach((language) => {
+			
 			// Filter countries based on unMember parameter
 			let filteredCountries = language.countries.filter((country) => country.unMember === unMember);
-			let newLanguage = new Language(language.name, language.statistics, filteredCountries);			
+			
+			let statistics = new Statistics(language.statistics);
+			console.log(statistics instanceof Statistics)
+			console.log(typeof statistics);
+			
+			let newLanguage = new Language(language.name, statistics, filteredCountries);
 			filteredData.push(newLanguage);
 		});
 
@@ -36,18 +41,34 @@ export class CountryDataHelper {
 	 */
 	public getLanguageSummary(languages: Language[]): Language {
 		let countriesSet = new Set<Country>();
+		let unCountriesSet = new Set<Country>();
 		let totalSpeakers = 0;
+		let totalUnSpeakers = 0;
 
 		languages.forEach((language) => {
-			language.countries.forEach((e) => countriesSet.add(e));
+			language.countries.forEach((country) => {
+				countriesSet.add(country);
+				if (country.unMember) {
+					unCountriesSet.add(country);
+				}
+			});
 
 			let statistics = language.statistics;
+
 			totalSpeakers += statistics.totalSpeakers;
+			totalUnSpeakers += statistics.totalUNSpeakers;
 		});
 
 		let countries = [...countriesSet];
+		let unCountries = [...unCountriesSet];
 
-		const languageStatistics = new Statistics(totalSpeakers, countries.length);
+		const languageStatistics : Statistics = new Statistics(
+			totalUnSpeakers,
+			unCountries.length,
+			totalSpeakers,
+			countries.length
+		);
+
 		const languageSummary = new Language('Totals', languageStatistics, countries);
 
 		return languageSummary;

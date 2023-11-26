@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { selectedLanguages } from '$lib/store';
 	import { ColoringHelper } from '$lib/helpers/ColoringHelper';
-	import { geoEqualEarth, geoPath } from 'd3-geo';
+	import { geoEquirectangular, geoPath } from 'd3-geo';
 	import { feature, mesh } from 'topojson-client';
 	import { onMount } from 'svelte';
 	import { json } from 'd3-fetch';
@@ -14,7 +14,7 @@
 	$: languages = $selectedLanguages;
 
 	// Map Projection.
-	const projection = geoEqualEarth();
+	const projection = geoEquirectangular();
 	const path = geoPath().projection(projection);
 
 	let rawCountries: any = null;
@@ -55,7 +55,6 @@
 			...country,
 			fill: getFillColor(country.id)
 		}));
-		console.log(countries);
 	}
 
 	/**
