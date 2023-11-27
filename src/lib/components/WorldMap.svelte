@@ -5,6 +5,7 @@
 	import { feature, mesh } from 'topojson-client';
 	import { onMount } from 'svelte';
 	import { json } from 'd3-fetch';
+	import { quadInOut } from 'svelte/easing';
 	import type Language from '$lib/model/language';
 
 	// Inputs
@@ -22,8 +23,8 @@
 	let borders: any = null;
 
 	onMount(async () => {
-		const world = await json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json');
-
+		// Fetch topo json from own api
+		const world = await json('/api/world');
 
 		// Filter out Antarctica (id '010')
 		rawCountries = feature(world, world.objects.countries);
