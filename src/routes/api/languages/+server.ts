@@ -21,6 +21,8 @@ export const POST: RequestHandler = async ({ request }) => {
 	let languages: Language[] = [];
 
 	languageNames.forEach((name) => {
+
+		name = name.toLowerCase();
 		const language = languageMap.get(name);
 
 		// Filter undefined / invalid inputs

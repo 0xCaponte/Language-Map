@@ -5,8 +5,8 @@
 	import { feature, mesh } from 'topojson-client';
 	import { onMount } from 'svelte';
 	import { json } from 'd3-fetch';
-	import { quadInOut } from 'svelte/easing';
 	import type Language from '$lib/model/language';
+	import { Spinner } from 'flowbite-svelte';
 
 	// Inputs
 	let languages: Language[];
@@ -21,8 +21,11 @@
 	let rawCountries: any = null;
 	let countries: any = null;
 	let borders: any = null;
+	let isLoading: boolean = true;
 
 	onMount(async () => {
+		isLoading = true;
+
 		// Fetch topo json from own api
 		const world = await json('/api/world');
 
@@ -39,6 +42,8 @@
 
 		// Generate borders excluding Antarctica
 		borders = mesh(world, countriesWithoutAntarctica, (a: any, b: any) => a !== b);
+
+		isLoading = false;
 
 		updateCountries();
 	});
@@ -74,13 +79,19 @@
 	}
 </script>
 
-<svg width="100%" height="auto" viewBox="0 0 960 500" style="max-width: 100%; height: auto;">
-	{#if countries}
-		{#each countries as country}
-			<path d={path(country)} fill={country.fill} stroke="#000" />
-		{/each}
-	{/if}
-	{#if borders}
-		<path d={path(borders)} fill="none" stroke="#000" />
-	{/if}
-</svg>
+{#if isLoading}
+	<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+		<Spinner color="blue" />
+	</div>
+{:else}
+	<svg width="100%" height="100%" viewBox="0 0 960 500" preserveAspectRatio="xMidYMid meet">
+		{#if countries}
+			{#each countries as country}
+				<path d={path(country)} fill={country.fill} stroke="#000" />
+			{/each}
+		{/if}
+		{#if borders}
+			<path d={path(borders)} fill="none" stroke="#000" />
+		{/if}
+	</svg>
+{/if}

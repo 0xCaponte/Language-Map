@@ -23,9 +23,6 @@ export class CountryDataHelper {
 			let filteredCountries = language.countries.filter((country) => country.unMember === unMember);
 			
 			let statistics = new Statistics(language.statistics);
-			console.log(statistics instanceof Statistics)
-			console.log(typeof statistics);
-			
 			let newLanguage = new Language(language.name, statistics, filteredCountries);
 			filteredData.push(newLanguage);
 		});

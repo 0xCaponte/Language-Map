@@ -57,17 +57,16 @@ class CountryDataLoader {
 	 */
 	private populateCountryMap(item: CountryData): void {
 		const { common, official } = item.name;
-		const languages = Array.from(
-			new Set(Object.values(item.languages).map((lang) => lang.toLowerCase()))
-		).sort();
 		const country = new Country(
 			item.ccn3,
+			item.cca2,
 			common,
 			official,
+			item.flag,
 			item.independent,
 			item.unMember,
 			item.population,
-			languages
+			item.languages
 		);
 
 		this.countryMap.set(common, country);
@@ -79,26 +78,29 @@ class CountryDataLoader {
 	 * @param country - The corresponding Country object.
 	 */
 	private populateLanguageMap(item: CountryData, country: Country): void {
-		Object.values(item.languages)
-			.map((lang) => lang.toLowerCase())
-			.forEach((language) => {
-				let languageData = this.languageMap.get(language);
 
-				if (!languageData) {
-					languageData = new Language(language, new Statistics(0, 0, 0, 0), []);
-					this.languageMap.set(language, languageData);
-				}
+		item.languages.forEach((language) => {
 
-				if (item.unMember) {
-					languageData.statistics.totalUNSpeakers += item.population;
-					languageData.statistics.numberOfUNCountries += 1;
-				}
+			let languageName: string = language.language.toLowerCase();
+			let languageData = this.languageMap.get(languageName);
 
-				languageData.statistics.totalSpeakers += item.population;
-				languageData.statistics.numberOfCountries += 1;
-				
-				languageData.countries.push(country);
-			});
+			if (!languageData) {
+				languageData = new Language(languageName, new Statistics(0, 0, 0, 0), []);
+				this.languageMap.set(languageName, languageData);
+			}
+
+			if (item.unMember) {
+				// Not all population speaks the language
+				languageData.statistics.totalUNSpeakers += (item.population * language.percentage);
+				languageData.statistics.numberOfUNCountries += 1;
+			}
+
+			// Not all population speaks the language	
+			languageData.statistics.totalSpeakers += (item.population * language.percentage);
+			languageData.statistics.numberOfCountries += 1;
+
+			languageData.countries.push(country);
+		});
 	}
 
 	/**

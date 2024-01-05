@@ -27,44 +27,50 @@
 			toggleCollapse();
 		}
 	}
-
 </script>
 
 {#if language}
 	<div class="list-container py-3">
-		<div
-			class="flex items-center font-semibold mb-2"
-			tabindex="0"
-			role="button"
-			on:click={toggleCollapse}
-			on:keydown={handleKeydown}
-			style="cursor: pointer;"
-		>
-			<div>
-				<span class="circle" style="background-color: {languageColor};" />
-				<span class="font-semibold">{formatter.capitalize(language.name)}</span>
-			</div>
-			
-			<div class="flex items-center font-semibold">
-				<span class="">
-					{language.statistics.getCountries(unMember)}
-					{language.statistics.getCountries(unMember) === 1 ? 'Country' : 'Countries'}
-				</span>
-				<span class=""> -- </span>
-				<span class=""> {formatter.formatNumber(language.statistics.getSpeakers(unMember))} people </span>
-			</div>
-		</div>
+		<div class="border border-gray-200 rounded-lg shadow-sm p-3">
+			<div
+				tabindex="0"
+				role="button"
+				on:click={toggleCollapse}
+				on:keydown={handleKeydown}
+				class="cursor-pointer"
+			>
+				<!-- First Row: Circle and Language Name -->
+				<div class="flex items-center font-semibold">
+					<span class="circle" style="background-color: {languageColor};" />
+					<span class="ml-2">{formatter.capitalize(language.name)}</span>
+				</div>
 
-		{#if !isCollapsed}
-			<ul>
-				{#each language.countries as country}
-					<li class="list-item">
-						<span>{country.commonName}</span>
-						<span>{formatter.formatNumber(country.population)}</span>
-					</li>
-				{/each}
-			</ul>
-		{/if}
+				<!-- Second Row: Countries and Speakers Information -->
+				<div class="flex flex-col">
+					<div class="flex flex-nowrap">
+						<span class="whitespace-nowrap">
+							{language.statistics.getCountries(unMember)} 🗺️
+						</span>
+					</div>
+					<div class="flex flex-nowrap">
+						<span class="whitespace-nowrap">
+							{formatter.formatNumber(language.statistics.getSpeakers(unMember))} 🗣️
+						</span>
+					</div>
+				</div>
+			</div>
+
+			{#if !isCollapsed}
+				<ul>
+					{#each language.countries as country}
+						<li class="list-item">
+							<span>{country.flag} {country.commonName}:</span>
+							<span>{formatter.formatNumber(country.population)}</span>
+						</li>
+					{/each}
+				</ul>
+			{/if}
+		</div>
 	</div>
 {/if}
 

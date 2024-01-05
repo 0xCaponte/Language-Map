@@ -4,12 +4,14 @@
 
 interface CountryData {
 	ccn3: string;
+	cca2: string;
 	name: {
 		common: string;
 		official: string;
 	};
+	flag: string;
 	independent: boolean;
 	unMember: boolean;
-	languages: Record<string, string>;
 	population: number;
+	languages: CountryLanguage[];
 }

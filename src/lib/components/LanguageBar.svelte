@@ -10,7 +10,7 @@
 	
 	// Properties that can be customized
 	export let placeholder: string = 'What Languages Do You Speak?';
-	export let helper: string = 'Separate languages with space or a comma';
+	export let helper: string = 'Separate languages with spaces or commas';
 
 	// Debounced fetch execution
 	let debounceHelper = new DebounceHelper();

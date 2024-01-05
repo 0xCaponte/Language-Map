@@ -11,7 +11,8 @@ export class FormatHelper {
 	 */
 	public formatNumber(num: number): String {
 		let userLocale = typeof navigator !== 'undefined' ? navigator.language : 'en-US';
-		return new Intl.NumberFormat(userLocale).format(num);
+		let roundedNum = Math.floor(num);
+		return new Intl.NumberFormat(userLocale).format(roundedNum);
 	}
 
 	/**

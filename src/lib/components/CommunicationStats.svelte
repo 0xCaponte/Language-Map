@@ -26,14 +26,23 @@
 	}
 </script>
 
-<span class="font-semibold">
-	People you can communicate with: {formatter.formatNumber(totals.statistics.getSpeakers(unMember))}
-</span>
-<br />
-<span class="font-semibold">
-	Countries you can communicate in: {totals.statistics.getCountries(unMember)}
-</span>
-<br />
-{#each languages as language}
-	<LanguageStats {language} {unMember} />
-{/each}
+<div class="max-h-screen overflow-hidden">
+    
+	<!-- Sticky -->
+    <div class="sticky top-0 z-10 p-4">
+		<p class="font-semibold text-ms">Communication Stats:</p>
+        <span class="font-semibold">
+            🗣️ {formatter.formatNumber(totals.statistics.getSpeakers(unMember))}
+        </span>
+        <br />
+        <span class="font-semibold">
+            🌍 {totals.statistics.getCountries(unMember)}
+        </span>
+        <br />
+    </div>
+
+    <!-- List of LanguageStats -->
+    {#each languages as language}
+        <LanguageStats {language} {unMember} />
+    {/each}
+</div>
