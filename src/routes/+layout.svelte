@@ -1,5 +1,6 @@
 <script lang="ts">
 	import '../app.postcss';
+	import '../app.css';
 	import { XCompanySolid, GithubSolid, GlobeOutline } from 'flowbite-svelte-icons';
 
 	const currentYear = new Date().getFullYear();
@@ -7,7 +8,7 @@
 
 <div class="flex flex-col h-screen overflow-hidden">
 	<!-- Header / Navbar -->
-	<nav class="flex items-center justify-between p-4">
+	<nav class="header flex items-center justify-between p-4">
 		<!-- Logo and Name -->
 		<a href="/" class="flex items-center">
 			<!-- <img src="/logo.svg" alt="Logo" class="h-8 mr-2" /> -->
@@ -27,8 +28,7 @@
 	</div>
 
 	<!-- Footer -->
-
-	<footer class="flex flex-col items-center py-2">
+	<footer class="footer flex flex-col items-center py-2">
 		<!--     <footer class="flex flex-col items-center fixed bottom-0 z-20 w-full py-2 m-4"> -->
 
 		<div class="flex space-x-10">

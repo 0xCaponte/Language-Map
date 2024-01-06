@@ -26,23 +26,27 @@
 	}
 </script>
 
-<div class="max-h-screen overflow-hidden">
-    
-	<!-- Sticky -->
-    <div class="sticky top-0 z-10 p-4">
+<div>
+	<!-- Sticky Header -->
+	<div class="sticky top-0 z-10 p-4 bg-white">
+		<!-- Added bg-white to maintain the background of the sticky header -->
 		<p class="font-semibold text-ms">Communication Stats:</p>
-        <span class="font-semibold">
-            🗣️ {formatter.formatNumber(totals.statistics.getSpeakers(unMember))}
-        </span>
-        <br />
-        <span class="font-semibold">
-            🌍 {totals.statistics.getCountries(unMember)}
-        </span>
-        <br />
-    </div>
+		<span>
+			🗺️ {totals.statistics.getCountries(unMember)}
+		</span>
+		<span>
+			🗣️ {formatter.formatNumber(totals.statistics.getSpeakers(unMember))}
+		</span>
+		<br />
+	</div>
 
-    <!-- List of LanguageStats -->
-    {#each languages as language}
-        <LanguageStats {language} {unMember} />
-    {/each}
+	<!-- Scrollable List -->
+	<div
+		class="overflow-auto custom-scrollbar"
+		style="max-height: calc(100vh - var(--header-height) - var(--footer-height));"
+	>
+		{#each languages as language}
+			<LanguageStats {language} {unMember} />
+		{/each}
+	</div>
 </div>

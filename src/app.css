@@ -1,0 +1,51 @@
+/* Header and Footer Styles */
+
+:root {
+  --header-height-mobile: 60px;
+  --footer-height-mobile: 60px;
+  --header-height-desktop: 100px;
+  --footer-height-desktop: 100px;
+  --header-height-large-desktop: 150px;
+  --footer-height-large-desktop: 150px;
+}
+
+@media (min-width: 640px) {
+
+  /* medium screens */
+  :root {
+    --header-height: var(--header-height-desktop);
+    --footer-height: var(--footer-height-desktop);
+  }
+}
+
+@media (min-width: 1024px) {
+
+  /* large screens */
+  :root {
+    --header-height: var(--header-height-large-desktop);
+    --footer-height: var(--footer-height-large-desktop);
+  }
+}
+
+/* Scrollbar styles */
+
+.custom-scrollbar {
+  --scrollbar-thumb-bg: #c1c1c1;
+  --scrollbar-thumb-rounded: 9999px;
+  
+  scrollbar-color: var(--scrollbar-thumb-bg) transparent;
+  scrollbar-width: thin;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb-bg);
+  border-radius: var(--scrollbar-thumb-rounded);
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}

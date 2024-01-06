@@ -5,9 +5,9 @@
 	import { feature, mesh } from 'topojson-client';
 	import { onMount } from 'svelte';
 	import { json } from 'd3-fetch';
-	import type Language from '$lib/model/language';
 	import { Spinner } from 'flowbite-svelte';
-
+	import type Language from '$lib/model/language';
+	
 	// Inputs
 	let languages: Language[];
 
@@ -84,7 +84,7 @@
 		<Spinner color="blue" />
 	</div>
 {:else}
-	<svg width="100%" height="100%" viewBox="0 0 960 500" preserveAspectRatio="xMidYMid meet">
+	<svg width="100%" height="100%" viewBox="0 0 960 400" preserveAspectRatio="xMidYMid meet">
 		{#if countries}
 			{#each countries as country}
 				<path d={path(country)} fill={country.fill} stroke="#000" />
