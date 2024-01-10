@@ -31,6 +31,16 @@ export const POST: RequestHandler = async ({ request }) => {
 		}
 	});
 
+	// ----- Start - Logging for analytics -----
+    const logEntry = {
+        timestamp: new Date().toISOString(),
+        numberOfLanguages: languages.length,
+        languages: languages.map(lang => lang.name.toLowerCase())
+    };
+
+    console.log(JSON.stringify(logEntry));
+	// ----- End - Logging for analytics -----
+
 	return new Response(JSON.stringify(languages), {
 		status: 200,
 		headers: {
