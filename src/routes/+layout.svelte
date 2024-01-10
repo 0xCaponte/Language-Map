@@ -2,6 +2,7 @@
 	import '../app.postcss';
 	import '../app.css';
 	import { XCompanySolid, GithubSolid, GlobeOutline } from 'flowbite-svelte-icons';
+	import KoFi from '$lib/components/KoFi.svelte';
 
 	const currentYear = new Date().getFullYear();
 </script>
@@ -25,6 +26,11 @@
 	<!-- +page.svelte is inserted here  -->
 	<div class="flex-grow overflow-y-auto">
 		<slot />
+	</div>
+
+	<!-- Ko-Fi -->
+	<div>
+		<KoFi />
 	</div>
 
 	<!-- Footer -->
