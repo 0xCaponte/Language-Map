@@ -28,11 +28,10 @@
 }
 
 /* Scrollbar styles */
-
 .custom-scrollbar {
   --scrollbar-thumb-bg: #c1c1c1;
   --scrollbar-thumb-rounded: 9999px;
-  
+
   scrollbar-color: var(--scrollbar-thumb-bg) transparent;
   scrollbar-width: thin;
 }
@@ -48,4 +47,11 @@
 
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
+}
+
+/* Emoji Flgas*/
+@font-face {
+  font-family: 'FlagEmoji';
+  unicode-range: U+1F1E6-1F1FF; /* Range for flag emojis */
+  src: url("/fonts/Flags.woff2") format('woff2');
 }

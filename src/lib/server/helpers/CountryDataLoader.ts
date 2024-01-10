@@ -98,7 +98,6 @@ class CountryDataLoader {
 			// Not all population speaks the language	
 			languageData.statistics.totalSpeakers += (item.population * language.percentage);
 			languageData.statistics.numberOfCountries += 1;
-
 			languageData.countries.push(country);
 		});
 	}

@@ -64,7 +64,10 @@
 				<ul>
 					{#each language.countries as country}
 						<li class="list-item">
-							<span>{country.flag} {country.commonName}:</span>
+							<span class="emoji-flag" style="font-family: 'FlagEmoji';">
+								{country.flag}
+							</span>
+							{country.commonName}:
 							<span>{formatter.formatNumber(country.population)}</span>
 						</li>
 					{/each}
