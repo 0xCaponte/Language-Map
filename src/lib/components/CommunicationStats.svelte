@@ -31,13 +31,15 @@
 	<div class="sticky top-0 z-10 p-4 bg-white">
 		<!-- Added bg-white to maintain the background of the sticky header -->
 		<p class="font-semibold text-ms">Communication Stats:</p>
-		<span>
-			🗺️ {totals.statistics.getCountries(unMember)}
-		</span>
-		<span>
-			🗣️ {formatter.formatNumber(totals.statistics.getSpeakers(unMember))}
-		</span>
-		<br />
+
+		<div class="py-1">
+			<span>
+				{totals.statistics.getCountries(unMember)} 🗺️
+			</span>
+			<span>
+				{formatter.formatNumber(totals.statistics.getSpeakers(unMember))}🗣️
+			</span>
+		</div>
 	</div>
 
 	<!-- Scrollable List -->

@@ -47,13 +47,9 @@
 
 				<!-- Second Row: Countries and Speakers Information -->
 				<div class="flex flex-col">
-					<div class="flex flex-nowrap">
+					<div class="flex flex-nowrap py-1">
 						<span class="whitespace-nowrap">
-							{language.statistics.getCountries(unMember)} 🗺️
-						</span>
-					</div>
-					<div class="flex flex-nowrap">
-						<span class="whitespace-nowrap">
+							{language.statistics.getCountries(unMember)} 🗺️ 
 							{formatter.formatNumber(language.statistics.getSpeakers(unMember))} 🗣️
 						</span>
 					</div>
