@@ -19,6 +19,13 @@
 	// Reactive totals
 	let totals: Language;
 
+	// Track the currently active accordion
+	let activeAccordion: string | null = null;
+
+	function setActiveAccordion(languageName: string) {
+		activeAccordion = activeAccordion === languageName ? null : languageName;
+	}
+
 	// Reactive update
 	$: if (languages) {
 		languages = countryDataHelper.getFilteredCountries(languages, unMember);
@@ -34,10 +41,10 @@
 
 		<div class="py-1">
 			<span>
-				{totals.statistics.getCountries(unMember)} 🗺️
+				🗺️{totals.statistics.getCountries(unMember)} 
 			</span>
 			<span>
-				{formatter.formatNumber(totals.statistics.getSpeakers(unMember))}🗣️
+				🗣️{formatter.formatNumber(totals.statistics.getSpeakers(unMember))}
 			</span>
 		</div>
 	</div>
@@ -48,7 +55,12 @@
 		style="max-height: calc(100vh - var(--header-height) - var(--footer-height));"
 	>
 		{#each languages as language}
-			<LanguageStats {language} {unMember} />
+			<LanguageStats
+				{language}
+				{unMember}
+				active={activeAccordion === language.name}
+				onToggle={setActiveAccordion}
+			/>
 		{/each}
 	</div>
 </div>

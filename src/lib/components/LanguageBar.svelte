@@ -37,12 +37,14 @@
 	 * @param languageNames
 	 */
 	async function fetchLanguageData(languageNames: string[]) {
+		
+		const sessionID = sessionStorage.getItem('sessionID');
 		const response = await fetch('/api/languages', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify({ languageNames })
+			body: JSON.stringify({ languageNames, sessionID })
 		});
 
 		if (response.ok) {

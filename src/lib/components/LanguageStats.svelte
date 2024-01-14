@@ -2,10 +2,16 @@
 	import { ColoringHelper } from '$lib/helpers/ColoringHelper';
 	import { FormatHelper } from '$lib/helpers/FormatHelper';
 	import type Language from '$lib/model/language';
+	import { AngleDownSolid, ChevronDoubleDownOutline } from 'flowbite-svelte-icons';
+	import { createEventDispatcher } from 'svelte';
 
 	// Properties that can be customized
 	export let language: Language;
 	export let unMember: boolean;
+	export let active: boolean; // This accordion is active
+	export let onToggle: (id: string) => void;
+
+	const dispatch = createEventDispatcher();
 
 	// Reactive subscription to the store
 	let languageColor: string;
@@ -13,18 +19,15 @@
 
 	const formatter = new FormatHelper();
 
-	// Reactive variable for collapse/expand state
-	let isCollapsed = true;
-
-	// Toggle the collapsed state for the list of countries
-	function toggleCollapse() {
-		isCollapsed = !isCollapsed;
+	// Accordion click
+	function handleAccordionClick() {
+		onToggle(language.name);
 	}
 
-	// Toggle on enter or space key press
-	function handleKeydown(event: KeyboardEvent) {
+	// Keydown for accordion
+	function handleAccordeonKeydown(event: KeyboardEvent) {
 		if (event.key === 'Enter' || event.key === ' ') {
-			toggleCollapse();
+			handleAccordionClick();
 		}
 	}
 </script>
@@ -32,31 +35,34 @@
 {#if language}
 	<div class="list-container py-3">
 		<div class="border border-gray-200 rounded-lg shadow-sm p-3">
+			<!-- First Row: Circle and Language Name -->
 			<div
 				tabindex="0"
 				role="button"
-				on:click={toggleCollapse}
-				on:keydown={handleKeydown}
-				class="cursor-pointer"
+				on:click={() => onToggle(language.name)}
+				on:keydown={(event) => handleAccordeonKeydown(event)}
+				class="cursor-pointer flex justify-between items-center"
 			>
-				<!-- First Row: Circle and Language Name -->
-				<div class="flex items-center font-semibold">
+				<!-- Content and Circle -->
+				<div class="flex items-center">
 					<span class="circle" style="background-color: {languageColor};" />
 					<span class="ml-2">{formatter.capitalize(language.name)}</span>
 				</div>
 
-				<!-- Second Row: Countries and Speakers Information -->
-				<div class="flex flex-col">
-					<div class="flex flex-nowrap py-1">
-						<span class="whitespace-nowrap">
-							{language.statistics.getCountries(unMember)} 🗺️ 
-							{formatter.formatNumber(language.statistics.getSpeakers(unMember))} 🗣️
-						</span>
-					</div>
+				<!-- Arrow to open/clode area -->
+				<AngleDownSolid class="{active ? 'rotate-180' : ''}" size="sm" aria-hidden="true" />
+			</div>
+			<!-- Second Row: Countries and Speakers Information -->
+			<div class="flex flex-col">
+				<div class="flex flex-nowrap py-1">
+					<span class="whitespace-nowrap">
+						🗺️{language.statistics.getCountries(unMember)}
+						🗣️{formatter.formatNumber(language.statistics.getSpeakers(unMember))}
+					</span>
 				</div>
 			</div>
 
-			{#if !isCollapsed}
+			{#if active}
 				<ul>
 					{#each language.countries as country}
 						<li class="list-item">
