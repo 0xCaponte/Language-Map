@@ -2,9 +2,18 @@
 	import '../app.postcss';
 	import '../app.css';
 	import { XCompanySolid, GithubSolid, GlobeOutline } from 'flowbite-svelte-icons';
+	import { onMount } from 'svelte';
 	import KoFi from '$lib/components/KoFi.svelte';
 
 	const currentYear = new Date().getFullYear();
+
+	onMount(() => {
+		// Only used for statistics, no PII
+		if (!sessionStorage.getItem('sessionID')) {
+			const uuid = crypto.randomUUID();
+			sessionStorage.setItem('sessionID', uuid);
+		}
+	});
 </script>
 
 <div class="flex flex-col h-screen overflow-hidden">
@@ -38,14 +47,14 @@
 		<!--     <footer class="flex flex-col items-center fixed bottom-0 z-20 w-full py-2 m-4"> -->
 
 		<div class="flex space-x-10">
-			<a href="https://x.com/caponte" target="_blank" class="w-6 h-6">
-				<XCompanySolid class="w-6 h-6" />
+			<a href="https://x.com/caponte" target="_blank">
+				<XCompanySolid size="lg" />
 			</a>
-			<a href="https://github.com/0xcaponte" target="_blank" class="w-6 h-6">
-				<GithubSolid class="w-6 h-6" />
+			<a href="https://github.com/0xcaponte" target="_blank">
+				<GithubSolid size="lg" />
 			</a>
-			<a href="https://caponte.io" target="_blank" class="w-6 h-6">
-				<GlobeOutline class="w-6 h-6" />
+			<a href="https://caponte.io" target="_blank">
+				<GlobeOutline size="lg" />
 			</a>
 		</div>
 		<div>

@@ -16,6 +16,7 @@ import type Language from '$lib/model/language';
 export const POST: RequestHandler = async ({ request }) => {
 	const requestData = await request.json();
 	const languageNames: string[] = requestData.languageNames;
+	const sessionID = requestData.sessionID;
 
 	// Language data from global map
 	let languages: Language[] = [];
@@ -33,6 +34,7 @@ export const POST: RequestHandler = async ({ request }) => {
 
 	// ----- Start - Logging for analytics -----
     const logEntry = {
+		sessionID,
         timestamp: new Date().toISOString(),
         numberOfLanguages: languages.length,
         languages: languages.map(lang => lang.name.toLowerCase())
