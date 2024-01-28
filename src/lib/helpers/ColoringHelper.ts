@@ -3,26 +3,22 @@ import { get } from 'svelte/store';
 import { languageColors, countryColors } from '$lib/store';
 
 const baseColors = [
-	'#D32F2F', // Red
 	'#1976D2', // Blue
-	'#388E3C', // Green
-	'#FBC02D', // Yellow
-	'#8E24AA', // Purple
-	'#F57C00', // Orange
-	'#0288D1', // Light Blue
-	'#C2185B', // Pink
+	'#FFEB3B', // Bright Yellow
+	'#D32F2F', // Red
+	'#32b600', // Green
 	'#7B1FA2', // Deep Purple
-	'#C0CA33', // Lime
+	'#F57C00', // Orange
+	'#00BCD4', // Cyan
+	'#E91E96', // Hot Pink
+	'#fffb91', // Neon Yellow
+	'#9E9E9E', // Grey
 	'#FF5722', // Deep Orange
 	'#009688', // Teal
-	'#607D8B', // Blue Grey
 	'#795548', // Brown
-	'#9E9E9E', // Grey
-	'#E91E63', // Hot Pink
 	'#3F51B5', // Indigo
-	'#00BCD4', // Cyan
 	'#8BC34A', // Light Green
-	'#FFEB3B' // Bright Yellow
+	'#FBC02D' // Yellow
 ];
 
 export class ColoringHelper {
@@ -32,7 +28,6 @@ export class ColoringHelper {
 	 * @param languages
 	 */
 	public static assignColors(languages: Language[]): void {
-		
 		const countryMapping = new Map<string, string>();
 		const laguageMapping = new Map<string, string>();
 
@@ -42,7 +37,7 @@ export class ColoringHelper {
 			laguageMapping.set(language.name, color);
 
 			language.countries.forEach((country) => {
-				if (!countryMapping.has(country.countryId)) {
+				if (country.countryId && !countryMapping.has(country.countryId)) {
 					countryMapping.set(country.countryId, color);
 				}
 			});
@@ -54,7 +49,7 @@ export class ColoringHelper {
 
 	/**
 	 * Returns the color assigned to this language or 'none' if the language is not mapped
-	 * 
+	 *
 	 * @param languageName
 	 * @returns
 	 */
@@ -65,7 +60,7 @@ export class ColoringHelper {
 
 	/**
 	 * Returns the color assigned to this country or 'none' if the country is not mapped
-	 * 
+	 *
 	 * @param countryId
 	 * @returns
 	 */
