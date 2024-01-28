@@ -5,7 +5,6 @@
 
 class Statistics {
 	// Properties
-
 	// UN-Stats
 	totalUNSpeakers: number = 0;
 	numberOfUNCountries: number = 0;
@@ -43,6 +42,17 @@ class Statistics {
 	/**************
 	 *  Helpers
 	 **************/
+
+	/**
+	 * Get the total speakers percentage of the world's population
+	 *
+	 * @param unMember
+	 * @returns
+	 */
+	getWorlPercentage(unMember: boolean): number {
+		let speakers : number = unMember ? this.totalUNSpeakers  : this.totalSpeakers;
+		return speakers * 100 / 8085627000;
+	}
 
 	/**
 	 * Get the total of speakers based on the given UN status.

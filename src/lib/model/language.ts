@@ -3,7 +3,7 @@
  * a list of countries that speak that language.
  */
 
-import type Country from './country';
+import Country from './country';
 import Statistics from './statistics';
 
 class Language {
@@ -16,7 +16,18 @@ class Language {
 	constructor(name: string, statistics: Statistics, countries: Country[]) {
 		this.name = name;
 		this.statistics = new Statistics(statistics);
-		this.countries = countries;
+							
+		this.countries = countries.map(country => new Country(
+            country.countryId,
+            country.cca2,
+            country.commonName,
+            country.officialName,
+            country.flag,
+            country.independent,
+            country.unMember,
+            country.population,
+            country.languages
+        ));
 	}
 
 	/**************

@@ -46,6 +46,9 @@
 			<span>
 				🗣️{formatter.formatNumber(totals.statistics.getSpeakers(unMember))}
 			</span>
+			<span>
+				🌐{formatter.formatNumber(totals.statistics.getWorlPercentage(unMember))}%
+			</span>
 		</div>
 	</div>
 

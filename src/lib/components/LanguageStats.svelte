@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { ColoringHelper } from '$lib/helpers/ColoringHelper';
 	import { FormatHelper } from '$lib/helpers/FormatHelper';
+	import Country from '$lib/model/country';
 	import type Language from '$lib/model/language';
 	import { AngleDownSolid, ChevronDoubleDownOutline } from 'flowbite-svelte-icons';
 	import { createEventDispatcher } from 'svelte';
@@ -70,7 +71,7 @@
 								{country.flag}
 							</span>
 							{country.commonName}:
-							<span>{formatter.formatNumber(country.population)}</span>
+							<span>{formatter.formatNumber(country.getSpeakers(language.name))}</span>
 						</li>
 					{/each}
 				</ul>
