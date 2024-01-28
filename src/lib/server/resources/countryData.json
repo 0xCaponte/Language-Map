@@ -1887,8 +1887,8 @@
         [
             {
                 "language": "Chinese",
-                "percentage": 0.713,
-                "notes": "official. Also known as Standard Chinese or Mandarin."
+                "percentage": 0.91,
+                "notes": "official. Standard Chinese or Mandarin."
             }
         ],
         "latlng":
@@ -5776,7 +5776,7 @@
             },
             {
                 "language": "Chinese",
-                "percentage": 0.3,
+                "percentage": 0.51,
                 "notes": "official"
             },
             {
