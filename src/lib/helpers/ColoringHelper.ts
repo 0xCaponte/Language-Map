@@ -6,12 +6,12 @@ const baseColors = [
 	'#1976D2', // Blue
 	'#FFEB3B', // Bright Yellow
 	'#D32F2F', // Red
-	'#32b600', // Green
-	'#7B1FA2', // Deep Purple
+	'#32B600', // Green
+	'#A6A6ED', // Lavender
 	'#F57C00', // Orange
 	'#00BCD4', // Cyan
 	'#E91E96', // Hot Pink
-	'#fffb91', // Neon Yellow
+	'#FFFB91', // Neon Yellow
 	'#9E9E9E', // Grey
 	'#FF5722', // Deep Orange
 	'#009688', // Teal
