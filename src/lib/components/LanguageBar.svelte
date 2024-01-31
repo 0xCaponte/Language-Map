@@ -12,6 +12,7 @@
 	export let helper: string = 'Separate languages with spaces or commas';
 
 	// Language input
+	let trailingSpaces = '';
 	let inputValue = '';
 	let previousInputSet: Set<string> = new Set();
 
@@ -25,6 +26,10 @@
 	 * @param input
 	 */
 	function parseLanguageInput(input: string): string[] {
+
+		const trailingSpacesMatch = input.match(/\s*$/);
+   		trailingSpaces = trailingSpacesMatch ? trailingSpacesMatch[0] : '';
+
 		let languageNames: string[] = input.split(/,|\s+/); // Split by space or comma
 		languageNames = languageNames.map((e) => e.toLowerCase().trim()).filter(Boolean);
 		return Array.from(new Set(languageNames));
@@ -59,7 +64,7 @@
 			selectedLanguages.set(languages);
 
 			// Update value in the search bar with the pre-proccesses languages
-			inputValue = languageNames.join(' ') + ' ';
+			inputValue = languageNames.join(' ') + trailingSpaces;
 			previousInputSet = new Set(languageNames);
 		}
 	}
@@ -70,6 +75,7 @@
 	 * @param {Event} event - Input event from the language input field.
 	 */
 	function onInput(event: Event): void {
+		
 		inputValue = (event.target as HTMLInputElement).value; // Update local state
 		const languages = parseLanguageInput(inputValue);
 

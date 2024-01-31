@@ -4,24 +4,27 @@
 	import WorldMap from '$lib/components/WorldMap.svelte';
 </script>
 
-<div class="flex flex-col overflow-hidden">
+<div class="flex flex-col overflow-hidden h-full">
 	<!-- Language Bar -->
 	<div class="w-full mx-auto sm:w-3/4 md:w-3/4 lg:w-1/2 xl:w-1/2 px-4">
 		<LanguageBar />
 	</div>
 
 	<!-- Main Content and Sidebar -->
-	<div class="flex flex-grow overflow-hidden justify-center">
-		<!-- Map -->
+	<div class="flex flex-grow h-full">
+		<!-- Map Container -->
 		<div
-			class="flex flex-grow overflow-hidden items-center"
+			class="flex flex-grow items-center justify-center pl-3"
 			style="max-height: calc(100vh - var(--header-height) - var(--footer-height));"
 		>
 			<WorldMap />
 		</div>
 
-		<!-- Languages -->
-		<div class="w-1/5 m-2">
+		<!-- Communication Stats -->
+		<div
+			class="w-1/3 m-3"
+			style="max-height: calc(100vh - var(--header-height) - var(--footer-height));"
+		>
 			<CommunicationStats />
 		</div>
 	</div>
