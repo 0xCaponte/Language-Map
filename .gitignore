@@ -39,3 +39,5 @@ Desktop.ini
 # npm
 npm-debug.log*
 package-lock.json
+
+pnpm-lock.yaml

@@ -1,9 +1,8 @@
 import adapterAuto from '@sveltejs/adapter-auto';
 import adapterCloudflare from '@sveltejs/adapter-cloudflare';
-import { vitePreprocess } from '@sveltejs/kit/vite';
+import { vitePreprocess } from '@sveltejs/vite-plugin-svelte'
 
-// Determine the adapter based on the environment or a custom condition.
-// For example, you could use an environment variable to switch between adapters.
+// Determine the adapter based on an environment variable
 const isDeployingToCloudflare = process.env.ADAPTER === 'cloudflare';
 
 const adapter = isDeployingToCloudflare

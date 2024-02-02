@@ -78,23 +78,12 @@ This tells your application to use the Cloudflare Pages adapter for the build pr
 
 ### 2. Local Testing with Cloudflare Pages Adapter
 
-If you wish to test the Cloudflare Pages adapter locally, you can temporarily set the environment variable in your terminal:
+If you wish to test the Cloudflare Pages adapter locally, you can run:
 
-    export ADAPTER=cloudflare
-
-Then, run your build process:
-
-    npm run build
-
+    npm run build:cloudflare
+    
 **Note:** The built site may not function exactly as expected locally because it's optimized for Cloudflare Pages.
 
 ## Deployment
 
 After setting the environment variable in your Cloudflare Pages project settings, push your changes to the connected Git repository. Cloudflare Pages will automatically build and deploy your site using the settings configured.
-
-## Additional Notes
-
-- Ensure all necessary environment variables and project settings are configured in Cloudflare Pages for your application to work correctly.
-
-- For detailed documentation on SvelteKit and the adapters, refer to the [SvelteKit documentation](https://kit.svelte.dev/docs).
-

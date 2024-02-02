@@ -22,7 +22,7 @@
 
 		<!-- Communication Stats -->
 		<div
-			class="w-1/3 m-3"
+			class="w-1/4 m-3"
 			style="max-height: calc(100vh - var(--header-height) - var(--footer-height));"
 		>
 			<CommunicationStats />
