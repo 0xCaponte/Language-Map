@@ -14,7 +14,7 @@
 	<div class="flex flex-grow h-full">
 		<!-- Map Container -->
 		<div
-			class="flex flex-grow items-center justify-center pl-3"
+			class="flex flex-grow items-center justify-center pl-3 w-3/4 lg:w-4/5"
 			style="max-height: calc(100vh - var(--header-height) - var(--footer-height));"
 		>
 			<WorldMap />
@@ -22,7 +22,7 @@
 
 		<!-- Communication Stats -->
 		<div
-			class="w-1/5 m-3"
+			class="w-1/4 lg:w-1/5 m-3"
 			style="max-height: calc(100vh - var(--header-height) - var(--footer-height));"
 		>
 			<CommunicationStats />
