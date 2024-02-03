@@ -7,6 +7,8 @@ import Country from '$lib/model/country';
 import Language from '$lib/model/language';
 import Statistics from '$lib/model/statistics';
 
+import type { CountryData } from '$lib/model/countryData';
+
 class CountryDataLoader {
 	countryMap: Map<string, Country>;
 	languageMap: Map<string, Language>;

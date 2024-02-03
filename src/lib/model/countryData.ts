@@ -2,7 +2,7 @@
  * @fileoverview Interface representing the objects in the countryData.json
  */
 
-interface CountryData {
+export interface CountryData {
 	ccn3: string;
 	cca2: string;
 	name: {
