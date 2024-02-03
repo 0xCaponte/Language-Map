@@ -1,6 +1,6 @@
 {
     // server - runs dev server in dev mode, allowing for breakpoints on server side code.
-    // chrome - uses Chrome and allows for breakpoints for client side code.
+    // client - uses Chrome and allows for breakpoints for client side code.
     // Both (Client & Server) - debugging for both the server side and the client side.
 	
     "version": "0.2.0",
@@ -17,7 +17,7 @@
         {
             "type": "chrome",
             "request": "launch",
-            "name": "chrome",
+            "name": "client",
             "url": "http://localhost:5173",
             "webRoot": "${workspaceFolder}"
         }
@@ -25,7 +25,7 @@
 	"compounds": [
 		{
 			"name": "Both (Client & Server)",
-			"configurations": ["server", "chrome"]
+			"configurations": ["server", "client"]
 		}
 	]
 }
