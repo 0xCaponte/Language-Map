@@ -3,8 +3,6 @@
  *  and language data from the countryData.json
  */
 
-import fs from 'fs/promises';
-import path from 'path';
 import Country from '$lib/model/country';
 import Language from '$lib/model/language';
 import Statistics from '$lib/model/statistics';
@@ -20,15 +18,19 @@ class CountryDataLoader {
 	}
 
 	/**
-	 * Loads and parses the country data JSON from the server resources directory.
+	 * Loads and parses the country data JSON from the server resources.
 	 * Populates the country and language hash maps with the parsed data.
 	 */
 	async loadAndParseCountryDataJson(): Promise<void> {
 		try {
-			const filePath = path.resolve('src', 'lib', 'server', 'resources', 'countryData.json');
-			const data = await fs.readFile(filePath, 'utf8');
-			const parsedData: CountryData[] = JSON.parse(data);
-			this.populateMaps(parsedData);
+			const jsonUrl = 'https://languagemap.world/resources/countryData.json';
+
+			const response = await fetch(jsonUrl);
+			if (!response.ok) {
+				throw new Error(`Failed to fetch Country Json data: ${response.statusText}`);
+			}
+			const data: CountryData[] = await response.json();
+			this.populateMaps(data);
 		} catch (error) {
 			console.error('Error loading JSON data:', error);
 		}
@@ -78,9 +80,7 @@ class CountryDataLoader {
 	 * @param country - The corresponding Country object.
 	 */
 	private populateLanguageMap(item: CountryData, country: Country): void {
-
 		item.languages.forEach((language) => {
-
 			let languageName: string = language.language.toLowerCase();
 			let languageData = this.languageMap.get(languageName);
 
@@ -91,12 +91,12 @@ class CountryDataLoader {
 
 			if (item.unMember) {
 				// Not all population speaks the language
-				languageData.statistics.totalUNSpeakers += (item.population * language.percentage);
+				languageData.statistics.totalUNSpeakers += item.population * language.percentage;
 				languageData.statistics.numberOfUNCountries += 1;
 			}
 
-			// Not all population speaks the language	
-			languageData.statistics.totalSpeakers += (item.population * language.percentage);
+			// Not all population speaks the language
+			languageData.statistics.totalSpeakers += item.population * language.percentage;
 			languageData.statistics.numberOfCountries += 1;
 			languageData.countries.push(country);
 		});

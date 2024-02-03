@@ -2,8 +2,6 @@
  * @fileoverview API in charge of managing the GeoJSON Data found in the server-side resources
  */
 
-import fs from 'fs';
-import path from 'path';
 import type { RequestHandler } from '@sveltejs/kit';
 
 /**
@@ -13,18 +11,28 @@ import type { RequestHandler } from '@sveltejs/kit';
  * @returns
  */
 export const GET: RequestHandler = async ({ request }) => {
-    try {
-        const filePath = path.resolve('src', 'lib', 'server', 'resources', 'countries-110m.json');
-		const data = fs.readFileSync(filePath, 'utf-8');
+   
 
-        return new Response(data, {
+    try {
+
+        const response = await fetch('https://languagemap.world/resources/countries-110m.json');
+        if (!response.ok) {
+            throw new Error('Failed to fetch JSON data): ${response.statusText}');
+        }
+
+        const data = await response.json();
+
+        return new Response(JSON.stringify(data), {
             status: 200,
             headers: {
                 'Content-Type': 'application/json'
             }
         });
-        
+
+
     } catch (error) {
+
+        console.log(error);
         return new Response(JSON.stringify({ error: 'Error reading the TopoJSON file.' }), {
             status: 500,
             headers: {
