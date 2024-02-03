@@ -103,6 +103,7 @@
 
 	function handleSelectionSelect(event: { detail: any; }) {
 		const selectedSuggestion = event.detail;
+		console.log(selectedSuggestion);
 		inputValue = selectedSuggestion;
 	}
 

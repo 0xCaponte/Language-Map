@@ -28,7 +28,9 @@
 			} else {
 				displayedSuggestions = suggestions;
 			}
-		}
+		}else{
+            displayedSuggestions = [];
+        }
 	}
 
 	/**
@@ -54,7 +56,7 @@
 </script>
 
 {#if displayedSuggestions.length > 0}
-	<ul class="max-w-lg bg-white border border-gray-200 divide-y divide-gray-200 shadow-md">
+	<ul class="bg-white border border-gray-200 divide-y divide-gray-200 shadow-md rounded-bl-lg rounded-br-lg">
 		{#each displayedSuggestions as suggestion, index}
 			{#if index < 5}
 				<button
@@ -64,7 +66,7 @@
 					{suggestion}
 				</button>
 			{:else}
-				<li class="px-4 py-2 text-gray-500 text-lg">...</li>
+				<li class="px-4 py-2 text-gray-500 text-lg">. . .</li>
 			{/if}
 		{/each}
 	</ul>
