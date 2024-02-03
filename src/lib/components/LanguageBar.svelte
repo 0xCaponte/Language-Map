@@ -8,6 +8,7 @@
 	import type Statistics from '$lib/model/statistics';
 	import { ColoringHelper } from '$lib/helpers/ColoringHelper';
 	import SearchSuggestions from './SearchSuggestions.svelte';
+	import { onMount } from 'svelte';
 
 	// Properties that can be customized
 	export let placeholder: string = 'What Languages Do You Speak?';
@@ -20,9 +21,26 @@
 	let processedInput: { word: string; isSuggested: boolean }[] = [];
 	let isInputFocused = false; // Track focus state
 
+	// Language suggestions
+	let preventCloseOfSuggestion = false;
+	let possibleLanguages: string[] = [];
+
 	// Debounced fetch execution
 	let debounceHelper = new DebounceHelper();
 	const debouncedFetchLanguageData = debounceHelper.debounce(fetchLanguageData);
+
+	/**
+	 * Fetch the available language names on mount of the component
+	 */
+	onMount(async () => {
+		const response = await fetch('/api/languages');
+
+		if (response.ok) {
+			possibleLanguages = await response.json();
+		} else {
+			console.error('Failed to fetch language names');
+		}
+	});
 
 	/**
 	 * Parses the input from the language input bar and returns an array of Language objects.
@@ -30,9 +48,8 @@
 	 * @param input
 	 */
 	function parseLanguageInput(input: string): string[] {
-
 		const trailingSpacesMatch = input.match(/\s*$/);
-   		trailingSpaces = trailingSpacesMatch ? trailingSpacesMatch[0] : '';
+		trailingSpaces = trailingSpacesMatch ? trailingSpacesMatch[0] : '';
 
 		let languageNames: string[] = input.split(/,|\s+/); // Split by space or comma
 		languageNames = languageNames.map((e) => e.toLowerCase().trim()).filter(Boolean);
@@ -78,16 +95,48 @@
 	 *
 	 * @param {Event} event - Input event from the language input field.
 	 */
-	 function onInput(event: Event): void {
-        inputValue = (event.target as HTMLInputElement).value;
-        const languages = parseLanguageInput(inputValue);
+	function onInput(event: Event): void {
+		inputValue = (event.target as HTMLInputElement).value;
+		const languages = parseLanguageInput(inputValue);
 
-        if (areSetsEqual(previousInputSet, new Set(languages))) {
-            return;
-        }
+		if (areSetsEqual(previousInputSet, new Set(languages))) {
+			return;
+		}
 
-        debouncedFetchLanguageData(languages);
-    }
+		debouncedFetchLanguageData(languages);
+	}
+
+	/**
+	 * Input is active
+	 */
+	function onFocus() {
+		if (!preventCloseOfSuggestion) {
+			isInputFocused = true;
+		}
+	}
+
+	/**
+	 * Input is no longer active
+	 */
+	function onBlur() {
+		if (!preventCloseOfSuggestion) {
+			isInputFocused = false;
+		}
+	}
+
+	/**
+	 * Mouse enters the suggestions box
+	 */
+	function onMouseEnter() {
+		preventCloseOfSuggestion = true;
+	}
+
+	/**
+	 * Mouse leaves the suggestions box
+	 */
+	function onMouseLeave() {
+		preventCloseOfSuggestion = false;
+	}
 
 	/**
 	 * Checks if two sets of strings have the same size and elements.
@@ -101,38 +150,36 @@
 		return true;
 	}
 
-	function handleSelectionSelect(event: { detail: any; }) {
+	function handleSelect(event: { detail: string }) {
 		const selectedSuggestion = event.detail;
-		console.log(selectedSuggestion);
 		inputValue = selectedSuggestion;
 	}
-
 </script>
 
 <Input
 	bind:value={inputValue}
 	id="languages-input"
 	class="text-lg text-center bg-transparent"
-	placeholder={placeholder}
-	on:focus={() => isInputFocused = true}
-    on:blur={() => isInputFocused = false}
+	{placeholder}
+	on:focus={onFocus}
+	on:blur={onBlur}
 	on:input={onInput}
 />
 
 <!-- Language Suggestions -->
-<div class="z-1">
+<div class="z-1" on:mouseenter={onMouseEnter} on:mouseleave={onMouseLeave}>
 	{#if isInputFocused}
-    <SearchSuggestions {inputValue} on:select={handleSelectionSelect} />
-{/if}
+		<SearchSuggestions {inputValue} {possibleLanguages} on:suggestionSelectedEvent={handleSelect} />
+	{/if}
 </div>
 
 <!-- Wrong languages -->
 <div class="flex flex-wrap gap-2">
-    {#each processedInput as { word, isSuggested }}
-        {#if !isSuggested}
-            <Badge dismissable large color="red">{word}</Badge>
-        {/if}
-    {/each}
+	{#each processedInput as { word, isSuggested }}
+		{#if !isSuggested}
+			<Badge dismissable large color="red">{word}</Badge>
+		{/if}
+	{/each}
 </div>
 
 <Helper class="pt-2 text-xs text-center" color="disabled">{helper}</Helper>
