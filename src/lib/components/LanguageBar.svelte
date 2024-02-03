@@ -167,7 +167,7 @@
 />
 
 <!-- Language Suggestions -->
-<div class="z-1" on:mouseenter={onMouseEnter} on:mouseleave={onMouseLeave}>
+<div role="list" class="z-1" on:mouseenter={onMouseEnter} on:mouseleave={onMouseLeave}>
 	{#if isInputFocused}
 		<SearchSuggestions {inputValue} {possibleLanguages} on:suggestionSelectedEvent={handleSelect} />
 	{/if}
