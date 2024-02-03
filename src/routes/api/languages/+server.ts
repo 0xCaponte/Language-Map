@@ -11,7 +11,36 @@ import { BASE_URL } from '$env/static/private';
 const STATIC_LANGUAGE_DATA_URL = '/data/languageMap.json';
 
 /**
- * Return all the language data matching valid the valid names in the request
+ * Return the list of all the language names in the pre-processes data.
+ * 
+ * @param  
+ * @returns 
+ */
+export const GET: RequestHandler = async ({ url }) => {
+    try {
+        const languageMap = await loadLanguageMap(url.origin);
+        const languageKeys = Array.from(languageMap.keys());
+
+        return new Response(JSON.stringify(languageKeys), {
+            status: 200,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+    } catch (error) {
+
+        return new Response(JSON.stringify({ error: 'no language adata available' }), {
+            status: 500,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+    }
+};
+
+
+/**
+ * Return all the language data matching the valid languages names in the request
  *
  * @param request
  * @returns
