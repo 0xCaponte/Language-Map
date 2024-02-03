@@ -1,7 +1,7 @@
 <script lang="ts">
 	import '../app.postcss';
 	import '../app.css';
-	import { XCompanySolid, GithubSolid, GlobeOutline } from 'flowbite-svelte-icons';
+	import { TwitterSolid, GithubSolid, GlobeOutline } from 'flowbite-svelte-icons';
 	import { onMount } from 'svelte';
 	import KoFi from '$lib/components/KoFi.svelte';
 
@@ -48,7 +48,7 @@
 
 		<div class="flex space-x-10">
 			<a href="https://x.com/caponte" target="_blank">
-				<XCompanySolid size="lg" />
+				<TwitterSolid size="lg" />
 			</a>
 			<a href="https://github.com/0xcaponte" target="_blank">
 				<GithubSolid size="lg" />
