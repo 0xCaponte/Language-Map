@@ -4,7 +4,8 @@
 	"private": true,
 	"scripts": {
 		"preprocess": "vite-node ./scripts/PreprocessCountryData.ts",
-		"dev": "npm run preprocess && vite dev",
+		"dev": "vite dev",
+		"full-dev": "npm run preprocess && vite dev",
 		"build": "npm run preprocess && vite build",
 		"build:cloudflare": "npm run preprocess && cross-env ADAPTER=cloudflare vite build",
 		"preview": "vite preview",
