@@ -1,11 +1,13 @@
 <script lang="ts">
 	import { Input, Helper } from 'flowbite-svelte';
 	import { selectedLanguages } from '$lib/store';
+	import { Badge } from 'flowbite-svelte';
 	import DebounceHelper from '$lib/helpers/DebounceHelper';
 	import Language from '$lib/model/language';
 	import type Country from '$lib/model/country';
 	import type Statistics from '$lib/model/statistics';
 	import { ColoringHelper } from '$lib/helpers/ColoringHelper';
+	import SearchSuggestions from './SearchSuggestions.svelte';
 
 	// Properties that can be customized
 	export let placeholder: string = 'What Languages Do You Speak?';
@@ -15,6 +17,8 @@
 	let trailingSpaces = '';
 	let inputValue = '';
 	let previousInputSet: Set<string> = new Set();
+	let processedInput: { word: string; isSuggested: boolean }[] = [];
+	let isInputFocused = false; // Track focus state
 
 	// Debounced fetch execution
 	let debounceHelper = new DebounceHelper();
@@ -74,17 +78,16 @@
 	 *
 	 * @param {Event} event - Input event from the language input field.
 	 */
-	function onInput(event: Event): void {
-		
-		inputValue = (event.target as HTMLInputElement).value; // Update local state
-		const languages = parseLanguageInput(inputValue);
+	 function onInput(event: Event): void {
+        inputValue = (event.target as HTMLInputElement).value;
+        const languages = parseLanguageInput(inputValue);
 
-		if (areSetsEqual(previousInputSet, new Set(languages))) {
-			return;
-		}
+        if (areSetsEqual(previousInputSet, new Set(languages))) {
+            return;
+        }
 
-		debouncedFetchLanguageData(languages);
-	}
+        debouncedFetchLanguageData(languages);
+    }
 
 	/**
 	 * Checks if two sets of strings have the same size and elements.
@@ -97,14 +100,38 @@
 		for (let a of setA) if (!setB.has(a)) return false;
 		return true;
 	}
+
+	function handleSelectionSelect(event: { detail: any; }) {
+		const selectedSuggestion = event.detail;
+		inputValue = selectedSuggestion;
+	}
+
 </script>
 
 <Input
 	bind:value={inputValue}
 	id="languages-input"
 	class="text-lg text-center bg-transparent"
-	{placeholder}
+	placeholder={placeholder}
+	on:focus={() => isInputFocused = true}
+    on:blur={() => isInputFocused = false}
 	on:input={onInput}
 />
+
+<!-- Language Suggestions -->
+<div class="z-1">
+	{#if isInputFocused}
+    <SearchSuggestions {inputValue} on:select={handleSelectionSelect} />
+{/if}
+</div>
+
+<!-- Wrong languages -->
+<div class="flex flex-wrap gap-2">
+    {#each processedInput as { word, isSuggested }}
+        {#if !isSuggested}
+            <Badge dismissable large color="red">{word}</Badge>
+        {/if}
+    {/each}
+</div>
 
 <Helper class="pt-2 text-xs text-center" color="disabled">{helper}</Helper>
