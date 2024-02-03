@@ -10,7 +10,7 @@
 
 		<div class="p-5">
 			<p>
-				I am passioante about learning languages and I believe that the more languages you speak,
+				I am passionate about learning languages and I believe that the more languages you speak,
 				the wider your world becomes, the more you can experience and learn. That is why I always
 				asked myself things like:
 			</p>
