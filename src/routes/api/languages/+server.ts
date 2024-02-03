@@ -3,7 +3,6 @@
  */
 
 import type { RequestHandler } from '@sveltejs/kit';
-import { languageMap } from '../../../hooks.server';
 
 import type Language from '$lib/model/language';
 import { BASE_URL } from '$env/static/private';
