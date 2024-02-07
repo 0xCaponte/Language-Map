@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { FormatHelper } from '$lib/helpers/FormatHelper';
+	import { StringHelper } from '$lib/helpers/StringHelper';
 	import { createEventDispatcher, onMount } from 'svelte';
 
 	export let inputValue: string = '';
 	export let possibleLanguages: string[] = [];
 
-	const formatter = new FormatHelper();
+	const stringHelper = new StringHelper();
 
 	let suggestions: string[] = [];
 	let displayedSuggestions: string[] = [];
@@ -13,32 +13,39 @@
 	// Event dispatcher for selected suggestion
 	let dispatch = createEventDispatcher();
 
-	// Derive suggestions based on the input
+	// Derive suggestions based on passed input
 	$: {
-		suggestions = possibleLanguages.filter((lang) =>
-			lang.toLowerCase().startsWith(inputValue.toLowerCase())
-		);
 
-		// Input matches a suggestion
-		let exactMatch = possibleLanguages.some(
-			(lang) => lang.toLowerCase() === inputValue.toLowerCase()
-		);
-
-		if (!exactMatch) {
-			if (suggestions.length > 5) {
-				displayedSuggestions = suggestions.slice(0, 5);
-				displayedSuggestions.push('...');
-			} else {
-				displayedSuggestions = suggestions;
-			}
-		} else {
-			// If there is a match, no need for suggestions
+		// Empty input, no need for suggestions
+		if (inputValue.trim().length === 0) {
 			displayedSuggestions = [];
+		} else {
+			// Filter valiid suggestions
+			suggestions = possibleLanguages.filter((lang) =>
+				lang.toLowerCase().startsWith(inputValue.trim().toLowerCase())
+			);
+
+			// Input exactly matches a suggestion
+			let exactMatch = possibleLanguages.some(
+				(lang) => lang.toLowerCase() === inputValue.toLowerCase()
+			);
+
+			if (!exactMatch) {
+				// Determine is a subset of suggestions is needed
+				displayedSuggestions =
+					suggestions.length > 5 ? [...suggestions.slice(0, 5), '...'] : suggestions;
+			}
 		}
 	}
 
+	/**
+	 * Reacts to the selection of a suggestion, dispatching the appropriate event and clearing the sugestions list
+	 * @param suggestion
+	 */
 	function suggestionSelected(suggestion: string) {
 		dispatch('suggestionSelectedEvent', suggestion.toLowerCase());
+		displayedSuggestions = [];
+
 	}
 </script>
 
@@ -52,7 +59,7 @@
 					class="px-4 py-2 w-full text-left text-lg hover:bg-gray-100"
 					on:click={() => suggestionSelected(suggestion.toLowerCase())}
 				>
-					{formatter.capitalize(suggestion)}
+					{stringHelper.capitalize(suggestion)}
 				</button>
 			{:else}
 				<li class="px-4 py-2 text-gray-500 text-lg">. . .</li>

@@ -20,7 +20,7 @@
 				<li>How many people could I interact with?</li>
 			</ul>
 			<br />
-			<p>The Language Map is my way of answering some of these questions.</p>
+			<p>The Language Map is my way of answering these questions by visualizing your linguistic reach and putting it into perspective.</p>
 		</div>
 	</div>
 

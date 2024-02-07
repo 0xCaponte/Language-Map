@@ -1,46 +1,40 @@
 <script lang="ts">
 	import { Input, Helper } from 'flowbite-svelte';
 	import { selectedLanguages } from '$lib/store';
-	import { Badge } from 'flowbite-svelte';
-	import DebounceHelper from '$lib/helpers/DebounceHelper';
-	import Language from '$lib/model/language';
-	import type Country from '$lib/model/country';
-	import type Statistics from '$lib/model/statistics';
 	import { ColoringHelper } from '$lib/helpers/ColoringHelper';
-	import SearchSuggestions from './SearchSuggestions.svelte';
-	import { onMount } from 'svelte';
+	import { createEventDispatcher } from 'svelte';
+	import { SetHelper } from '$lib/helpers/SetHelper';
+	import { RequestHelper } from '$lib/helpers/RequestsHelper';
+	import { StringHelper } from '$lib/helpers/StringHelper';
+	import DebounceHelper from '$lib/helpers/DebounceHelper';
 
-	// Properties that can be customized
+	// Properties exported and accesible to the parent component
 	export let placeholder: string = 'What Languages Do You Speak?';
 	export let helper: string = 'Separate languages with spaces or commas';
+	export let possibleLanguages: string[] = [];
+	export let selectedSuggestion: string = '';
 
 	// Language input
-	let trailingSpaces = '';
-	let inputValue = '';
+	let inputValue: string = '';
+	let realNewInput: string = '';
+	let inputElement: Input;
 	let previousInputSet: Set<string> = new Set();
-	let processedInput: { word: string; isSuggested: boolean }[] = [];
-	let isInputFocused = false; // Track focus state
 
-	// Language suggestions
-	let preventCloseOfSuggestion = false;
-	let possibleLanguages: string[] = [];
+	const setHelper: SetHelper = new SetHelper();
+	const stringHelper: StringHelper = new StringHelper();
+	const requestHelper: RequestHelper = new RequestHelper();
+	const dispatch = createEventDispatcher();
+
+	// Reacts to the selection of a suggestion
+	$: if (selectedSuggestion) {
+		inputValue = stringHelper.replaceSubString(inputValue, realNewInput, selectedSuggestion);
+		selectedSuggestion = ''; // clears suggestions to start over
+		inputElement.focus(); // Go back to typing in the input
+	}
 
 	// Debounced fetch execution
 	let debounceHelper = new DebounceHelper();
-	const debouncedFetchLanguageData = debounceHelper.debounce(fetchLanguageData);
-
-	/**
-	 * Fetch the available language names on mount of the component
-	 */
-	onMount(async () => {
-		const response = await fetch('/api/languages');
-
-		if (response.ok) {
-			possibleLanguages = await response.json();
-		} else {
-			console.error('Failed to fetch language names');
-		}
-	});
+	const debouncedFetchLanguageData = debounceHelper.debounce(fetchAndProcessLanguageData);
 
 	/**
 	 * Parses the input from the language input bar and returns an array of Language objects.
@@ -48,46 +42,26 @@
 	 * @param input
 	 */
 	function parseLanguageInput(input: string): string[] {
-		const trailingSpacesMatch = input.match(/\s*$/);
-		trailingSpaces = trailingSpacesMatch ? trailingSpacesMatch[0] : '';
-
 		let languageNames: string[] = input.split(/,|\s+/); // Split by space or comma
 		languageNames = languageNames.map((e) => e.toLowerCase().trim()).filter(Boolean);
 		return Array.from(new Set(languageNames));
 	}
 
 	/**
-	 * Fetches language data from the API using a POST request with an array of language names.
+	 *  Fetches language data from the API and processes the returning data
 	 *
 	 * @param languageNames
 	 */
-	async function fetchLanguageData(languageNames: string[]) {
-		const sessionID = sessionStorage.getItem('sessionID');
-		const response = await fetch('/api/languages', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({ languageNames, sessionID })
-		});
+	async function fetchAndProcessLanguageData(languageNames: string[]) {
+		let languages = await requestHelper.fetchLanguageData(languageNames);
 
-		if (response.ok) {
-			let languageData = await response.json();
-			let languages = languageData.map(
-				(lang: { name: string; statistics: Statistics; countries: Country[] }) =>
-					new Language(lang.name, lang.statistics, lang.countries)
-			);
+		// Initialize the colors
+		ColoringHelper.assignColors(languages);
 
-			// Initialize the colors
-			ColoringHelper.assignColors(languages);
+		// Set languages in the store
+		selectedLanguages.set(languages);
 
-			// Set languages in the store
-			selectedLanguages.set(languages);
-
-			// Update value in the search bar with the pre-proccesses languages
-			inputValue = languageNames.join(' ') + trailingSpaces;
-			previousInputSet = new Set(languageNames);
-		}
+		previousInputSet = new Set(languageNames);
 	}
 
 	/**
@@ -96,90 +70,31 @@
 	 * @param {Event} event - Input event from the language input field.
 	 */
 	function onInput(event: Event): void {
-		inputValue = (event.target as HTMLInputElement).value;
-		const languages = parseLanguageInput(inputValue);
+		const newInputValue = (event.target as HTMLInputElement).value;
+		const newLanguages = parseLanguageInput(newInputValue);
 
-		if (areSetsEqual(previousInputSet, new Set(languages))) {
-			return;
+		// Determine real changes in the input
+		const newInputSet = new Set(newLanguages);
+		let difference = setHelper.difference(newInputSet, previousInputSet);
+		realNewInput = difference.size > 0 ? [...difference][0] : '';
+
+		// Notify SearchSuggestions of the input
+		dispatch('updateInputValue', realNewInput);
+
+		if (!setHelper.areSetsEqual(previousInputSet, newInputSet)) {
+			// TODO debouncedFetchLanguageData(newLanguages);
 		}
 
-		debouncedFetchLanguageData(languages);
-	}
-
-	/**
-	 * Input is active
-	 */
-	function onFocus() {
-		if (!preventCloseOfSuggestion) {
-			isInputFocused = true;
-		}
-	}
-
-	/**
-	 * Input is no longer active
-	 */
-	function onBlur() {
-		if (!preventCloseOfSuggestion) {
-			isInputFocused = false;
-		}
-	}
-
-	/**
-	 * Mouse enters the suggestions box
-	 */
-	function onMouseEnter() {
-		preventCloseOfSuggestion = true;
-	}
-
-	/**
-	 * Mouse leaves the suggestions box
-	 */
-	function onMouseLeave() {
-		preventCloseOfSuggestion = false;
-	}
-
-	/**
-	 * Checks if two sets of strings have the same size and elements.
-	 *
-	 * @param setA
-	 * @param setB
-	 */
-	function areSetsEqual(setA: Set<string>, setB: Set<string>): boolean {
-		if (setA.size !== setB.size) return false;
-		for (let a of setA) if (!setB.has(a)) return false;
-		return true;
-	}
-
-	function handleSelect(event: { detail: string }) {
-		const selectedSuggestion = event.detail;
-		inputValue = selectedSuggestion;
+		previousInputSet = newInputSet; // Update the previousInputSet
 	}
 </script>
 
 <Input
+	bind:this={inputElement}
 	bind:value={inputValue}
-	id="languages-input"
+	on:input={onInput}
 	class="text-lg text-center bg-transparent"
 	{placeholder}
-	on:focus={onFocus}
-	on:blur={onBlur}
-	on:input={onInput}
 />
-
-<!-- Language Suggestions -->
-<div role="list" class="z-1" on:mouseenter={onMouseEnter} on:mouseleave={onMouseLeave}>
-	{#if isInputFocused}
-		<SearchSuggestions {inputValue} {possibleLanguages} on:suggestionSelectedEvent={handleSelect} />
-	{/if}
-</div>
-
-<!-- Wrong languages -->
-<div class="flex flex-wrap gap-2">
-	{#each processedInput as { word, isSuggested }}
-		{#if !isSuggested}
-			<Badge dismissable large color="red">{word}</Badge>
-		{/if}
-	{/each}
-</div>
 
 <Helper class="pt-2 text-xs text-center" color="disabled">{helper}</Helper>

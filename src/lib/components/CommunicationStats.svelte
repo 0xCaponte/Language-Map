@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { selectedLanguages } from '$lib/store';
 	import { CountryDataHelper } from '$lib/helpers/CountryDataHelper';
-	import { FormatHelper } from '$lib/helpers/FormatHelper';
+	import { StringHelper } from '$lib/helpers/StringHelper';
 
 	import LanguageStats from '$lib/components/LanguageStats.svelte';
 	import type Language from '$lib/model/language';
 
 	let countryDataHelper = new CountryDataHelper();
-	const formatter = new FormatHelper();
+	const stringHelper = new StringHelper();
 
 	// Filter is data for all or for just UN countries is used
 	let unMember = true;
@@ -44,10 +44,10 @@
 				🗺️{totals.statistics.getCountries(unMember)} 
 			</span>
 			<span>
-				🗣️{formatter.formatNumber(totals.statistics.getSpeakers(unMember))}
+				🗣️{stringHelper.formatNumber(totals.statistics.getSpeakers(unMember))}
 			</span>
 			<span>
-				🌐{formatter.formatNumber(totals.statistics.getWorlPercentage(unMember))}%
+				🌐{stringHelper.formatNumber(totals.statistics.getWorlPercentage(unMember))}%
 			</span>
 		</div>
 	</div>
