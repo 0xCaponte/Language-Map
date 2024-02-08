@@ -19,7 +19,9 @@
 	let realNewInput: string = '';
 	let inputElement: Input;
 	let previousInputSet: Set<string> = new Set();
+	let currentInputSet:  Set<string> = new Set();
 
+	// Helpers
 	const setHelper: SetHelper = new SetHelper();
 	const stringHelper: StringHelper = new StringHelper();
 	const requestHelper: RequestHelper = new RequestHelper();
@@ -29,7 +31,10 @@
 	$: if (selectedSuggestion) {
 		inputValue = stringHelper.replaceSubString(inputValue, realNewInput, selectedSuggestion);
 		selectedSuggestion = ''; // clears suggestions to start over
-		inputElement.focus(); // Go back to typing in the input
+
+		processInputedLanguages(inputValue);
+
+		// inputElement.focus(); // Go back to typing in the input
 	}
 
 	// Debounced fetch execution
@@ -70,23 +75,41 @@
 	 * @param {Event} event - Input event from the language input field.
 	 */
 	function onInput(event: Event): void {
-		const newInputValue = (event.target as HTMLInputElement).value;
-		const newLanguages = parseLanguageInput(newInputValue);
-
-		// Determine real changes in the input
-		const newInputSet = new Set(newLanguages);
-		let difference = setHelper.difference(newInputSet, previousInputSet);
-		realNewInput = difference.size > 0 ? [...difference][0] : '';
+		
+		const newInput = (event.target as HTMLInputElement).value;
+		
+		processInputedLanguages(newInput)
 
 		// Notify SearchSuggestions of the input
 		dispatch('updateInputValue', realNewInput);
+		
+	}
 
-		if (!setHelper.areSetsEqual(previousInputSet, newInputSet)) {
-			// TODO debouncedFetchLanguageData(newLanguages);
+	/**
+	 * Processes the inputed language names, it updates the sets and determines the differences between them.
+	 * @param newInput
+	 */
+	function processInputedLanguages(newInput: string){
+		
+		const newLanguages = parseLanguageInput(newInput);
+
+		// Determine real changes in the input
+		currentInputSet = new Set(newLanguages);
+		let difference = setHelper.difference(currentInputSet, previousInputSet);
+		realNewInput = difference.size > 0 ? [...difference][0] : '';
+		
+		// If new valid input was given, update the sets
+		if (realNewInput !== ''){
+			previousInputSet = currentInputSet; 
 		}
 
-		previousInputSet = newInputSet; // Update the previousInputSet
+		// If new valid languages are present, retrieve new data
+		if (!setHelper.areSetsEqual(previousInputSet, currentInputSet)) {
+			// TODO debouncedFetchLanguageData(newLanguages);
+		}
 	}
+
+
 </script>
 
 <Input

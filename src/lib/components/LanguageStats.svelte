@@ -2,7 +2,7 @@
 	import { ColoringHelper } from '$lib/helpers/ColoringHelper';
 	import { StringHelper } from '$lib/helpers/StringHelper';
 	import type Language from '$lib/model/language';
-	import { AngleDownSolid, ChevronDoubleDownOutline } from 'flowbite-svelte-icons';
+	import { AngleDownSolid } from 'flowbite-svelte-icons';
 	import { createEventDispatcher } from 'svelte';
 
 	// Properties that can be customized
