@@ -3,14 +3,18 @@
 	import LanguageBar from '$lib/components/LanguageBar.svelte';
 	import SearchSuggestions from '$lib/components/SearchSuggestions.svelte';
 	import WorldMap from '$lib/components/WorldMap.svelte';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
+	import { browser } from '$app/environment';
 
 	let possibleLanguages: string[] = [];
 	let selectedSuggestion: string = '';
 	let inputValue = ''; // Bound to LanguageBar's input
 
+	// References to the SearchSuggestions component
+	let searchSuggestionsRef: SearchSuggestions;
+
 	/**
-	 * Fetch the available language names on mount of the component
+	 * Fetch the available language names and sets a listener for the areas currently active
 	 */
 	onMount(async () => {
 		const response = await fetch('/api/languages');
@@ -18,6 +22,20 @@
 			possibleLanguages = await response.json();
 		} else {
 			console.error('Failed to fetch language names');
+		}
+
+		// Event listener for detecting clicks outside input area
+		document.addEventListener('click', handleOutsideActivity);
+		document.addEventListener('keydown', handleOutsideActivity);
+	});
+
+	/**
+	 * Removes the listener set onMount
+	 */
+	onDestroy(() => {
+		if (browser) {
+			document.removeEventListener('click', handleOutsideActivity);
+			document.removeEventListener('keydown', handleOutsideActivity);
 		}
 	});
 
@@ -36,16 +54,28 @@
 	function handleSuggestionSelect(event: CustomEvent<string>) {
 		selectedSuggestion = event.detail;
 	}
+
+	/**
+	 * If clicked outside the inout area (language bar or the suggestions), clear the suggestions shown
+	 *
+	 * @param event
+	 */
+	function handleOutsideActivity(event: any) {
+		const outside = !event.target.closest('.input-area');
+		if (outside) {
+			searchSuggestionsRef.clearSuggestions();
+		}
+	}
 </script>
 
 <div class="flex flex-col overflow-hidden h-full">
 	<!-- Language Bar -->
-	<div class="w-full mx-auto px-4 relative">
+	<div class="input-area w-full mx-auto px-4 relative">
 		<LanguageBar {possibleLanguages} {selectedSuggestion} on:updateInputValue={updateInputValue} />
 
-		<!-- Search Suggestions -->
 		<div class="absolute w-full z-50 pr-8 -mt-5">
 			<SearchSuggestions
+				bind:this={searchSuggestionsRef}
 				{inputValue}
 				{possibleLanguages}
 				on:suggestionSelectedEvent={handleSuggestionSelect}

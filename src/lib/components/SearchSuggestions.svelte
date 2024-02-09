@@ -7,21 +7,25 @@
 
 	const stringHelper = new StringHelper();
 
-	let suggestions: string[] = [];
 	let displayedSuggestions: string[] = [];
 
 	// Event dispatcher for selected suggestion
 	let dispatch = createEventDispatcher();
+
+	// Exported function to clear suggestions shown
+	export function clearSuggestions() {
+        displayedSuggestions = [];
+    }
 
 	// Derive suggestions based on passed input
 	$: {
 
 		// Empty input, no need for suggestions
 		if (inputValue.trim().length === 0) {
-			displayedSuggestions = [];
+			clearSuggestions()
 		} else {
 			// Filter valiid suggestions
-			suggestions = possibleLanguages.filter((lang) =>
+			let suggestions = possibleLanguages.filter((lang) =>
 				lang.toLowerCase().startsWith(inputValue.trim().toLowerCase())
 			);
 
@@ -44,7 +48,7 @@
 	 */
 	function suggestionSelected(suggestion: string) {
 		dispatch('suggestionSelectedEvent', suggestion.toLowerCase());
-		displayedSuggestions = [];
+		clearSuggestions()
 
 	}
 </script>
