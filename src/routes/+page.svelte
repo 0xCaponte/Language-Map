@@ -69,6 +69,7 @@
 </script>
 
 <div class="flex flex-col overflow-hidden h-full">
+
 	<!-- Language Bar -->
 	<div class="input-area w-full mx-auto px-4 relative">
 		<LanguageBar {possibleLanguages} {selectedSuggestion} on:updateInputValue={updateInputValue} />

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Input, Helper } from 'flowbite-svelte';
+	import { Input, Helper, Badge } from 'flowbite-svelte';
 	import { selectedLanguages } from '$lib/store';
 	import { ColoringHelper } from '$lib/helpers/ColoringHelper';
 	import { createEventDispatcher } from 'svelte';
@@ -17,9 +17,13 @@
 	// Language input
 	let inputValue: string = '';
 	let realNewInput: string = '';
-	let inputElement: Input;
 	let previousInputSet: Set<string> = new Set();
-	let currentInputSet:  Set<string> = new Set();
+	let currentInputSet: Set<string> = new Set();
+
+	// Reactive statement to check input validity
+	$: invalidLanguages = Array.from(currentInputSet).filter(
+		(lang) => !possibleLanguages.includes(lang.toLowerCase())
+	);
 
 	// Helpers
 	const setHelper: SetHelper = new SetHelper();
@@ -33,8 +37,6 @@
 		selectedSuggestion = ''; // clears suggestions to start over
 
 		processInputedLanguages(inputValue);
-
-		// inputElement.focus(); // Go back to typing in the input
 	}
 
 	// Debounced fetch execution
@@ -75,32 +77,31 @@
 	 * @param {Event} event - Input event from the language input field.
 	 */
 	function onInput(event: Event): void {
-		
-		const newInput = (event.target as HTMLInputElement).value;
-		
-		processInputedLanguages(newInput)
+		let newInput = (event.target as HTMLInputElement).value;
+		inputValue  = newInput.replace(/[^\p{L}\s,-]/gu, ''); // only letters, spaces, commas, and hyphens
+		newInput = inputValue  
+
+		processInputedLanguages(newInput);
 
 		// Notify SearchSuggestions of the input
 		dispatch('updateInputValue', realNewInput);
-		
 	}
 
 	/**
 	 * Processes the inputed language names, it updates the sets and determines the differences between them.
 	 * @param newInput
 	 */
-	function processInputedLanguages(newInput: string){
-		
+	function processInputedLanguages(newInput: string) {
 		const newLanguages = parseLanguageInput(newInput);
 
 		// Determine real changes in the input
 		currentInputSet = new Set(newLanguages);
 		let difference = setHelper.difference(currentInputSet, previousInputSet);
 		realNewInput = difference.size > 0 ? [...difference][0] : '';
-		
+
 		// If new valid input was given, update the sets
-		if (realNewInput !== ''){
-			previousInputSet = currentInputSet; 
+		if (realNewInput !== '') {
+			previousInputSet = currentInputSet;
 		}
 
 		// If new valid languages are present, retrieve new data
@@ -108,16 +109,24 @@
 			// TODO debouncedFetchLanguageData(newLanguages);
 		}
 	}
-
-
 </script>
 
 <Input
-	bind:this={inputElement}
 	bind:value={inputValue}
 	on:input={onInput}
 	class="text-lg text-center bg-transparent"
 	{placeholder}
 />
 
-<Helper class="pt-2 text-xs text-center" color="disabled">{helper}</Helper>
+<!-- Helper and Invalid Input Badges -->
+<div class="flex flex-col items-center mt-2" style="min-height: 1.5rem;">
+	{#if invalidLanguages.length > 0}
+		<div class="flex flex-wrap justify-center gap-2">
+			{#each invalidLanguages as invalidLang}
+				<Badge color="red">{invalidLang}</Badge>
+			{/each}
+		</div>
+	{:else}
+		<Helper class="text-xs text-center" color="disabled">{helper}</Helper>
+	{/if}
+</div>
