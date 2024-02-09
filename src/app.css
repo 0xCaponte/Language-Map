@@ -1,12 +1,12 @@
 /* Header and Footer Styles */
 
 :root {
-  --header-height-mobile: 60px;
-  --footer-height-mobile: 60px;
-  --header-height-desktop: 100px;
-  --footer-height-desktop: 100px;
-  --header-height-large-desktop: 150px;
-  --footer-height-large-desktop: 150px;
+  --header-height-mobile: 25px;
+  --footer-height-mobile: 25px;
+  --header-height-desktop: 50px;
+  --footer-height-desktop: 35px;
+  --header-height-large-desktop: 100px;
+  --footer-height-large-desktop: 45px;
 }
 
 @media (min-width: 640px) {
@@ -49,7 +49,7 @@
   background: transparent;
 }
 
-/* Emoji Flgas*/
+/* Emoji Flags*/
 @font-face {
   font-family: 'FlagEmoji';
   unicode-range: U+1F1E6-1F1FF; /* Range for flag emojis */
