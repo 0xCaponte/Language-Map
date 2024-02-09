@@ -72,12 +72,12 @@
 
 	<!-- Language Bar -->
 	<div class="input-area w-full mx-auto px-4 relative">
-		<LanguageBar {possibleLanguages} {selectedSuggestion} on:updateInputValue={updateInputValue} />
+		<LanguageBar {possibleLanguages} bind:selectedSuggestion on:updateInputValue={updateInputValue} />
 
-		<div class="absolute w-full z-50 pr-8 -mt-5">
+		<div class="absolute w-full z-50 pr-8 -mt-7">
 			<SearchSuggestions
 				bind:this={searchSuggestionsRef}
-				{inputValue}
+				bind:inputValue
 				{possibleLanguages}
 				on:suggestionSelectedEvent={handleSuggestionSelect}
 			/>

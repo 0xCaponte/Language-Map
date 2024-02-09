@@ -7,6 +7,7 @@
 	import { RequestHelper } from '$lib/helpers/RequestsHelper';
 	import { StringHelper } from '$lib/helpers/StringHelper';
 	import DebounceHelper from '$lib/helpers/DebounceHelper';
+	import type Language from '$lib/model/language';
 
 	// Properties exported and accesible to the parent component
 	export let placeholder: string = 'What Languages Do You Speak?';
@@ -19,11 +20,8 @@
 	let realNewInput: string = '';
 	let previousInputSet: Set<string> = new Set();
 	let currentInputSet: Set<string> = new Set();
-
-	// Reactive statement to check input validity
-	$: invalidLanguages = Array.from(currentInputSet).filter(
-		(lang) => !possibleLanguages.includes(lang.toLowerCase())
-	);
+	let previousRequestSet: Set<string> = new Set();
+	let invalidLanguages: string[];
 
 	// Helpers
 	const setHelper: SetHelper = new SetHelper();
@@ -31,17 +29,28 @@
 	const requestHelper: RequestHelper = new RequestHelper();
 	const dispatch = createEventDispatcher();
 
-	// Reacts to the selection of a suggestion
-	$: if (selectedSuggestion) {
-		inputValue = stringHelper.replaceSubString(inputValue, realNewInput, selectedSuggestion);
-		selectedSuggestion = ''; // clears suggestions to start over
-
-		processInputedLanguages(inputValue);
-	}
-
 	// Debounced fetch execution
 	let debounceHelper = new DebounceHelper();
 	const debouncedFetchLanguageData = debounceHelper.debounce(fetchAndProcessLanguageData);
+
+	// Reactive statement to check input validity
+	$: {
+		determineInvalidLanguages();
+	}
+
+	function determineInvalidLanguages() {
+		invalidLanguages = Array.from(currentInputSet).filter(
+			(lang) => !possibleLanguages.includes(lang.toLowerCase())
+		);
+	}
+
+	// Reactive statement for the selection of a suggestion
+	$: if (selectedSuggestion) {
+		inputValue = stringHelper.replaceSubString(inputValue, realNewInput, selectedSuggestion);
+		processInputedLanguages(inputValue);
+		selectedSuggestion = ''; // clears selection
+	}
+
 
 	/**
 	 * Parses the input from the language input bar and returns an array of Language objects.
@@ -60,31 +69,16 @@
 	 * @param languageNames
 	 */
 	async function fetchAndProcessLanguageData(languageNames: string[]) {
+		
 		let languages = await requestHelper.fetchLanguageData(languageNames);
 
 		// Initialize the colors
 		ColoringHelper.assignColors(languages);
 
 		// Set languages in the store
-		selectedLanguages.set(languages);
+		setLanguageStore(languages);
 
-		previousInputSet = new Set(languageNames);
-	}
-
-	/**
-	 * Updates the input value and calls the debounced fetch function.
-	 *
-	 * @param {Event} event - Input event from the language input field.
-	 */
-	function onInput(event: Event): void {
-		let newInput = (event.target as HTMLInputElement).value;
-		inputValue  = newInput.replace(/[^\p{L}\s,-]/gu, ''); // only letters, spaces, commas, and hyphens
-		newInput = inputValue  
-
-		processInputedLanguages(newInput);
-
-		// Notify SearchSuggestions of the input
-		dispatch('updateInputValue', realNewInput);
+		previousRequestSet = new Set(languageNames);
 	}
 
 	/**
@@ -95,19 +89,53 @@
 		const newLanguages = parseLanguageInput(newInput);
 
 		// Determine real changes in the input
-		currentInputSet = new Set(newLanguages);
+		if (!setHelper.areSetsEqual(currentInputSet, new Set(newLanguages))) {
+			currentInputSet = new Set(newLanguages);
+			determineInvalidLanguages();
+
+			if (currentInputSet.size == 0){
+				setLanguageStore([]);
+			}
+		}
+
 		let difference = setHelper.difference(currentInputSet, previousInputSet);
 		realNewInput = difference.size > 0 ? [...difference][0] : '';
 
-		// If new valid input was given, update the sets
+		// If new valid input was given
 		if (realNewInput !== '') {
+			let validLanguages = Array.from(currentInputSet).filter((lang) =>
+				possibleLanguages.includes(lang.toLowerCase())
+			);
+
+			// If valid languages that have not been processed
+			if (
+				validLanguages.length > 0 &&
+				!setHelper.areSetsEqual(new Set(validLanguages), previousRequestSet)
+			) {
+				debouncedFetchLanguageData(validLanguages);
+			}
+
 			previousInputSet = currentInputSet;
 		}
+	}
 
-		// If new valid languages are present, retrieve new data
-		if (!setHelper.areSetsEqual(previousInputSet, currentInputSet)) {
-			// TODO debouncedFetchLanguageData(newLanguages);
-		}
+	function setLanguageStore(languages: Language[] ){
+		selectedLanguages.set(languages);
+	}
+	/**
+	 * Updates the input value and calls the debounced fetch function.
+	 *
+	 * @param {Event} event - Input event from the language input field.
+	 */
+	function onInput(event: Event): void {
+		let newInput = (event.target as HTMLInputElement).value;
+		inputValue = newInput.replace(/[^\p{L}\s,-]/gu, ''); // only letters, spaces, commas, and hyphens
+		newInput = inputValue;
+
+		processInputedLanguages(newInput);
+
+		// Notify SearchSuggestions of the input
+		dispatch('updateInputValue', realNewInput);
 	}
 </script>
 

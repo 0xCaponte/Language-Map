@@ -5,12 +5,11 @@
 	export let inputValue: string = '';
 	export let possibleLanguages: string[] = [];
 
-	const stringHelper = new StringHelper();
-
 	let displayedSuggestions: string[] = [];
 
-	// Event dispatcher for selected suggestion
-	let dispatch = createEventDispatcher();
+	// Helpers	
+	const stringHelper = new StringHelper();
+	let dispatch = createEventDispatcher(); 	// Event dispatcher for selected suggestion
 
 	// Exported function to clear suggestions shown
 	export function clearSuggestions() {
@@ -38,6 +37,8 @@
 				// Determine is a subset of suggestions is needed
 				displayedSuggestions =
 					suggestions.length > 5 ? [...suggestions.slice(0, 5), '...'] : suggestions;
+			}else{
+				clearSuggestions()
 			}
 		}
 	}
