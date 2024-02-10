@@ -1,57 +1,72 @@
 <script lang="ts">
+	import { onMount, onDestroy } from 'svelte';
 	import { StringHelper } from '$lib/helpers/StringHelper';
-	import { createEventDispatcher, onMount } from 'svelte';
+	import { createEventDispatcher } from 'svelte';
 
 	export let inputValue: string = '';
 	export let possibleLanguages: string[] = [];
 
 	let displayedSuggestions: string[] = [];
+	let focusedIndex = 0; // Index of the highlighted suggestion
 
-	// Helpers	
+	// Helpers
 	const stringHelper = new StringHelper();
-	let dispatch = createEventDispatcher(); 	// Event dispatcher for selected suggestion
+	let dispatch = createEventDispatcher(); // Event dispatcher for selected suggestion
 
 	// Exported function to clear suggestions shown
 	export function clearSuggestions() {
-        displayedSuggestions = [];
-    }
+		displayedSuggestions = [];
+	}
 
 	// Derive suggestions based on passed input
 	$: {
-
-		// Empty input, no need for suggestions
 		if (inputValue.trim().length === 0) {
-			clearSuggestions()
+			clearSuggestions();
 		} else {
-			// Filter valiid suggestions
 			let suggestions = possibleLanguages.filter((lang) =>
 				lang.toLowerCase().startsWith(inputValue.trim().toLowerCase())
 			);
 
-			// Input exactly matches a suggestion
 			let exactMatch = possibleLanguages.some(
 				(lang) => lang.toLowerCase() === inputValue.toLowerCase()
 			);
 
 			if (!exactMatch) {
-				// Determine is a subset of suggestions is needed
 				displayedSuggestions =
 					suggestions.length > 5 ? [...suggestions.slice(0, 5), '...'] : suggestions;
-			}else{
-				clearSuggestions()
+			} else {
+				clearSuggestions();
 			}
 		}
 	}
 
 	/**
-	 * Reacts to the selection of a suggestion, dispatching the appropriate event and clearing the sugestions list
+	 * Reacts to the selection of a suggestion, dispatching the appropriate event and clearing the suggestions list.
 	 * @param suggestion
 	 */
 	function suggestionSelected(suggestion: string) {
 		dispatch('suggestionSelectedEvent', suggestion.toLowerCase());
-		clearSuggestions()
-
+		clearSuggestions();
 	}
+
+	/**
+	 * On mount of the component set-up the logic for the pressing of the enter key
+	 *
+	 */
+	onMount(() => {
+		const handleKeydown = (event: KeyboardEvent) => {
+			if (event.key === 'Enter' && displayedSuggestions.length > 0) {
+				event.preventDefault(); // prevents default actions
+				suggestionSelected(displayedSuggestions[focusedIndex]);
+			}
+		};
+
+		window.addEventListener('keydown', handleKeydown);
+
+		return () => {
+			window.removeEventListener('keydown', handleKeydown);
+		};
+	});
 </script>
 
 {#if displayedSuggestions.length > 0}
