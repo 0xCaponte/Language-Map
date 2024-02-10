@@ -15,6 +15,9 @@
 	export let possibleLanguages: string[] = [];
 	export let selectedSuggestion: string = '';
 
+	// Input Reference
+	let inputRef: HTMLInputElement;
+
 	// Language input
 	let inputValue: string = '';
 	let realNewInput: string = '';
@@ -49,9 +52,17 @@
 		inputValue = stringHelper.replaceSubString(inputValue, realNewInput, selectedSuggestion);
 		processInputedLanguages(inputValue);
 		selectedSuggestion = ''; // clears selection
+		focusInput();
 	}
 
-
+	/**
+	 * Focus the input element
+	 */
+	function focusInput() {
+		if (inputRef) {
+			inputRef.focus();
+		}
+	}
 	/**
 	 * Parses the input from the language input bar and returns an array of Language objects.
 	 *
@@ -69,7 +80,6 @@
 	 * @param languageNames
 	 */
 	async function fetchAndProcessLanguageData(languageNames: string[]) {
-		
 		let languages = await requestHelper.fetchLanguageData(languageNames);
 
 		// Initialize the colors
@@ -93,7 +103,7 @@
 			currentInputSet = new Set(newLanguages);
 			determineInvalidLanguages();
 
-			if (currentInputSet.size == 0){
+			if (currentInputSet.size == 0) {
 				setLanguageStore([]);
 			}
 		}
@@ -119,7 +129,7 @@
 		}
 	}
 
-	function setLanguageStore(languages: Language[] ){
+	function setLanguageStore(languages: Language[]) {
 		selectedLanguages.set(languages);
 	}
 	/**
@@ -139,10 +149,11 @@
 	}
 </script>
 
-<Input
+<input
+	bind:this={inputRef}
 	bind:value={inputValue}
 	on:input={onInput}
-	class="text-lg text-center bg-transparent"
+	class="text-lg text-center bg-white border border-gray-300 focus:border-sky-500 border-2 shadow-md w-full mx-auto px-4 py-2 rounded-lg focus:outline-none"
 	{placeholder}
 />
 
