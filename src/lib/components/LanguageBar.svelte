@@ -103,7 +103,8 @@
 			currentInputSet = new Set(newLanguages);
 			determineInvalidLanguages();
 
-			if (currentInputSet.size == 0) {
+			// No input or only invalid input
+			if (currentInputSet.size == 0 || currentInputSet.size == invalidLanguages.length) {
 				setLanguageStore([]);
 			}
 		}
@@ -129,6 +130,11 @@
 		}
 	}
 
+	/**
+	 * Update the language store so tha other components can see the input
+	 *
+	 * @param languages
+	 */
 	function setLanguageStore(languages: Language[]) {
 		selectedLanguages.set(languages);
 	}
