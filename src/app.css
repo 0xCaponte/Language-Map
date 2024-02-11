@@ -1,12 +1,12 @@
 /* Header and Footer Styles */
 
 :root {
-  --header-height-mobile: 25px;
-  --footer-height-mobile: 25px;
-  --header-height-desktop: 50px;
-  --footer-height-desktop: 35px;
-  --header-height-large-desktop: 100px;
-  --footer-height-large-desktop: 45px;
+  --header-height-mobile: 3px;
+  --footer-height-mobile: 30px;
+  --header-height-desktop: 40px;
+  --footer-height-desktop: 40px;
+  --header-height-large-desktop: 50px;
+  --footer-height-large-desktop: 50px;
 }
 
 @media (min-width: 640px) {

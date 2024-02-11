@@ -18,10 +18,10 @@
 
 <div class="flex flex-col h-screen overflow-hidden">
 	<!-- Header / Navbar -->
-	<nav class="header flex items-center justify-between p-4">
-		<!-- Logo and Name -->
+	<nav class="header flex items-center justify-between p-4" style="height: var(--header-height);">
+		
+		<!-- Title name -->
 		<a href="/" class="flex items-center">
-			<!-- <img src="/logo.svg" alt="Logo" class="h-8 mr-2" /> -->
 			<span class="text-xl font-bold">Language Map</span>
 		</a>
 
@@ -32,13 +32,16 @@
 		</div>
 	</nav>
 
-	<!-- +page.svelte is inserted here  -->
-	<div class="flex-grow overflow-y-auto">
+	<!-- Main Content +page.svelte is inserted here  -->
+	<div
+		class="flex-grow overflow-y-auto"
+		style="max-height: calc(100vh - var(--header-height) - var(--footer-height));"
+	>
 		<slot />
 	</div>
 
 	<!-- Footer -->
-	<footer class="flex items-center py-2 w-full px-4 relative">
+	<footer class="flex items-center py-2 w-full px-4 relative" style="height: var(--footer-height);">
 		
 		<!-- Left-aligned - Ko-Fi -->
 		<div class="flex items-center">
@@ -51,7 +54,7 @@
 			target="_blank"
 			class="ml-auto flex items-center font-semibold border shadow-md rounded-xl px-4 py-2"
 		>
-			<TwitterSolid size="md" class="mr-1"/> @0xCaponte
+			<TwitterSolid size="md" class="mr-1" /> @0xCaponte
 		</a>
 
 		<!-- Absolute Centered Content -->

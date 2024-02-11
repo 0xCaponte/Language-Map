@@ -55,7 +55,6 @@
 	<!-- Scrollable List -->
 	<div
 		class="overflow-auto custom-scrollbar"
-		style="max-height: calc(100vh - var(--header-height) - var(--footer-height));"
 	>
 		{#each languages as language}
 			<LanguageStats
