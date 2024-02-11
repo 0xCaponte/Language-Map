@@ -50,7 +50,7 @@
 		<a
 			href="https://x.com/0xcaponte"
 			target="_blank"
-			class="ml-auto flex items-center font-semibold border shadow-md rounded-xl px-4 py-2"
+			class="ml-auto flex items-center font-semibold border shadow-md rounded-xl px-4 py-2 z-10"
 		>
 			<TwitterSolid size="md" class="mr-1" /> @0xCaponte
 		</a>
