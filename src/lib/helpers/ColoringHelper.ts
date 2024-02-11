@@ -48,26 +48,37 @@ export class ColoringHelper {
 	}
 
 	/**
-	 * Returns the color assigned to this language or 'none' if the language is not mapped
+	 * Returns the color assigned to this language or the default color if the language is not mapped
 	 *
 	 * @param languageName
 	 * @returns
 	 */
 	public static getColorByLanguageName(languageName: string): string {
 		const currentLanguageColors = get(languageColors);
-		return currentLanguageColors.get(languageName) || 'none';
+		return currentLanguageColors.get(languageName) || this.getDefaultColor();
 	}
 
 	/**
-	 * Returns the color assigned to this country or 'none' if the country is not mapped
+	 * Returns the color assigned to this country or the default color if the country is not mapped
 	 *
 	 * @param countryId
 	 * @returns
 	 */
 	public static getColorByCountryId(countryId: string): string {
 		const currentCountryColorMapping = get(countryColors);
-		return currentCountryColorMapping.get(countryId) || 'none';
+		return currentCountryColorMapping.get(countryId) || this.getDefaultColor();
 	}
+
+
+	/**
+	 * Returns the default color for a country in the map
+	 *
+	 * @returns
+	 */
+	public static getDefaultColor(): string {
+		return 'none';
+	}
+	
 
 	/**
 	 * Returns the pre-defined color asigned to this index or to its module

@@ -37,28 +37,31 @@
 		<slot />
 	</div>
 
-	<!-- Ko-Fi -->
-	<div>
-		<KoFi />
-	</div>
-
 	<!-- Footer -->
-	<footer class="footer flex flex-col items-center py-2">
-		<!--     <footer class="flex flex-col items-center fixed bottom-0 z-20 w-full py-2 m-4"> -->
-
-		<div class="flex space-x-10">
-			<a href="https://x.com/caponte" target="_blank">
-				<TwitterSolid size="lg" />
-			</a>
-			<a href="https://github.com/0xcaponte" target="_blank">
-				<GithubSolid size="lg" />
-			</a>
-			<a href="https://caponte.io" target="_blank">
-				<GlobeOutline size="lg" />
-			</a>
+	<footer class="flex items-center py-2 w-full px-4 relative">
+		
+		<!-- Left-aligned - Ko-Fi -->
+		<div class="flex items-center">
+			<KoFi />
 		</div>
-		<div>
-			<p class="text-xs">© {currentYear} Carlos Aponte - All Rights Reserved.</p>
+
+		<!-- Right-aligned - Twitter -->
+		<a
+			href="https://x.com/0xcaponte"
+			target="_blank"
+			class="ml-auto flex items-center font-semibold border shadow-md rounded-xl px-4 py-2"
+		>
+			<TwitterSolid size="md" class="mr-1"/> @0xCaponte
+		</a>
+
+		<!-- Absolute Centered Content -->
+		<div class="absolute inset-x-0 top-1/2 transform -translate-y-1/2 flex justify-center w-full">
+			<div class="flex flex-col items-center">
+				<a href="https://caponte.io" target="_blank" class="block">
+					<GlobeOutline size="lg" />
+				</a>
+				<p class="text-xs">© {currentYear} Carlos Aponte - All Rights Reserved.</p>
+			</div>
 		</div>
 	</footer>
 </div>
