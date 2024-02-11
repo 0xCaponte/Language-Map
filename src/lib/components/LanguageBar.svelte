@@ -86,7 +86,7 @@
 		ColoringHelper.assignColors(languages);
 
 		// Set languages in the store
-		setLanguageStore(languages);
+		selectedLanguages.set(languages);
 
 		previousRequestSet = new Set(languageNames);
 	}
@@ -105,7 +105,7 @@
 
 			// No input or only invalid input
 			if (currentInputSet.size == 0 || currentInputSet.size == invalidLanguages.length) {
-				setLanguageStore([]);
+				cleanLanguageStore([]);
 			}
 		}
 
@@ -127,16 +127,25 @@
 			}
 
 			previousInputSet = currentInputSet;
+		} else {
+			cleanLanguageStore(Array.from(currentInputSet));
 		}
 	}
 
 	/**
-	 * Update the language store so tha other components can see the input
+	 * Update the language store to only keep languages whose names are in the passed  array.
 	 *
-	 * @param languages
+	 * @param languageNames
 	 */
-	function setLanguageStore(languages: Language[]) {
-		selectedLanguages.set(languages);
+	function cleanLanguageStore(languageNames: string[]): void {
+
+		selectedLanguages.update((currentLanguages) => {
+			const filteredLanguages = currentLanguages.filter((lang) =>
+				languageNames.includes(lang.name.toLowerCase())
+			);
+			
+			return filteredLanguages;
+		});
 	}
 	/**
 	 * Updates the input value and calls the debounced fetch function.

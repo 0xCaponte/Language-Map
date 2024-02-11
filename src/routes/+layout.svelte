@@ -19,7 +19,6 @@
 <div class="flex flex-col h-screen overflow-hidden">
 	<!-- Header / Navbar -->
 	<nav class="header flex items-center justify-between p-4" style="height: var(--header-height);">
-		
 		<!-- Title name -->
 		<a href="/" class="flex items-center">
 			<span class="text-xl font-bold">Language Map</span>
@@ -42,7 +41,6 @@
 
 	<!-- Footer -->
 	<footer class="flex items-center py-2 w-full px-4 relative" style="height: var(--footer-height);">
-		
 		<!-- Left-aligned - Ko-Fi -->
 		<div class="flex items-center">
 			<KoFi />
