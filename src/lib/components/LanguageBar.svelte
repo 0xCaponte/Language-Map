@@ -168,7 +168,7 @@
 	bind:this={inputRef}
 	bind:value={inputValue}
 	on:input={onInput}
-	class="text-lg text-center bg-white border border-gray-300 focus:border-sky-500 border-2 shadow-md w-full mx-auto px-4 py-2 rounded-lg focus:outline-none"
+	class="text-lg text-center bg-white border border-sky-300 focus:border-sky-500 border-2 shadow-md w-full mx-auto px-4 py-2 rounded-lg focus:outline-none"
 	{placeholder}
 />
 
