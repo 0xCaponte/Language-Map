@@ -1,6 +1,8 @@
 <script lang="ts">
 	import '../app.postcss';
 	import '../app.css';
+
+	import { MetaTags } from 'svelte-meta-tags';
 	import { TwitterSolid, GithubSolid, GlobeOutline } from 'flowbite-svelte-icons';
 	import { onMount } from 'svelte';
 	import KoFi from '$lib/components/KoFi.svelte';
@@ -15,6 +17,34 @@
 		}
 	});
 </script>
+
+<MetaTags
+	title="Language Map"
+	description="Your Languages, Your Map - Explore Where Your Languages Connect You!"
+	canonical="https://www.languagemap.world/"
+	openGraph={{
+		url: 'https://www.languagemap.world',
+		title: 'Language Map',
+		description: 'Your Languages, Your Map - Explore Where Your Languages Connect You!',
+		images: [
+			{
+				url: 'https://languagemap.world/resources/images/og.png',
+				width: 1200,
+				height: 630,
+				alt: 'Language Map Image Alt'
+			}
+		],
+		siteName: 'Language Map'
+	}}
+	twitter={{
+		handle: '@0xCaponte',
+		cardType: 'summary_large_image',
+		title: 'Language Map',
+		description: 'Your Languages, Your Map - Explore Where Your Languages Connect You!',
+		image: 'https://languagemap.world/resources/images/twitter.png',
+		imageAlt: 'Language Map image alt'
+	}}
+/>
 
 <div class="flex flex-col h-screen overflow-hidden">
 	<!-- Header / Navbar -->
@@ -47,6 +77,7 @@
 		</div>
 
 		<!-- Right-aligned - Twitter -->
+
 		<a
 			href="https://x.com/0xcaponte"
 			target="_blank"
@@ -54,14 +85,15 @@
 		>
 			<TwitterSolid size="md" class="mr-1" /> @0xCaponte
 		</a>
-
-		<!-- Absolute Centered Content -->
-		<div class="absolute inset-x-0 top-1/2 transform -translate-y-1/2 flex justify-center w-full">
-			<div class="flex flex-col items-center">
-				<a href="https://caponte.io" target="_blank" class="block">
-					<GlobeOutline size="lg" />
-				</a>
-				<p class="text-xs">© {currentYear} Carlos Aponte - All Rights Reserved.</p>
+		<div>
+			<!-- Absolute Centered Content -->
+			<div class="absolute inset-x-0 top-1/2 transform -translate-y-1/2 flex justify-center w-full">
+				<div class="flex flex-col items-center">
+					<a href="https://caponte.io" target="_blank" class="block">
+						<GlobeOutline size="lg" />
+					</a>
+					<p class="text-xs">© {currentYear} Carlos Aponte - All Rights Reserved.</p>
+				</div>
 			</div>
 		</div>
 	</footer>
