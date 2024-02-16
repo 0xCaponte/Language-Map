@@ -28,7 +28,7 @@
 		description: 'Your Languages, Your Map - Explore Where Your Languages Connect You!',
 		images: [
 			{
-				url: 'https://languagemap.world/resources/images/og.png',
+				url: 'https://r2.languagemap.world/resources/images/og.png',
 				width: 1200,
 				height: 630,
 				alt: 'Language Map Image Alt'
@@ -41,7 +41,7 @@
 		cardType: 'summary_large_image',
 		title: 'Language Map',
 		description: 'Your Languages, Your Map - Explore Where Your Languages Connect You!',
-		image: 'https://languagemap.world/resources/images/og.png',
+		image: 'https://r2.languagemap.world/resources/images/og.png',
 		imageAlt: 'Language Map image alt'
 	}}
 />

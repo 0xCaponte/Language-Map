@@ -15,7 +15,7 @@ export const GET: RequestHandler = async ({ request }) => {
 
     try {
 
-        const response = await fetch('https://languagemap.world/resources/countries-110m.json');
+        const response = await fetch('https://r2.languagemap.world/resources/countries-110m.json');
         if (!response.ok) {
             throw new Error('Failed to fetch JSON data): ${response.statusText}');
         }

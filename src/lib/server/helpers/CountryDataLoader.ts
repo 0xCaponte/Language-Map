@@ -25,7 +25,7 @@ class CountryDataLoader {
 	 */
 	async loadAndParseCountryDataJson(): Promise<void> {
 		try {
-			const jsonUrl = 'https://languagemap.world/resources/countryData.json';
+			const jsonUrl = 'https://r2.languagemap.world/resources/countryData.json';
 
 			const response = await fetch(jsonUrl);
 			if (!response.ok) {

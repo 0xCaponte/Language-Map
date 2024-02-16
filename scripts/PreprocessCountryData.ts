@@ -10,7 +10,7 @@ import { CountryData } from '../src/lib/model/CountryData';
 
 async function main() {
 
-    const jsonUrl = 'https://languagemap.world/resources/countryData.json';
+    const jsonUrl = 'https://r2.languagemap.world/resources/countryData.json';
 
     try {
         const response = await fetch(jsonUrl);
