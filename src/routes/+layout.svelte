@@ -41,7 +41,7 @@
 		cardType: 'summary_large_image',
 		title: 'Language Map',
 		description: 'Your Languages, Your Map - Explore Where Your Languages Connect You!',
-		image: 'https://languagemap.world/resources/images/x.png',
+		image: 'https://languagemap.world/resources/images/og.png',
 		imageAlt: 'Language Map image alt'
 	}}
 />
