@@ -1,100 +1,40 @@
 <script lang="ts">
-    import { selectedLanguages } from '$lib/store';
-    import { ColoringHelper } from '$lib/helpers/ColoringHelper';
-    import { geoEquirectangular, geoPath } from 'd3-geo';
-    import { feature, mesh } from 'topojson-client';
-    import { onMount } from 'svelte';
-    import { json } from 'd3-fetch';
-    import { Spinner } from 'flowbite-svelte';
-    import type Language from '$lib/model/language';
-    
-    // Inputs
-    let languages: Language[] = [];
+	import { onMount, onDestroy } from 'svelte';
+	import FlatMapComponent from './FlatMapComponent.svelte';
+	import GlobeMapComponent from './GlobeMapComponent.svelte';
+	import { writable } from 'svelte/store';
 
-    // Reactive subscriptions
-    $: languages = $selectedLanguages;
+	let isMediumScreen = writable(false);
 
-    // Map Projection.
-    const projection = geoEquirectangular();
-    const path = geoPath().projection(projection);
+	/**
+	 * Check screen size initially and on resize
+	 */
+	function checkScreenSize() {
+		if (typeof window !== 'undefined') {
+			isMediumScreen.set(window.innerWidth <= 768);
+		}
+	}
+	
+	/**
+	 * Determines the size of the screen and sets a listener for screen resize events.
+	 */
+	onMount(() => {
+		// Ensure 'window' is accessed only client-side
+		if (typeof window !== 'undefined') {
+			// Set screen size event listener
+			window.addEventListener('resize', checkScreenSize);
+			checkScreenSize();
+		}
+	});
 
-    let rawCountries: any = null;
-    let countries: any = null;
-    let borders: any = null;
-    let isLoading: boolean = true;
-
-    onMount(async () => {
-        isLoading = true;
-
-        // Fetch topo json from own api
-        const world = await json('/api/world');
-
-        // Filter out Antarctica (id '010')
-        rawCountries = feature(world, world.objects.countries);
-        rawCountries = rawCountries.features;
-        rawCountries = rawCountries.filter((country: { id: string }) => country.id !== '010');
-
-        // Exclude Antarctica for the borders
-        const countriesWithoutAntarctica = {
-            ...world.objects.countries,
-            geometries: world.objects.countries.geometries.filter((geo: any) => geo.id !== '010')
-        };
-
-        // Generate borders excluding Antarctica
-        borders = mesh(world, countriesWithoutAntarctica, (a: any, b: any) => a !== b);
-
-        isLoading = false;
-
-        updateCountries();
-    });
-
-    // Reactive code to update based on the languages
-    // Ensures updateCountries is called whenever there's a change in selectedLanguages
-    $: $selectedLanguages, updateCountries();
-
-    /**
-     * Recalculates the colors of all countries based on the selected languages
-     */
-    function updateCountries() {
-        if (!rawCountries) return; // Ensure rawCountries is loaded before attempting to update
-
-        countries = rawCountries.map((country: { id: string }) => ({
-            ...country,
-            fill: getFillColor(country.id)
-        }));
-    }
-
-    /**
-     * Get the color to be used to fill the country
-     */
-    function getFillColor(countryId: string) {
-       
-		// Default for empty languages
-        if (!languages || languages.length === 0) {
-            return ColoringHelper.getDefaultColor(); 
-        }
-
-        let countryInLanguages = languages.some((language: Language) =>
-            language.hasCountryById(countryId)
-        );
-
-        return countryInLanguages ? ColoringHelper.getColorByCountryId(countryId) : ColoringHelper.getDefaultColor();
-    }
+	/**
+	 * Removes a previously added listener for screen resize events.
+	 */
+	onDestroy(() => {
+		if (typeof window !== 'undefined') {
+			window.removeEventListener('resize', checkScreenSize);
+		}
+	});
 </script>
 
-{#if isLoading}
-    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-        <Spinner color="blue" />
-    </div>
-{:else}
-    <svg width="100%" height="100%" viewBox="0 0 960 400" preserveAspectRatio="xMidYMid meet">
-        {#if countries}
-            {#each countries as country}
-                <path d={path(country)} fill={country.fill} stroke="#000" />
-            {/each}
-        {/if}
-        {#if borders}
-            <path d={path(borders)} fill={ColoringHelper.getDefaultColor()} stroke="#000" />
-        {/if}
-    </svg>
-{/if}
+<svelte:component this={$isMediumScreen ? GlobeMapComponent : FlatMapComponent} />
