@@ -84,6 +84,6 @@
 
 <style>
 	svg {
-		touch-action: none; /* Prevents default touch behaviors on the SVG */
+		touch-action: pan-x pan-y; /* Allows panning gestures */
 	}
 </style>
