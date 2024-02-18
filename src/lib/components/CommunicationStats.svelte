@@ -35,27 +35,21 @@
 
 <div>
 	<!-- Sticky Header -->
-	<div class="sticky top-0 z-10 p-4 bg-white">
-		<!-- Added bg-white to maintain the background of the sticky header -->
-		<p class="font-semibold text-ms">Communication Stats:</p>
+	<div class="sticky top-0 z-10 p-4 bg-white mx-auto lg:w-auto lg:max-w-4xl">
+		<p class="font-semibold text-ms text-center">Communication Stats:</p>
 
-		<div class="py-1">
-			<span>
-				🗺️{totals.statistics.getCountries(unMember)} 
-			</span>
-			<span>
-				🗣️{stringHelper.formatNumber(totals.statistics.getSpeakers(unMember))}
-			</span>
-			<span>
-				🌐{stringHelper.formatNumber(totals.statistics.getWorlPercentage(unMember))}%
-			</span>
+		<!-- Content centered within the div -->
+		<div class="flex justify-center space-x-2 py-1">
+			<div><span>🗺️{totals.statistics.getCountries(unMember)}</span></div>
+			<div><span>🗣️{stringHelper.formatNumber(totals.statistics.getSpeakers(unMember))}</span></div>
+			<div>
+				<span>🌐{stringHelper.formatNumber(totals.statistics.getWorlPercentage(unMember))}%</span>
+			</div>
 		</div>
 	</div>
 
 	<!-- Scrollable List -->
-	<div
-		class="overflow-auto custom-scrollbar"
-	>
+	<div class="overflow-auto custom-scrollbar">
 		{#each languages as language}
 			<LanguageStats
 				{language}

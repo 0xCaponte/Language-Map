@@ -10,7 +10,7 @@
 	import { fade } from 'svelte/transition';
 
 	// Screensize flag
-	let isMediumScreen = writable(false);
+	let isLargeScreen = writable(false);
 
 	// Map Data
 	let worldData: any = null;
@@ -25,7 +25,7 @@
 	 */
 	function checkScreenSize() {
 		if (typeof window !== 'undefined') {
-			isMediumScreen.set(window.innerWidth <= 768);
+			isLargeScreen.set(window.innerWidth < 1024);
 		}
 	}
 
@@ -66,7 +66,7 @@
 	>
 		<Spinner color="blue" />
 	</div>
-{:else if $isMediumScreen}
+{:else if $isLargeScreen}
 	<GlobeMapComponent {worldData} {languages} />
 {:else}
 	<FlatMapComponent {worldData} {languages} />
