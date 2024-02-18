@@ -28,6 +28,14 @@
 	// Reactive code to update the map colors based on the languages
 	$: $selectedLanguages, MapHelper.updateCountries(countries, languages);
 
+	function onStart(event: { dx: any; dy: any }) {
+		console.log('start draging');
+	}
+
+	function onEnd(event: { dx: any; dy: any }) {
+		console.log('end draging');
+	}
+
 	/**
 	 * Calculates the rotation effects when the user drags on the map
 	 *
@@ -45,23 +53,15 @@
 			currentRotation[1] - dy * scale,
 			currentRotation[2]
 		];
+
+		projection.rotate(rotation);
 	}
 
 	/**
-	 * Sets-up the drag event for the SVG map and partially prevent defautl scroll behavior.
+	 * Sets-up the drag event for the SVG map and partially prevent defautl scroll behav
 	 */
 	onMount(() => {
-		const svg = select('svg');
-
-		const dragBehavior = drag()
-			.on('start', (event: { sourceEvent: { preventDefault: () => void } }) => {
-				event.sourceEvent.preventDefault();
-			})
-			.on('drag', (event: { dx: any; dy: any }) => {
-				onDrag(event); // Handle dragging
-			});
-
-		svg.call(dragBehavior);
+		const svg = select('svg').call(drag().on('start', onStart).on('drag', onDrag).on('end', onEnd));
 	});
 </script>
 
@@ -81,9 +81,3 @@
 	<!--Borders -->
 	<path d={path(borders)} fill="none" stroke="#000" />
 </svg>
-
-<style>
-	svg {
-		touch-action: pan-x pan-y; /* Allows panning gestures */
-	}
-</style>
