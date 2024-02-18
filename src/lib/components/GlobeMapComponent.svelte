@@ -48,28 +48,20 @@
 	}
 
 	/**
-	 * Sets-up the drag event for the SVG map
+	 * Sets-up the drag event for the SVG map and partially prevent defautl scroll behavior.
 	 */
 	onMount(() => {
 		const svg = select('svg');
+
 		const dragBehavior = drag()
 			.on('start', (event: { sourceEvent: { preventDefault: () => void } }) => {
-				event.sourceEvent.preventDefault(); // Prevents scrolling while dragging the map
+				event.sourceEvent.preventDefault();
 			})
 			.on('drag', (event: { dx: any; dy: any }) => {
-				onDrag(event);
+				onDrag(event); // Handle dragging
 			});
 
 		svg.call(dragBehavior);
-
-		// Disables touch scrolling on the SVG element
-		svg.on(
-			'touchmove',
-			(event: { preventDefault: () => void }) => {
-				event.preventDefault(); // Prevents scrolling on touch move
-			},
-			{ passive: false }
-		);
 	});
 </script>
 
@@ -89,3 +81,9 @@
 	<!--Borders -->
 	<path d={path(borders)} fill="none" stroke="#000" />
 </svg>
+
+<style>
+	svg {
+		touch-action: none; /* Prevents default touch behaviors on the SVG */
+	}
+</style>
