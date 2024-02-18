@@ -10,6 +10,9 @@
 	export let worldData: any;
 	export let languages: Language[];
 
+	// Reactive code to update the map colors based on the languages
+	$: $selectedLanguages, MapHelper.updateCountries(countries, languages);
+
 	// Map setup & rendering
 	let projection = geoOrthographic().scale(250).translate([480, 250]);
 	let path = geoPath().projection(projection);
@@ -23,17 +26,6 @@
 	$: if (projection) {
 		projection.rotate(rotation);
 		path = geoPath().projection(projection); // Ensure path is updated here too
-	}
-
-	// Reactive code to update the map colors based on the languages
-	$: $selectedLanguages, MapHelper.updateCountries(countries, languages);
-
-	function onStart(event: { dx: any; dy: any }) {
-		console.log('start draging');
-	}
-
-	function onEnd(event: { dx: any; dy: any }) {
-		console.log('end draging');
 	}
 
 	/**
@@ -57,12 +49,23 @@
 		projection.rotate(rotation);
 	}
 
+	// Called at the start of a touch event, currently does nothing but it is needed for functionality
+	function onStart(event: { dx: any; dy: any }) {
+		console.log('start draging');
+	}
+
+	// Called at the end of a touch event, currently does nothing but it is needed for functionality
+	function onEnd(event: { dx: any; dy: any }) {
+		console.log('end draging');
+	}
+
 	/**
 	 * Sets-up the drag event for the SVG map and partially prevent defautl scroll behav
 	 */
 	onMount(() => {
 		const svg = select('svg').call(drag().on('start', onStart).on('drag', onDrag).on('end', onEnd));
 	});
+	
 </script>
 
 <svg width="100%" height="100%" viewBox="0 0 960 500" preserveAspectRatio="xMidYMid meet">
