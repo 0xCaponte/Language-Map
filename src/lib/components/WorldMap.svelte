@@ -7,6 +7,7 @@
 	import { selectedLanguages } from '$lib/store';
 	import { Spinner } from 'flowbite-svelte';
 	import { MapHelper } from '$lib/helpers/MapHelper';
+	import { fade } from 'svelte/transition';
 
 	// Screensize flag
 	let isMediumScreen = writable(false);
@@ -32,7 +33,6 @@
 	 * Determines the size of the screen and sets a listener for screen resize events.
 	 */
 	onMount(async () => {
-		
 		isLoading = true;
 
 		// Fetch topo json from own api
@@ -60,7 +60,10 @@
 
 <!-- Map Components -->
 {#if isLoading}
-	<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+	<div
+		class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+		transition:fade
+	>
 		<Spinner color="blue" />
 	</div>
 {:else if $isMediumScreen}

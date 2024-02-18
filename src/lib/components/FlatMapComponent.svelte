@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { geoEquirectangular, geoPath } from 'd3-geo';
+	import { geoNaturalEarth1, geoPath } from 'd3-geo';
 	import { selectedLanguages } from '$lib/store';
 	import type Language from '$lib/model/language';
 	import { MapHelper } from '$lib/helpers/MapHelper';
@@ -9,7 +9,7 @@
 
 	// Map setup & rendering
     const shouldIncludeantartica = false;  // Dont include Antarctica
-	let projection = geoEquirectangular();
+	let projection = geoNaturalEarth1();
 	let path = geoPath().projection(projection);
 	let countries = MapHelper.processCountries(worldData, shouldIncludeantartica);
 	let borders = MapHelper.processBorders(worldData, shouldIncludeantartica);
