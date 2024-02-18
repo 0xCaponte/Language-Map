@@ -52,7 +52,24 @@
 	 */
 	onMount(() => {
 		const svg = select('svg');
-		svg.call(drag().on('drag', onDrag));
+		const dragBehavior = drag()
+			.on('start', (event: { sourceEvent: { preventDefault: () => void } }) => {
+				event.sourceEvent.preventDefault(); // Prevents scrolling while dragging the map
+			})
+			.on('drag', (event: { dx: any; dy: any }) => {
+				onDrag(event);
+			});
+
+		svg.call(dragBehavior);
+
+		// Disables touch scrolling on the SVG element
+		svg.on(
+			'touchmove',
+			(event: { preventDefault: () => void }) => {
+				event.preventDefault(); // Prevents scrolling on touch move
+			},
+			{ passive: false }
+		);
 	});
 </script>
 
