@@ -78,6 +78,7 @@
 				<button
 					class="px-4 py-2 w-full text-left text-lg hover:bg-gray-100"
 					on:click={() => suggestionSelected(suggestion.toLowerCase())}
+					on:touchend={() => suggestionSelected(suggestion.toLowerCase())}
 				>
 					{stringHelper.capitalize(suggestion)}
 				</button>
