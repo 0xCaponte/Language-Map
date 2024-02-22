@@ -71,8 +71,11 @@
 <div class="flex flex-col overflow-hidden h-full">
 	<!-- Header Section -->
 	<div class="text-center p-4 md:p-8">
-		<h1 class="text-xl lg:text-3xl font-bold text-gray-800">Your Languages, Your Map</h1>
-		<p class="text-xl lg:text-3xl font-bold text-gray-800 mt-1 lg:mt-2">Explore Where Your Languages Connect You!</p>
+		<p class="text-lg lg:text-2xl font-bold text-gray-800 mt-1 lg:mt-2">
+			Explore Where Your Languages&nbsp;<span class="hidden lg:inline">Connect You!</span><span
+				class="lg:hidden"><br />Connect You!</span
+			>
+		</p>
 	</div>
 
 	<!-- Language Bar -->
