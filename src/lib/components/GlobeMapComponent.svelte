@@ -50,12 +50,12 @@
 	}
 
 	// Called at the start of a touch event, currently does nothing but it is needed for functionality
-	function onStart() {
+	function onStart(event: { dx: any; dy: any }) {
 		console.log('start draging');
 	}
 
 	// Called at the end of a touch event, currently does nothing but it is needed for functionality
-	function onEnd() {
+	function onEnd(event: { dx: any; dy: any }) {
 		console.log('end draging');
 	}
 
