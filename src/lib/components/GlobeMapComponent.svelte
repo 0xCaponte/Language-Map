@@ -50,12 +50,12 @@
 	}
 
 	// Called at the start of a touch event, currently does nothing but it is needed for functionality
-	function onStart(event: { dx: any; dy: any }) {
+	function onStart() {
 		console.log('start draging');
 	}
 
 	// Called at the end of a touch event, currently does nothing but it is needed for functionality
-	function onEnd(event: { dx: any; dy: any }) {
+	function onEnd() {
 		console.log('end draging');
 	}
 
@@ -65,7 +65,7 @@
 	onMount(() => {
 		const svg = select('svg').call(drag().on('start', onStart).on('drag', onDrag).on('end', onEnd));
 	});
-	
+
 </script>
 
 <svg width="100%" height="100%" viewBox="0 0 960 500" preserveAspectRatio="xMidYMid meet">
