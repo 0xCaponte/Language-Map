@@ -6,7 +6,6 @@
 	import type Language from '$lib/model/language';
 	import { MapHelper } from '$lib/helpers/MapHelper';
 	import { onMount } from 'svelte';
-
 	export let worldData: any;
 	export let languages: Language[];
 
@@ -25,17 +24,17 @@
 	// Reactive code to update on map dragging
 	$: if (projection) {
 		projection.rotate(rotation);
-		path = geoPath().projection(projection); // Ensure path is updated here too
+		path = geoPath().projection(projection);
 	}
 
 	/**
-	 * Calculates the rotation effects when the user drags on the map
+	 * Calculates the rotation of the globe when the user drags on the map
 	 *
-	 * @param dragEvent
+	 * @param event
 	 */
-	function onDrag(dragEvent: { dx: any; dy: any }) {
-		const dx = dragEvent.dx;
-		const dy = dragEvent.dy;
+	function dragged(event: { dx: number; dy: number }) {
+		const dx = event.dx;
+		const dy = event.dy;
 		const currentRotation = projection.rotate();
 		const radius = projection.scale();
 		const scale = 360 / (2 * Math.PI * radius);
@@ -49,26 +48,29 @@
 		projection.rotate(rotation);
 	}
 
-	// Called at the start of a touch event, currently does nothing but it is needed for functionality
-	function onStart(event: { dx: any; dy: any }) {
-		console.log('start draging');
-	}
-
-	// Called at the end of a touch event, currently does nothing but it is needed for functionality
-	function onEnd(event: { dx: any; dy: any }) {
-		console.log('end draging');
-	}
-
-	/**
-	 * Sets-up the drag event for the SVG map and partially prevent defautl scroll behav
-	 */
 	onMount(() => {
-		const svg = select('svg').call(drag().on('start', onStart).on('drag', onDrag).on('end', onEnd));
-	});
+		const svg = select('#globe');
 
+		// Define drag behavior
+		const dragHandler = drag().on(
+			'drag',
+			(event: { sourceEvent: { target: any }; dx: number; dy: number }) => {
+				dragged({ dx: event.dx, dy: event.dy });
+			}
+		);
+
+		// Apply the drag behavior
+		dragHandler(svg);
+	});
 </script>
 
-<svg width="100%" height="100%" viewBox="0 0 960 500" preserveAspectRatio="xMidYMid meet">
+<svg
+	id="globe"
+	width="100%"
+	height="100%"
+	viewBox="0 0 960 500"
+	preserveAspectRatio="xMidYMid meet"
+>
 	<!-- Globe outline -->
 	<path d={path(sphere)} fill="none" stroke="#000" />
 
