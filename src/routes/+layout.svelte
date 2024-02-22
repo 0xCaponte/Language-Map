@@ -51,13 +51,13 @@
 	<nav class="header flex items-center justify-between p-4" style="height: var(--header-height);">
 		<!-- Title name -->
 		<a href="/" class="flex items-center">
-			<span class="text-xl font-bold">Language Map</span>
+			<span class="text-xl font-bold text-gray-800">Language Map</span>
 		</a>
 
 		<!-- Navigation Links -->
 		<div class="flex">
-			<a href="/" class="ml-4">Home</a>
-			<a href="/about" class="ml-4">About</a>
+			<a href="/" class="ml-4 text-gray-800">Home</a>
+			<a href="/about" class="ml-4 text-gray-800">About</a>
 		</div>
 	</nav>
 

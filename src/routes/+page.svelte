@@ -69,6 +69,12 @@
 </script>
 
 <div class="flex flex-col overflow-hidden h-full">
+	<!-- Header Section -->
+	<div class="text-center p-4 md:p-8">
+		<h1 class="text-xl lg:text-3xl font-bold text-gray-800">Your Languages, Your Map</h1>
+		<p class="text-xl lg:text-3xl font-bold text-gray-800 mt-1 lg:mt-2">Explore Where Your Languages Connect You!</p>
+	</div>
+
 	<!-- Language Bar -->
 	<div class="input-area w-full mx-auto px-4 relative z-10">
 		<!-- Bound input to LanguageBar and listens for updates -->
