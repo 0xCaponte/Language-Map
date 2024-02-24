@@ -45,7 +45,7 @@
 	}}
 />
 
-<div class="flex flex-col lg:h-screen overflow-hidden">
+<div class="flex flex-col min-h-screen lg:h-screen lg:overflow-hidden">
 	<!-- Header / Navbar -->
 	<nav class="header flex items-center justify-between p-4" style="height: var(--header-height);">
 		<!-- Title name -->
@@ -69,10 +69,7 @@
 	</div>
 
 	<!-- Footer -->
-	<footer
-		class="flex flex-col justify-between w-full px-4 py-2 lg:flex-row lg:items-center"
-		style="height: var(--footer-height);"
-	>
+	<footer class="px-4 py-2 w-full" style="height: var(--footer-height);">
 		<div class="grid grid-cols-2 gap-4 lg:flex lg:flex-1 lg:gap-0">
 			<!-- Globe and All Rights Reserved -->
 			<div class="flex flex-row items-center justify-start col-span-1">
