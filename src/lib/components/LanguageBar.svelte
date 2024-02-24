@@ -106,7 +106,6 @@
 			// No input or only invalid input
 			if (currentInputSet.size == 0 || currentInputSet.size == invalidLanguages.length) {
 				cleanLanguageStore([]);
-				previousRequestSet = new Set();
 			}
 		}
 
