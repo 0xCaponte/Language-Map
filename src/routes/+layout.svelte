@@ -70,11 +70,10 @@
 
 	<!-- Footer -->
 	<footer
-		class="w-full px-4 py-2 bg-white border-t lg:bg-transparent lg:border-none flex flex-col lg:flex-row lg:items-center justify-between"
+		class="flex flex-col justify-between w-full px-4 py-2 lg:flex-row lg:items-center"
 		style="height: var(--footer-height);"
 	>
 		<div class="grid grid-cols-2 gap-4 lg:flex lg:flex-1 lg:gap-0">
-			
 			<!-- Globe and All Rights Reserved -->
 			<div class="flex flex-row items-center justify-start col-span-1">
 				<a href="https://caponte.io" target="_blank" class="block">
@@ -84,11 +83,11 @@
 			</div>
 
 			<!-- Twitter Icon -->
-			<div class="col-span-1 lg:ml-auto">
+			<div class="col-span-1 ml-auto">
 				<a
 					href="https://x.com/0xcaponte"
 					target="_blank"
-					class="flex items-center font-semibold border shadow-md rounded-xl  py-2 justify-center lg:justify-end"
+					class="flex items-center font-semibold border shadow-md rounded-xl justify-center px-4 py-2 lg:justify-end"
 				>
 					<TwitterSolid size="md" /> @0xCaponte
 				</a>

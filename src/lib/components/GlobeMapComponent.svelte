@@ -12,8 +12,17 @@
 	// Reactive code to update the map colors based on the languages
 	$: $selectedLanguages, MapHelper.updateCountries(countries, languages);
 
+	// Calculate Globe Radious
+	let padding = 30;
+	let viewBoxSize = 960;
+	let diameter = viewBoxSize - 2 * padding;
+	let radius = diameter / 2;
+
 	// Map setup & rendering
-	let projection = geoOrthographic().scale(250).translate([480, 250]);
+	let projection = geoOrthographic()
+		.scale(radius)
+		.translate([viewBoxSize / 2, viewBoxSize / 2]);
+		
 	let path = geoPath().projection(projection);
 	let rotation = [0, 0, 0]; // Initial rotation
 	let sphere = { type: 'Sphere' }; // Globe Outline
@@ -68,7 +77,7 @@
 	id="globe"
 	width="100%"
 	height="100%"
-	viewBox="0 0 960 500"
+	viewBox="0 0 960 960"
 	preserveAspectRatio="xMidYMid meet"
 >
 	<!-- Globe outline -->

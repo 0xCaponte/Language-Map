@@ -33,15 +33,6 @@ Header and Footer Styles
   --footer-height-large-desktop: 50px;
 }
 
-@media (min-width: 640px) {
-
-  /* medium screens */
-  :root {
-    --header-height: var(--header-height-desktop);
-    --footer-height: var(--footer-height-desktop);
-  }
-}
-
 @media (min-width: 1024px) {
 
   /* large screens */
