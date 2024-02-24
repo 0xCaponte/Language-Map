@@ -16,6 +16,30 @@ export class StringHelper {
 	}
 
 	/**
+	 * Formats a percentage number based on the users locale.
+	 * Numbers rounded to 0 will have a decimal point
+	 *
+	 * @param num
+	 * @returns
+	 */
+	public formatPercentageNumber(percentageNumber: number): string {
+		let userLocale = typeof navigator !== 'undefined' ? navigator.language : 'en-US';
+		let roundedNumber: number;
+
+		//
+		if (percentageNumber < 0.5 && percentageNumber !== 0) {
+			// Round up to the next one decimal place (e.g., 0.01 to 0.1)
+			roundedNumber = Math.ceil(percentageNumber * 10) / 10;
+			return new Intl.NumberFormat(userLocale, {
+				minimumFractionDigits: 1,
+				maximumFractionDigits: 1
+			}).format(roundedNumber);
+		} else {
+			return this.formatNumber(percentageNumber);
+		}
+	}
+
+	/**
 	 * Formats a string so that the first letter is upper case and the rest lower case
 	 *
 	 * @param text

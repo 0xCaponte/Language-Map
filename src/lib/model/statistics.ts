@@ -49,7 +49,7 @@ class Statistics {
 	 * @param unMember
 	 * @returns
 	 */
-	getWorlPercentage(unMember: boolean): number {
+	getWorldPercentage(unMember: boolean): number {
 		let speakers : number = unMember ? this.totalUNSpeakers  : this.totalSpeakers;
 		return speakers * 100 / 8085627000;
 	}
