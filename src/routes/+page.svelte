@@ -102,7 +102,7 @@
 
 	<div class="flex flex-grow overflow-hidden flex-col lg:flex-row">
 		<!-- Map Container - Flex-grow to fill available space -->
-		<div class="w-full pt-8 xl:pt-0 lg:w-3/4 xl:flex-grow overflow-auto">
+		<div class="w-full lg:w-3/4 xl:flex-grow overflow-auto">
 			<WorldMap />
 		</div>
 

@@ -22,7 +22,7 @@
 	let projection = geoOrthographic()
 		.scale(radius)
 		.translate([viewBoxSize / 2, viewBoxSize / 2]);
-		
+
 	let path = geoPath().projection(projection);
 	let rotation = [0, 0, 0]; // Initial rotation
 	let sphere = { type: 'Sphere' }; // Globe Outline
@@ -58,7 +58,7 @@
 	}
 
 	onMount(() => {
-		const svg = select('#globe');
+		const globe = select('.globe-path');
 
 		// Define drag behavior
 		const dragHandler = drag().on(
@@ -69,19 +69,14 @@
 		);
 
 		// Apply the drag behavior
-		dragHandler(svg);
+		dragHandler(globe);
 	});
 </script>
 
-<svg
-	id="globe"
-	width="100%"
-	height="100%"
-	viewBox="0 0 960 960"
-	preserveAspectRatio="xMidYMid meet"
->
-	<!-- Globe outline -->
-	<path d={path(sphere)} fill="none" stroke="#000" />
+<svg width="100%" height="100%" viewBox="0 0 960 960" preserveAspectRatio="xMidYMid meet">
+	
+	<!-- Globe outline with transparent fill -->
+	<path d={path(sphere)} fill="rgba(0,0,0,0)" stroke="#000" class="globe-path" />
 
 	<!--Countries -->
 	{#each countries as country}
