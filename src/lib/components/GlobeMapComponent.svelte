@@ -13,7 +13,7 @@
 	$: $selectedLanguages, MapHelper.updateCountries(countries, languages);
 
 	// Calculate Globe Radious
-	let padding = 30;
+	let padding = 50;
 	let viewBoxSize = 960;
 	let diameter = viewBoxSize - 2 * padding;
 	let radius = diameter / 2;
