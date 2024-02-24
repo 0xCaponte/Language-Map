@@ -46,7 +46,7 @@
 	}}
 />
 
-<div class="flex flex-col h-screen overflow-hidden">
+<div class="flex flex-col lg:h-screen overflow-hidden">
 	<!-- Header / Navbar -->
 	<nav class="header flex items-center justify-between p-4" style="height: var(--header-height);">
 		<!-- Title name -->
@@ -61,7 +61,7 @@
 		</div>
 	</nav>
 
-	<!-- Main Content +page.svelte is inserted here  -->
+	<!-- Main Content +page.svelte is inserted here -->
 	<div
 		class="flex-grow overflow-y-auto"
 		style="max-height: calc(100vh - var(--header-height) - var(--footer-height));"
@@ -70,30 +70,29 @@
 	</div>
 
 	<!-- Footer -->
-	<footer class="flex items-center py-2 w-full px-4 relative" style="height: var(--footer-height);">
-		<!-- Left-aligned - Ko-Fi -->
-		<div class="flex items-center">
-			<KoFi />
-		</div>
+	<footer
+		class="w-full px-4 py-2 bg-white border-t lg:bg-transparent lg:border-none flex flex-col lg:flex-row lg:items-center justify-between"
+		style="height: var(--footer-height);"
+	>
+		<div class="grid grid-cols-2 gap-4 lg:flex lg:flex-1 lg:gap-0">
+			
+			<!-- Globe and All Rights Reserved -->
+			<div class="flex flex-row items-center justify-start col-span-1">
+				<a href="https://caponte.io" target="_blank" class="block">
+					<GlobeOutline size="lg" />
+				</a>
+				<p class="text-xs ml-2">© {currentYear} Carlos Aponte - All Rights Reserved.</p>
+			</div>
 
-		<!-- Right-aligned - Twitter -->
-
-		<a
-			href="https://x.com/0xcaponte"
-			target="_blank"
-			class="ml-auto flex items-center font-semibold border shadow-md rounded-xl px-4 py-2 z-10"
-		>
-			<TwitterSolid size="md" class="mr-1" /> @0xCaponte
-		</a>
-		<div>
-			<!-- Absolute Centered Content -->
-			<div class="absolute inset-x-0 top-1/2 transform -translate-y-1/2 flex justify-center w-full">
-				<div class="flex flex-col items-center">
-					<a href="https://caponte.io" target="_blank" class="block">
-						<GlobeOutline size="lg" />
-					</a>
-					<p class="text-xs">© {currentYear} Carlos Aponte - All Rights Reserved.</p>
-				</div>
+			<!-- Twitter Icon -->
+			<div class="col-span-1 lg:ml-auto">
+				<a
+					href="https://x.com/0xcaponte"
+					target="_blank"
+					class="flex items-center font-semibold border shadow-md rounded-xl px-4 py-2 justify-center lg:justify-end"
+				>
+					<TwitterSolid size="md" class="mr-1" /> @0xCaponte
+				</a>
 			</div>
 		</div>
 	</footer>

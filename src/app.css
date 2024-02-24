@@ -1,5 +1,29 @@
-/* Header and Footer Styles */
+/*****************************************
+ App Container Width Control 
+ ******************************************/
+.container {
+  margin: 0 auto;
+  padding: 0 1rem;
+  max-width: 1920px; /* Max width for very large screens */
+}
 
+/* Responsive padding */
+@media (min-width: 1024px) {
+  .container {
+    padding: 0 4vw;
+  }
+}
+
+/* Font scaling for larger screens */
+@media (min-width: 1920px) {
+  body {
+    font-size: 1.2rem;
+  }
+}
+
+/******************************************
+Header and Footer Styles 
+******************************************/
 :root {
   --header-height-mobile: 3px;
   --footer-height-mobile: 30px;
@@ -49,7 +73,9 @@
   background: transparent;
 }
 
-/* Emoji Flags*/
+/******************************************
+Emoji Flags
+******************************************/
 @font-face {
   font-family: 'FlagEmoji';
   unicode-range: U+1F1E6-1F1FF; /* Range for flag emojis */
