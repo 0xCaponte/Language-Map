@@ -24,14 +24,14 @@ export class MapHelper {
 	 * By default antartica is also included but that can be cahgned acording to the desired output map.
 	 *
 	 * @param world
-	 * @param includeAntarctica
+	 * @param condensedVersion
 	 * @returns
 	 */
-	public static processCountries(world: any, includeAntarctica = true) {
+	public static processCountries(world: any, condensedVersion: boolean = false) {
 		let countries: any = feature(world, world.objects.countries);
 		countries = countries.features;
 
-		if (!includeAntarctica) {
+		if (condensedVersion) {
 			// Filter out Antarctica (id '010')
 			countries = countries.filter((country: { id: string }) => country.id !== '010');
 		}
@@ -43,22 +43,23 @@ export class MapHelper {
 	 * Given the world topo json data it creates the data for the borders between the countries.
 	 *
 	 * @param world
-	 * @param includeAntarctica
+	 * @param condensedVersion
 	 * @returns
 	 */
-	public static processBorders(world: any, includeAntarctica: boolean = true) {
-		const filteredGeometries = world.objects.countries.geometries.filter(
-			(geo: any) => includeAntarctica || geo.id !== '010' // Filters out Antarctica (id '010') if flag is active
-		);
+	public static processBorders(world: any, condensedVersion: boolean = false) {
+		const excludedIds = ['010']; // IDs for Antarctica ('010')
 
-		const countriesWithoutAntarctica: any = {
+		const filteredGeometries = world.objects.countries.geometries.filter((geo: any) => {
+			return !condensedVersion || !excludedIds.includes(geo.id);
+		});
+
+		const countriesCondensed: any = {
 			...world.objects.countries,
 			geometries: filteredGeometries
 		};
 
-		return mesh(world, countriesWithoutAntarctica, (a: any, b: any) => a !== b);
+		return mesh(world, countriesCondensed, (a: any, b: any) => a !== b);
 	}
-
 	/**
 	 * Recalculates the colors of all countries based on the selected languages
 	 */

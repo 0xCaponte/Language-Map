@@ -25,12 +25,12 @@
 Header and Footer Styles 
 ******************************************/
 :root {
-  --header-height-mobile: 3px;
+  --header-height-mobile: 30px;
   --footer-height-mobile: 30px;
   --header-height-desktop: 40px;
   --footer-height-desktop: 40px;
-  --header-height-large-desktop: 50px;
-  --footer-height-large-desktop: 50px;
+  --header-height-large-desktop: 45px;
+  --footer-height-large-desktop: 45px;
 }
 
 @media (min-width: 1024px) {
