@@ -26,6 +26,7 @@
 
 		// Event listener for detecting clicks outside input area
 		document.addEventListener('click', handleOutsideActivity);
+		document.addEventListener('touchend', handleOutsideActivity);
 		document.addEventListener('keydown', handleOutsideActivity);
 	});
 
@@ -35,6 +36,7 @@
 	onDestroy(() => {
 		if (browser) {
 			document.removeEventListener('click', handleOutsideActivity);
+			document.removeEventListener('touchend', handleOutsideActivity);
 			document.removeEventListener('keydown', handleOutsideActivity);
 		}
 	});

@@ -77,11 +77,8 @@
 			{#if index < 5}
 				<button
 					class="px-4 py-2 w-full text-left text-lg hover:bg-gray-100"
-					on:click|preventDefault={() => suggestionSelected(suggestion.toLowerCase())}
-					on:touchend|preventDefault={(event) => {
-						event.preventDefault();
-						suggestionSelected(suggestion.toLowerCase());
-					}}
+					on:click={() => suggestionSelected(suggestion.toLowerCase())}
+					on:touchend={() => suggestionSelected(suggestion.toLowerCase())}
 				>
 					{stringHelper.capitalize(suggestion)}
 				</button>

@@ -17,7 +17,7 @@ export class StringHelper {
 
 	/**
 	 * Formats a string so that the first letter is upper case and the rest lower case
-	 * 
+	 *
 	 * @param text
 	 * @returns
 	 */
@@ -27,15 +27,14 @@ export class StringHelper {
 
 	/**
 	 * Replaces a given substring with the new value in the original one.
-	 * 
-	 * @param original 
-	 * @param toReplace 
-	 * @param newValue 
-	 * @returns 
+	 *
+	 * @param original
+	 * @param toReplace
+	 * @param newValue
+	 * @returns
 	 */
-	public replaceSubString(original : string, toReplace: string, newValue: string): string {
-
-		const lastIndex = original.lastIndexOf(toReplace);
+	public replaceSubString(original: string, toReplace: string, newValue: string): string {
+		const lastIndex = original.toLowerCase().lastIndexOf(toReplace.toLowerCase());
 
 		if (lastIndex > -1) {
 			original =
