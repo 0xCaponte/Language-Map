@@ -3,9 +3,8 @@
 	import '../app.css';
 
 	import { MetaTags } from 'svelte-meta-tags';
-	import { TwitterSolid, GithubSolid, GlobeOutline } from 'flowbite-svelte-icons';
+	import { TwitterSolid, GlobeOutline } from 'flowbite-svelte-icons';
 	import { onMount } from 'svelte';
-	import KoFi from '$lib/components/KoFi.svelte';
 
 	const currentYear = new Date().getFullYear();
 
@@ -19,7 +18,7 @@
 </script>
 
 <MetaTags
-	title="Language Map"
+	title="Language Map 🗺️🗣️"
 	description="Your Languages, Your Map - Explore Where Your Languages Connect You!"
 	canonical="https://www.languagemap.world/"
 	openGraph={{
@@ -81,7 +80,7 @@
 				<a href="https://caponte.io" target="_blank" class="block">
 					<GlobeOutline size="lg" />
 				</a>
-				<p class="text-xs ml-2">© {currentYear} Carlos Aponte - All Rights Reserved.</p>
+				<p class="text-xs ml-2">© {currentYear} All Rights Reserved.</p>
 			</div>
 
 			<!-- Twitter Icon -->
@@ -89,9 +88,9 @@
 				<a
 					href="https://x.com/0xcaponte"
 					target="_blank"
-					class="flex items-center font-semibold border shadow-md rounded-xl px-4 py-2 justify-center lg:justify-end"
+					class="flex items-center font-semibold border shadow-md rounded-xl  py-2 justify-center lg:justify-end"
 				>
-					<TwitterSolid size="md" class="mr-1" /> @0xCaponte
+					<TwitterSolid size="md" /> @0xCaponte
 				</a>
 			</div>
 		</div>
