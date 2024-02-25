@@ -55,13 +55,12 @@
 	function shareOnTwitter() {
 		// Defualt Message
 		let tweetText =
-			'Your Languages, Your Map 🌐🗺️🗣️ Explore Where Your Languages Connect You! #LanguageMap https://languagemap.world';
+			'Your Languages, Your Map 🌐🗺️🗣️ Explore Where Your Languages Connect You! #LanguageMap https://languagemap.world by @0xCaponte';
 
 		// Message for non 0 statistics
 		if (!Number.isNaN(parseInt(speakers)) && parseInt(speakers) > 0) {
-
-			const countryText = countries === 1 ? "country" : "countries";
-			tweetText = `I can speak with ${speakers} people in ${countries} ${countryText} - that's ${worldPercentage}% of the world's population! 🌐🗺️🗣️ Explore where your languages connect you! #LanguageMap https://languagemap.world`;
+			const countryText = countries === 1 ? 'country' : 'countries';
+			tweetText = `I can speak with ${speakers} people in ${countries} ${countryText} - that's ${worldPercentage}% of the world's population! 🌐🗺️🗣️ Explore where your languages connect you! #LanguageMap https://languagemap.world by @0xCaponte`;
 		}
 
 		const encodedTweet = encodeURIComponent(tweetText);
