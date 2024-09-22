@@ -2,7 +2,7 @@
 	import { ColoringHelper } from '$lib/helpers/ColoringHelper';
 	import { StringHelper } from '$lib/helpers/StringHelper';
 	import type Language from '$lib/model/language';
-	import { AngleDownSolid } from 'flowbite-svelte-icons';
+	import { AngleDownOutline } from 'flowbite-svelte-icons';
 	import { createEventDispatcher } from 'svelte';
 
 	// Properties that can be customized
@@ -50,7 +50,7 @@
 				</div>
 
 				<!-- Arrow to open/clode area -->
-				<AngleDownSolid class="{active ? 'rotate-180' : ''}" size="sm" aria-hidden="true" />
+				<AngleDownOutline class="{active ? 'rotate-180' : ''}" size="sm" aria-hidden="true" />
 			</div>
 			<!-- Second Row: Countries and Speakers Information -->
 			<div class="flex flex-col">
