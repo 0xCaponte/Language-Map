@@ -153,6 +153,42 @@
 			</AccordionItem>
 		</Accordion>
 	</div>
+
+	<!-- Supporters  -->
+	<div class="py-5">
+		<h2 class="text-xl font-bold">Supporters</h2>
+
+		<div class="p-5">
+			<p>
+				Here are some people that supported this small project with feedback, tests, ideas, or tools. Thank you.
+			</p>
+			<br />
+			<ul class="list-[circle] px-10">
+				<li>
+					<a
+						class="font-semibold text-sky-500"
+						href="https://adhs-beratung.online"
+						target="_blank">Melanie Schroeder</a
+					>
+				</li>
+				<li>
+					<a
+						class="font-semibold text-sky-500"
+						href="https://github.com/alejodiazg"
+						target="_blank">Alejandro Diaz</a
+					>
+				</li>
+				<li>
+					<a
+						class="font-semibold text-sky-500"
+						href="https://www.patreon.com/amatos"
+						target="_blank">Alejandro Matos</a
+					>
+				</li>
+			</ul>
+			<br />
+		</div>
+	</div>
 </div>
 
 <style>
