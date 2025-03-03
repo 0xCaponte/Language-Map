@@ -7,7 +7,7 @@
 		"dev": "vite dev",
 		"full-dev": "npm run preprocess && vite dev",
 		"build": "npm run preprocess && vite build",
-		"build:cloudflare": "npm run preprocess && cross-env ADAPTER=cloudflare vite build",
+		"build:cloudflare": "npm run preprocess  && echo 'Preprocessing complete, starting build...' &&  cross-env ADAPTER=cloudflare vite build",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
