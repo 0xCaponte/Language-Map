@@ -1,21 +1,33 @@
 import fetch from 'node-fetch';
 import fs from 'fs';
 import path from 'path';
+import http from 'http';
+import https from 'https';
 
 import Country from '../src/lib/model/country';
 import Language from '../src/lib/model/language';
 import Statistics from '../src/lib/model/statistics';
 import { CountryData } from '../src/lib/model/CountryData';
 
+// Create custom agents with keepAlive set to false to prevent hanging connections
+const httpAgent = new http.Agent({ keepAlive: false });
+const httpsAgent = new https.Agent({ keepAlive: false });
+
 // Safety timeout - force exit after 2 minutes if script hangs
 const safetyTimeout = setTimeout(() => {
-    console.warn('⚠️ SAFETY TIMEOUT: Force exiting after 2 minutes - script may have hung');
+    console.warn('⚠️ SAFETY TIMEOUT: Force exiting after 5 minutes - script may have hung');
     process.exit(0);
-}, 120000);
+}, 300000);
 
-// Make sure to clean up the safety timeout if we exit normally
+// clean up the safety timeout if we exit normally
 process.on('exit', () => {
+    
     clearTimeout(safetyTimeout);
+    
+    // Destroy any remaining agent connections
+    httpAgent.destroy();
+    httpsAgent.destroy();
+    console.log(`[${new Date().toISOString()}] Process exiting, resources cleaned up`);
 });
 
 async function main() {
@@ -29,7 +41,12 @@ async function main() {
         
         const response = await fetch(jsonUrl, { 
             signal: controller.signal,
-            headers: { 'User-Agent': 'Language-Map-Cloudflare-Build/1.0' }
+            headers: { 'User-Agent': 'Language-Map-Cloudflare-Build/1.0' },
+      
+            // Use the custom agents to avoid hanging connections
+            agent: (_parsedURL) => {
+                return _parsedURL.protocol === 'http:' ? httpAgent : httpsAgent;
+            }
         });
         clearTimeout(timeout);
         
@@ -65,11 +82,22 @@ async function main() {
         const staticDirPath = path.join(__dirname, '..', 'static', 'data');
         fs.mkdirSync(staticDirPath, { recursive: true });
 
-        // Write maps to files
+        // Write maps to files with explicit error handling
         console.log(`[${new Date().toISOString()}] Writing countryMap.json...`);
-        fs.writeFileSync(path.join(staticDirPath, 'countryMap.json'), JSON.stringify(Array.from(countryMap.entries())));
+        try {
+            fs.writeFileSync(path.join(staticDirPath, 'countryMap.json'), JSON.stringify(Array.from(countryMap.entries())));
+        } catch (writeError) {
+            console.error(`[${new Date().toISOString()}] Error writing countryMap.json:`, writeError);
+            throw writeError;
+        }
+        
         console.log(`[${new Date().toISOString()}] Writing languageMap.json...`);
-        fs.writeFileSync(path.join(staticDirPath, 'languageMap.json'), JSON.stringify(Array.from(languageMap.entries())));
+        try {
+            fs.writeFileSync(path.join(staticDirPath, 'languageMap.json'), JSON.stringify(Array.from(languageMap.entries())));
+        } catch (writeError) {
+            console.error(`[${new Date().toISOString()}] Error writing languageMap.json:`, writeError);
+            throw writeError;
+        }
 
         const countryMapSize = fs.statSync(path.join(staticDirPath, 'countryMap.json')).size / 1024;
         const languageMapSize = fs.statSync(path.join(staticDirPath, 'languageMap.json')).size / 1024;
@@ -79,10 +107,19 @@ async function main() {
         console.log(`[${new Date().toISOString()}] Static data maps have been generated & saved to: ${staticDirPath}`);
         console.log(`[${new Date().toISOString()}] Preprocessing complete!`);
         
-        return true; // Indicate success
+        // Explicitly close any remaining HTTP connections
+        httpAgent.destroy();
+        httpsAgent.destroy();
+        
+        return true;
+
     } catch (error) {
         console.error(`[${new Date().toISOString()}] Error in preprocessing:`, error);
-        return false; // Indicate failure
+       
+        // Explicitly close any remaining HTTP connections on error
+        httpAgent.destroy();
+        httpsAgent.destroy();
+        return false; 
     }
 }
 
@@ -132,22 +169,23 @@ function sortLanguageCountries(languageMap: Map<string, Language>) {
     });
 }
 
-// Improved execution with proper exit handling
 console.log(`[${new Date().toISOString()}] Script started, executing main function...`);
+
 main()
     .then(success => {
         console.log(`[${new Date().toISOString()}] Main function completed with ${success ? 'success' : 'failure'}`);
+        
         // Use setTimeout to ensure any lingering async operations have a chance to complete
         setTimeout(() => {
             console.log(`[${new Date().toISOString()}] Preprocessing script execution completed, exiting now`);
             process.exit(success ? 0 : 1);
-        }, 500);
+        }, 1000); // Increased to 1000ms to ensure more time for cleanup
     })
     .catch(err => {
         console.error(`[${new Date().toISOString()}] Fatal unhandled error in preprocessing script:`, err);
         setTimeout(() => {
             process.exit(1);
-        }, 500);
+        }, 1000);
     });
 
 // Log that we've started the execution chain
