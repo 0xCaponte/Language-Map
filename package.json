@@ -1,6 +1,6 @@
 {
 	"name": "language-map",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"private": true,
 	"scripts": {
 		"preprocess": "vite-node ./scripts/PreprocessCountryData.ts",
