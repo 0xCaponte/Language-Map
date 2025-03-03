@@ -167,7 +167,7 @@
 				<li>
 					<a
 						class="font-semibold text-sky-500"
-						href="https://adhs-beratung.online"
+						href="https://schroedermelanie.com"
 						target="_blank">Melanie Schroeder</a
 					>
 				</li>
