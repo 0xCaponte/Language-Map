@@ -3,7 +3,6 @@
 </script>
 
 <div class="px-4">
-	
 	<!-- About -->
 	<div class="py-5">
 		<h2 class="text-xl font-bold">About</h2>
@@ -20,7 +19,10 @@
 				<li>How many people could I interact with?</li>
 			</ul>
 			<br />
-			<p>The Language Map is my way of answering these questions by visualizing your linguistic reach and putting it into perspective.</p>
+			<p>
+				The Language Map is my way of answering these questions by visualizing your linguistic reach
+				and putting it into perspective.
+			</p>
 		</div>
 	</div>
 
@@ -151,6 +153,14 @@
 					> (as of December 2023).
 				</p>
 			</AccordionItem>
+			<AccordionItem>
+				<span slot="header">Are all sign languages the same?</span>
+				<p>
+					No, each country generally has its own sign language, and some regions even have multiple.
+					However, for the sake of simplification, we grouped them together. Also, this is not a complete list, as there are many
+					unique sign languages worldwide.
+				</p>
+			</AccordionItem>
 		</Accordion>
 	</div>
 
@@ -160,22 +170,19 @@
 
 		<div class="p-5">
 			<p>
-				Here are some people that supported this small project with feedback, tests, ideas, or tools. Thank you.
+				Here are some people that supported this small project with feedback, tests, ideas, or
+				tools. Thank you.
 			</p>
 			<br />
 			<ul class="list-[circle] px-10">
 				<li>
-					<a
-						class="font-semibold text-sky-500"
-						href="https://schroedermelanie.com"
-						target="_blank">Melanie Schroeder</a
+					<a class="font-semibold text-sky-500" href="https://schroedermelanie.com" target="_blank"
+						>Melanie Schroeder</a
 					>
 				</li>
 				<li>
-					<a
-						class="font-semibold text-sky-500"
-						href="https://github.com/alejodiazg"
-						target="_blank">Alejandro Diaz</a
+					<a class="font-semibold text-sky-500" href="https://github.com/alejodiazg" target="_blank"
+						>Alejandro Diaz</a
 					>
 				</li>
 				<li>
