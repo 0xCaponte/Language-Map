@@ -56,12 +56,12 @@
 			<div class="flex flex-col">
 				<div class="flex flex-nowrap py-1">
 					<span class="whitespace-nowrap">
-						🗺️{language.statistics.getCountries(unMember)}{#if language.hasNonUNCountries()}<span
+							🗺️{language.statistics.getCountries(unMember)}{#if language.hasNonUNCountries()}<span
 								class="text-gray-500 cursor-help"
 								title="Includes non-UN member countries"
 								aria-label="Includes non-UN member countries">*</span
 							>{/if}
-						🗣️{stringHelper.formatNumber(language.statistics.getSpeakers(unMember))}
+							🗣️{stringHelper.formatNumber(language.statistics.getSpeakers(unMember))}
 					</span>
 				</div>
 			</div>
@@ -73,7 +73,8 @@
 							<span class="emoji-flag" style="font-family: 'FlagEmoji';">
 								{country.flag}
 							</span>
-							{country.commonName}:
+							{country.commonName}{#if !country.unMember}<span class="text-gray-500 cursor-help" 
+								title="Non-UN member country" aria-label="Non-UN member country">*</span>{/if}:
 							<span>{stringHelper.formatNumber(country.getSpeakers(language.name))}</span>
 						</li>
 					{/each}

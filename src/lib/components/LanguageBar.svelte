@@ -63,21 +63,68 @@
 			inputRef.focus();
 		}
 	}
+
+	// Multi-word languages that need special handling
+	const MULTI_WORD_LANGUAGES = [
+		'sign language',
+		'swiss german',
+		'taiwanese hokkien',
+		'taiwanese hakka'
+	];
+
+	// Pre-compile regex patterns and create lookup maps
+	const LANGUAGE_REGEX_MAP = new Map();
+	const LANGUAGE_UNDERSCORED_MAP = new Map();
+
+	MULTI_WORD_LANGUAGES.forEach((language) => {
+		// Regex pattern for each multi-word language
+		LANGUAGE_REGEX_MAP.set(language, new RegExp(language.replace(/\s+/g, '\\s+'), 'gi'));
+
+		// underscored version for each multi-word language
+		LANGUAGE_UNDERSCORED_MAP.set(language, language.replace(/\s+/g, '_'));
+	});
+
 	/**
-	 * Parses the input from the language input bar and returns an array of Language objects.
+	 * Parses the input from the language bar and handles multi-word language names.
 	 *
-	 * @param input
+	 * @param input User input string
+	 * @returns Array of parsed language names
 	 */
 	function parseLanguageInput(input: string): string[] {
-		let languageNames: string[] = input.split(/,|\s+/); // Split by space or comma
-		languageNames = languageNames.map((e) => e.toLowerCase().trim()).filter(Boolean);
+		// Pre-process to handle multi-word languages as special cases
+		let processedInput = input.toLowerCase();
+
+		// Replace spaces with underscores in multi-word languages
+		for (const language of MULTI_WORD_LANGUAGES) {
+			const regex = LANGUAGE_REGEX_MAP.get(language);
+			const underscoredLang = LANGUAGE_UNDERSCORED_MAP.get(language);
+			processedInput = processedInput.replace(regex, underscoredLang);
+		}
+
+		// Split by space or comma
+		let languageNames: string[] = processedInput.split(/,|\s+/);
+
+		// Post-process to restore multi-word languages and clean up
+		languageNames = languageNames
+			.map((term) => {
+				term = term.trim();
+				if (!term) return '';
+
+				for (const [language, underscoredLang] of LANGUAGE_UNDERSCORED_MAP.entries()) {
+					if (term === underscoredLang) {
+						return language;
+					}
+				}
+				return term;
+			})
+			.filter(Boolean);
+
 		return Array.from(new Set(languageNames));
 	}
 
 	/**
-	 *  Fetches language data from the API and processes the returning data
-	 *
-	 * @param languageNames
+	 * Fetches language data from the API and processes the returning data
+	 * @param languageNames Array of language names
 	 */
 	async function fetchAndProcessLanguageData(languageNames: string[]) {
 		let languages = await requestHelper.fetchLanguageData(languageNames);
@@ -92,11 +139,24 @@
 	}
 
 	/**
+	 * Formats language list with commas as separators and capitalizes each language
+	 * @param languages Array of language names
+	 * @returns Formatted string with comma separators and capitalized languages
+	 */
+	function formatLanguagesWithCommas(languages: string[]): string {
+		return languages.map((lang) => stringHelper.capitalize(lang)).join(', ');
+	}
+
+	/**
 	 * Processes the inputed language names, it updates the sets and determines the differences between them.
 	 * @param newInput
 	 */
 	function processInputedLanguages(newInput: string) {
 		const newLanguages = parseLanguageInput(newInput);
+
+		// Store cursor position
+		const cursorPos = inputRef?.selectionStart || 0;
+		const originalLength = inputValue.length;
 
 		// Determine real changes in the input
 		if (!setHelper.areSetsEqual(currentInputSet, new Set(newLanguages))) {
@@ -126,6 +186,11 @@
 				!setHelper.areSetsEqual(new Set(validLanguages), previousRequestSet)
 			) {
 				debouncedFetchLanguageData(validLanguages);
+
+				// Format when we have valid languages that match our possible languages list
+				if (validLanguages.length >= 1) {
+					formatInput();
+				}
 			}
 
 			previousInputSet = currentInputSet;
@@ -135,17 +200,56 @@
 	}
 
 	/**
+	 * Formats the input with comma separators while preserving cursor position
+	 */
+	function formatInput() {
+		// Store cursor position
+		const cursorPos = inputRef?.selectionStart || 0;
+		const originalLength = inputValue.length;
+		let cursorOffset = 0;
+
+		// Get valid languages
+		const validLanguages = Array.from(currentInputSet).filter(
+			(lang) => !invalidLanguages.includes(lang)
+		);
+
+		if (validLanguages.length > 0) {
+			// Only reformat if necessary
+			const formattedInput = formatLanguagesWithCommas(validLanguages);
+			if (formattedInput !== inputValue) {
+				inputValue = formattedInput;
+
+				// Try to maintain cursor position relative to input length change
+				cursorOffset = inputValue.length - originalLength;
+
+				// Restore cursor position after formatting
+				setTimeout(() => {
+					if (inputRef && cursorOffset !== 0) {
+						// If cursor was at the end, keep it at the end
+						if (cursorPos === originalLength) {
+							inputRef.selectionStart = inputRef.selectionEnd = inputValue.length;
+						} else {
+							// Otherwise adjust position by the length change
+							const newPos = Math.min(inputValue.length, Math.max(0, cursorPos + cursorOffset));
+							inputRef.selectionStart = inputRef.selectionEnd = newPos;
+						}
+					}
+				}, 0);
+			}
+		}
+	}
+
+	/**
 	 * Update the language store to only keep languages whose names are in the passed  array.
 	 *
 	 * @param languageNames
 	 */
 	function cleanLanguageStore(languageNames: string[]): void {
-
 		selectedLanguages.update((currentLanguages) => {
 			const filteredLanguages = currentLanguages.filter((lang) =>
 				languageNames.includes(lang.name.toLowerCase())
 			);
-			
+
 			return filteredLanguages;
 		});
 	}
@@ -156,8 +260,13 @@
 	 */
 	function onInput(event: Event): void {
 		let newInput = (event.target as HTMLInputElement).value;
-		inputValue = newInput.replace(/[^\p{L}\s,-]/gu, ''); // only letters, spaces, commas, and hyphens
-		newInput = inputValue;
+		// Don't overwrite inputValue directly, just clean invalid chars
+		const cleanedInput = newInput.replace(/[^\p{L}\s,-]/gu, ''); // only letters, spaces, commas, and hyphens
+
+		if (cleanedInput !== newInput) {
+			(event.target as HTMLInputElement).value = cleanedInput;
+			newInput = cleanedInput;
+		}
 
 		processInputedLanguages(newInput);
 
