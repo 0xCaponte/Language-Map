@@ -50,13 +50,17 @@
 				</div>
 
 				<!-- Arrow to open/clode area -->
-				<AngleDownOutline class="{active ? 'rotate-180' : ''}" size="sm" aria-hidden="true" />
+				<AngleDownOutline class={active ? 'rotate-180' : ''} size="sm" aria-hidden="true" />
 			</div>
 			<!-- Second Row: Countries and Speakers Information -->
 			<div class="flex flex-col">
 				<div class="flex flex-nowrap py-1">
 					<span class="whitespace-nowrap">
-						🗺️{language.statistics.getCountries(unMember)}
+						🗺️{language.statistics.getCountries(unMember)}{#if language.hasNonUNCountries()}<span
+								class="text-gray-500 cursor-help"
+								title="Includes non-UN member countries"
+								aria-label="Includes non-UN member countries">*</span
+							>{/if}
 						🗣️{stringHelper.formatNumber(language.statistics.getSpeakers(unMember))}
 					</span>
 				</div>

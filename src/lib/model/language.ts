@@ -16,18 +16,18 @@ class Language {
 	constructor(name: string, statistics: Statistics, countries: Country[]) {
 		this.name = name;
 		this.statistics = new Statistics(statistics);
-							
+
 		this.countries = countries.map(country => new Country(
-            country.countryId,
-            country.cca2,
-            country.commonName,
-            country.officialName,
-            country.flag,
-            country.independent,
-            country.unMember,
-            country.population,
-            country.languages
-        ));
+			country.countryId,
+			country.cca2,
+			country.commonName,
+			country.officialName,
+			country.flag,
+			country.independent,
+			country.unMember,
+			country.population,
+			country.languages
+		));
 	}
 
 	/**************
@@ -42,6 +42,15 @@ class Language {
 	 */
 	hasCountryById(countryId: string): boolean {
 		return this.countries.some((country) => country.countryId === countryId);
+	}
+
+	/**
+ 	* Checks if non-UN countries are present in this language's data
+ 	* 
+ 	* @returns True if there are non-UN countries in the data
+ 	*/
+	 hasNonUNCountries(): boolean {
+		return this.statistics.numberOfCountries > this.statistics.numberOfUNCountries;
 	}
 }
 

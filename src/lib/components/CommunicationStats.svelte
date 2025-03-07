@@ -24,12 +24,14 @@
 	let totals: Language;
 	let speakers: string = '0';
 	let countries: number = 0;
+	let nonUnCountries: boolean = false;
 	let worldPercentage: string = '0';
 
 	// Use a separate reactive statement for updating derived stats
 	$: if (totals) {
 		speakers = stringHelper.formatNumber(totals.statistics.getSpeakers(unMember));
 		countries = totals.statistics.getCountries(unMember);
+		nonUnCountries = totals.statistics.hasNonUNCountries();
 		worldPercentage = stringHelper.formatPercentageNumber(
 			totals.statistics.getWorldPercentage(unMember)
 		);
@@ -77,7 +79,16 @@
 
 		<!-- Content centered within the div -->
 		<div class="flex justify-center space-x-2 py-1">
-			<div><span>🗺️{countries}</span></div>
+			<div>
+				<span
+					>🗺️{countries}{#if nonUnCountries}<span
+							class="text-gray-500 cursor-help"
+							title="Includes non-UN member countries"
+							aria-label="Includes non-UN member countries">*</span
+						>
+					{/if}</span
+				>
+			</div>
 			<div><span>🗣️{speakers}</span></div>
 			<div>
 				<span>🌐{worldPercentage}%</span>

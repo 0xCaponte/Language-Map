@@ -4,6 +4,7 @@
  */
 
 class Statistics {
+	
 	// Properties
 	// UN-Stats
 	totalUNSpeakers: number = 0;
@@ -72,6 +73,15 @@ class Statistics {
 	 */
 	getCountries(unMember: boolean): number {
 		return unMember ? this.numberOfUNCountries : this.numberOfCountries;
+	}
+
+	/**
+ 	* Checks if non-UN countries are present in this language's data
+ 	* 
+ 	* @returns True if there are non-UN countries in the data
+ 	*/
+	 hasNonUNCountries(): boolean {
+		return this.numberOfCountries > this.numberOfUNCountries;
 	}
 }
 
