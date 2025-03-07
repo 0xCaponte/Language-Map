@@ -73,20 +73,46 @@ export class MapHelper {
 	}
 
 	/**
-	 * Get the color to be used to fill the country
-	 */
+ * Get the color to be used to fill the country
+ */
 	public static getCountryFillColor(countryId: string, languages: Language[]) {
 		// Default for empty languages
 		if (!languages || languages.length === 0) {
 			return ColoringHelper.getDefaultColor();
 		}
 
+		// Check normal language-country relationships
 		let countryInLanguages = languages.some((language: Language) =>
 			language.hasCountryById(countryId)
 		);
 
+		// Handle special cases (like Taiwan for Chinese)
+		if (!countryInLanguages) {
+			countryInLanguages = this.handleSpecialMapCases(countryId, languages);
+		}
+
 		return countryInLanguages
 			? ColoringHelper.getColorByCountryId(countryId)
 			: ColoringHelper.getDefaultColor();
+	}
+
+	/**
+	 * Handles special cases for map display only
+	 * For example: Taiwan should be colored when Chinese is selected
+	 */
+	private static handleSpecialMapCases(countryId: string, languages: Language[]): boolean {
+
+		// Taiwan's country ID in the map data
+		const taiwanId = '158';
+
+		if (countryId === taiwanId) {
+
+			// Check if any Chinese languages are selected
+			return languages.some(lang =>
+				['chinese', 'mandarin', 'cantonese'].includes(lang.name.toLowerCase())
+			);
+		}
+
+		return false;
 	}
 }
