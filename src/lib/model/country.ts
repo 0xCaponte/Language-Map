@@ -30,9 +30,10 @@ class Country {
 		 population: number,
 		 languages: CountryLanguage[]
 	 );
+	 constructor(countryId: string, unMember: boolean);
 	 constructor(
 		 countryIdOrData: string | Partial<Country>,
-		 cca2?: string,
+		 cca2OrUnMember?: string | boolean,
 		 commonName?: string,
 		 officialName?: string,
 		 flag?: string,
@@ -44,10 +45,14 @@ class Country {
 		 if (typeof countryIdOrData === 'object') {
 			 // Initialize from object
 			 Object.assign(this, countryIdOrData);
+		 } else if (typeof cca2OrUnMember === 'boolean') {
+			 // Initialize from countryId and unMember
+			 this.countryId = countryIdOrData as string;
+			 this.unMember = cca2OrUnMember;
 		 } else {
 			 // Initialize from properties
 			 this.countryId = countryIdOrData as string;
-			 this.cca2 = cca2!;
+			 this.cca2 = cca2OrUnMember as string;
 			 this.commonName = commonName!;
 			 this.officialName = officialName!;
 			 this.flag = flag!;
