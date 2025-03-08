@@ -46,7 +46,17 @@
 				<!-- Content and Circle -->
 				<div class="flex items-center">
 					<span class="circle" style="background-color: {languageColor};"></span>
-					<span class="ml-2">{stringHelper.capitalize(language.name)}</span>
+					<span class="ml-2"
+						>{stringHelper.capitalize(language.name)}{#if language.name
+							.toLowerCase()
+							.includes('sign')}
+							<span
+								class="text-gray-500 cursor-help"
+								title="Groups different types of sign language - See About page for details"
+								aria-label="Groups different types of sign language - See About for details">⬥</span
+							>
+						{/if}</span
+					>
 				</div>
 
 				<!-- Arrow to open/clode area -->
@@ -56,12 +66,12 @@
 			<div class="flex flex-col">
 				<div class="flex flex-nowrap py-1">
 					<span class="whitespace-nowrap">
-							🗺️{language.statistics.getCountries(unMember)}{#if language.hasNonUNCountries()}<span
+						🗺️{language.statistics.getCountries(unMember)}{#if language.hasNonUNCountries()}<span
 								class="text-gray-500 cursor-help"
 								title="Includes non-UN member countries"
 								aria-label="Includes non-UN member countries">*</span
 							>{/if}
-							🗣️{stringHelper.formatNumber(language.statistics.getSpeakers(unMember))}
+						🗣️{stringHelper.formatNumber(language.statistics.getSpeakers(unMember))}
 					</span>
 				</div>
 			</div>
@@ -73,8 +83,11 @@
 							<span class="emoji-flag" style="font-family: 'FlagEmoji';">
 								{country.flag}
 							</span>
-							{country.commonName}{#if !country.unMember}<span class="text-gray-500 cursor-help" 
-								title="Non-UN member country" aria-label="Non-UN member country">*</span>{/if}:
+							{country.commonName}{#if !country.unMember}<span
+									class="text-gray-500 cursor-help"
+									title="Non-UN member country"
+									aria-label="Non-UN member country">*</span
+								>{/if}:
 							<span>{stringHelper.formatNumber(country.getSpeakers(language.name))}</span>
 						</li>
 					{/each}
