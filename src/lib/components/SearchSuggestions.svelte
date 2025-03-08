@@ -116,7 +116,8 @@
 					class="px-4 py-2 w-full text-left text-lg hover:bg-gray-100 {index === focusedIndex ? 'bg-gray-100 font-semibold' : ''}"
 					on:click={() => suggestionSelected(suggestion.toLowerCase())}
 					on:touchend={() => suggestionSelected(suggestion.toLowerCase())}
-					on:mouseover={() => focusedIndex = index} 
+					on:mouseover={() => focusedIndex = index}
+					on:focus={() => focusedIndex = index}
 				>
 					{stringHelper.capitalize(suggestion)}
 				</button>

@@ -45,7 +45,7 @@
 			>
 				<!-- Content and Circle -->
 				<div class="flex items-center">
-					<span class="circle" style="background-color: {languageColor};" />
+					<span class="circle" style="background-color: {languageColor};"></span>
 					<span class="ml-2">{stringHelper.capitalize(language.name)}</span>
 				</div>
 
