@@ -19,7 +19,7 @@ export default defineConfig({
   
   // Server configuration
   server: {
-    port: 3000
+    port: 5173
   },
   
   // Path resolution
