@@ -23,12 +23,39 @@
 		if (inputValue.trim().length === 0) {
 			clearSuggestions();
 		} else {
-			let suggestions = possibleLanguages.filter((lang) =>
-				lang.toLowerCase().startsWith(inputValue.trim().toLowerCase())
-			);
+			const searchTerm = inputValue.trim().toLowerCase();
+			const multiWordLanguages = ['sign language', 'taiwanese hakka', 'taiwanese hokkien', 'swiss german'];
+			
+			let suggestions = possibleLanguages.filter((lang) => {
+				const langLower = lang.toLowerCase();
+				
+				// default behaviour, match language start
+				if (langLower.startsWith(searchTerm)) {
+					return true;
+				}
+				
+				// multi-word languages - check for partial match
+				if (multiWordLanguages.includes(langLower)) {
+					const words = langLower.split(' ');
+					
+					if (langLower.includes(searchTerm)) {
+						return true;
+					}
+					
+					// Check first word and is starting the second
+					const searchParts = searchTerm.split(' ');
+					if (searchParts.length > 1) {
+						const firstWordMatch = words[0] === searchParts[0];
+						const secondWordStartsWith = words[1].startsWith(searchParts[1]);
+						return firstWordMatch && secondWordStartsWith;
+					}
+				}
+				
+				return false;
+			});
 
 			let exactMatch = possibleLanguages.some(
-				(lang) => lang.toLowerCase() === inputValue.toLowerCase()
+				(lang) => lang.toLowerCase() === searchTerm
 			);
 
 			if (!exactMatch) {
