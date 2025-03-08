@@ -7,7 +7,7 @@
 	export let possibleLanguages: string[] = [];
 
 	let displayedSuggestions: string[] = [];
-	let focusedIndex = 0; // Index of the highlighted suggestion
+	let focusedIndex = -1; // Start with no focus (-1)
 
 	// Helpers
 	const stringHelper = new StringHelper();
@@ -50,17 +50,54 @@
 	}
 
 	/**
-	 * On mount of the component set-up the logic for the pressing of the enter key
-	 *
+	 * Handle keyboard navigation through suggestions
+	 */
+	function handleKeydown(event: KeyboardEvent) {
+		if (displayedSuggestions.length === 0) return;
+		
+		switch (event.key) {
+		  case 'ArrowDown':
+			event.preventDefault();
+			// Move focus down, but only through actual suggestions (not the "..." item)
+			focusedIndex = Math.min(
+			  focusedIndex + 1, 
+			  displayedSuggestions.length - (displayedSuggestions[displayedSuggestions.length - 1] === '...' ? 2 : 1)
+			);
+			break;
+			
+		  case 'ArrowUp':
+			event.preventDefault();
+			// Move focus up (minimum is 0)
+			focusedIndex = Math.max(focusedIndex - 1, 0);
+			break;
+			
+		  case 'Enter':
+			if (focusedIndex >= 0 && focusedIndex < displayedSuggestions.length) {
+			  event.preventDefault(); // prevents default actions
+			  suggestionSelected(displayedSuggestions[focusedIndex]);
+			}
+			break;
+			
+		  case 'Escape':
+			event.preventDefault();
+			clearSuggestions();
+			break;
+		}
+	  }
+
+	/**
+	 * Reset focus index when suggestions change
+	 */
+	$: if (displayedSuggestions.length > 0 && focusedIndex < 0) {
+		focusedIndex = 0;
+	} else if (displayedSuggestions.length === 0) {
+		focusedIndex = -1;
+	}
+
+	/**
+	 * On mount of the component set-up the keyboard navigation
 	 */
 	onMount(() => {
-		const handleKeydown = (event: KeyboardEvent) => {
-			if (event.key === 'Enter' && displayedSuggestions.length > 0) {
-				event.preventDefault(); // prevents default actions
-				suggestionSelected(displayedSuggestions[focusedIndex]);
-			}
-		};
-
 		window.addEventListener('keydown', handleKeydown);
 
 		return () => {
@@ -76,9 +113,10 @@
 		{#each displayedSuggestions as suggestion, index}
 			{#if index < 5}
 				<button
-					class="px-4 py-2 w-full text-left text-lg hover:bg-gray-100"
+					class="px-4 py-2 w-full text-left text-lg hover:bg-gray-100 {index === focusedIndex ? 'bg-gray-100 font-semibold' : ''}"
 					on:click={() => suggestionSelected(suggestion.toLowerCase())}
 					on:touchend={() => suggestionSelected(suggestion.toLowerCase())}
+					on:mouseover={() => focusedIndex = index} 
 				>
 					{stringHelper.capitalize(suggestion)}
 				</button>

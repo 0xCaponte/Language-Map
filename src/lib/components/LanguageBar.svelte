@@ -25,6 +25,7 @@
 	let currentInputSet: Set<string> = new Set();
 	let previousRequestSet: Set<string> = new Set();
 	let invalidLanguages: string[];
+	let previousInputLength = inputValue.length; // Track the previous input length
 
 	// Helpers
 	const setHelper: SetHelper = new SetHelper();
@@ -50,18 +51,18 @@
 	// Reactive statement for the selection of a suggestion
 	$: if (selectedSuggestion) {
 		inputValue = stringHelper.replaceSubString(inputValue, realNewInput, selectedSuggestion);
+		inputValue += ' '; // Add a space at the end
+		
 		processInputedLanguages(inputValue);
 		selectedSuggestion = ''; // clears selection
-		focusInput();
-	}
 
-	/**
-	 * Focus the input element
-	 */
-	function focusInput() {
-		if (inputRef) {
-			inputRef.focus();
-		}
+		// Focus the input and place cursor at the end
+		setTimeout(() => {
+			if (inputRef) {
+				inputRef.focus();
+				inputRef.selectionStart = inputRef.selectionEnd = inputValue.length;
+			}
+		}, 0);
 	}
 
 	// Multi-word languages that need special handling
@@ -141,15 +142,14 @@
 	/**
 	 * Formats language list with commas as separators and capitalizes each language
 	 * @param languages Array of language names
-	 * @returns Formatted string with comma separators and capitalized languages
+	 * @returns Formatted string with comma separators, capitalized languages and trailing space
 	 */
 	function formatLanguagesWithCommas(languages: string[]): string {
-		return languages.map((lang) => stringHelper.capitalize(lang)).join(', ');
+		return languages.map((lang) => stringHelper.capitalize(lang)).join(', ') + ' ';
 	}
 
 	/**
 	 * Processes the inputed language names, it updates the sets and determines the differences between them.
-	 * @param newInput
 	 */
 	function processInputedLanguages(newInput: string) {
 		const newLanguages = parseLanguageInput(newInput);
@@ -171,11 +171,13 @@
 			}
 		}
 
-		let difference = setHelper.difference(currentInputSet, previousInputSet);
-		realNewInput = difference.size > 0 ? [...difference][0] : '';
+		// Calculate difference but don't override realNewInput here
+		// This prevents the suggestions from disappearing
+		const difference = setHelper.difference(currentInputSet, previousInputSet);
+		const diffInput = difference.size > 0 ? [...difference][0] : '';
 
 		// If new valid input was given
-		if (realNewInput !== '') {
+		if (diffInput !== '') {
 			let validLanguages = Array.from(currentInputSet).filter((lang) =>
 				possibleLanguages.includes(lang.toLowerCase())
 			);
@@ -203,6 +205,7 @@
 	 * Formats the input with comma separators while preserving cursor position
 	 */
 	function formatInput() {
+		
 		// Store cursor position
 		const cursorPos = inputRef?.selectionStart || 0;
 		const originalLength = inputValue.length;
@@ -214,22 +217,21 @@
 		);
 
 		if (validLanguages.length > 0) {
-			// Only reformat if necessary
+			
 			const formattedInput = formatLanguagesWithCommas(validLanguages);
 			if (formattedInput !== inputValue) {
 				inputValue = formattedInput;
-
-				// Try to maintain cursor position relative to input length change
+	
 				cursorOffset = inputValue.length - originalLength;
 
 				// Restore cursor position after formatting
 				setTimeout(() => {
+
 					if (inputRef && cursorOffset !== 0) {
-						// If cursor was at the end, keep it at the end
+
 						if (cursorPos === originalLength) {
 							inputRef.selectionStart = inputRef.selectionEnd = inputValue.length;
 						} else {
-							// Otherwise adjust position by the length change
 							const newPos = Math.min(inputValue.length, Math.max(0, cursorPos + cursorOffset));
 							inputRef.selectionStart = inputRef.selectionEnd = newPos;
 						}
@@ -260,18 +262,30 @@
 	 */
 	function onInput(event: Event): void {
 		let newInput = (event.target as HTMLInputElement).value;
-		// Don't overwrite inputValue directly, just clean invalid chars
-		const cleanedInput = newInput.replace(/[^\p{L}\s,-]/gu, ''); // only letters, spaces, commas, and hyphens
-
+	
+		const isDeletingOperation = newInput.length < previousInputLength;
+		previousInputLength = newInput.length;
+		
+		// Clean invalid chars
+		const cleanedInput = newInput.replace(/[^\p{L}\s,-]/gu, '');
 		if (cleanedInput !== newInput) {
 			(event.target as HTMLInputElement).value = cleanedInput;
 			newInput = cleanedInput;
 		}
 
-		processInputedLanguages(newInput);
-
-		// Notify SearchSuggestions of the input
+		// Parse languages and update currentInputSet
+		const newLanguages = parseLanguageInput(newInput);
+		currentInputSet = new Set(newLanguages);
+		determineInvalidLanguages();
+		
+		const parts = newInput.split(/,|\s+/);
+		realNewInput = parts[parts.length - 1].trim().toLowerCase();
 		dispatch('updateInputValue', realNewInput);
+		
+		// Skip formatting when deleting
+		if (!isDeletingOperation) {
+			processInputedLanguages(newInput);
+		}
 	}
 </script>
 
