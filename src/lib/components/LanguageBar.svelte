@@ -25,7 +25,7 @@
 	let currentInputSet: Set<string> = new Set();
 	let previousRequestSet: Set<string> = new Set();
 	let invalidLanguages: string[];
-	let previousInputLength = inputValue.length; // Track the previous input length
+	let previousInputLength: number = 0;
 
 	// Helpers
 	const setHelper: SetHelper = new SetHelper();
@@ -52,7 +52,7 @@
 	$: if (selectedSuggestion) {
 		inputValue = stringHelper.replaceSubString(inputValue, realNewInput, selectedSuggestion);
 		inputValue += ' '; // Add a space at the end
-		
+
 		processInputedLanguages(inputValue);
 		selectedSuggestion = ''; // clears selection
 
@@ -92,7 +92,6 @@
 	 * @returns Array of parsed language names
 	 */
 	function parseLanguageInput(input: string): string[] {
-		// Pre-process to handle multi-word languages as special cases
 		let processedInput = input.toLowerCase();
 
 		// Replace spaces with underscores in multi-word languages
@@ -120,7 +119,7 @@
 			})
 			.filter(Boolean);
 
-		return Array.from(new Set(languageNames));
+		return Array.from(languageNames);
 	}
 
 	/**
@@ -152,51 +151,52 @@
 	 * Processes the inputed language names, it updates the sets and determines the differences between them.
 	 */
 	function processInputedLanguages(newInput: string) {
-		const newLanguages = parseLanguageInput(newInput);
+		
+		// Parse the input into language array
+		const parsedLanguages = parseLanguageInput(newInput);
+		const deduplicatedLanguagesSet = new Set(parsedLanguages);
 
-		// Store cursor position
-		const cursorPos = inputRef?.selectionStart || 0;
-		const originalLength = inputValue.length;
+		// Last inputed word is valid language
+		let lastInputedIsValidLanguage = possibleLanguages.includes(parsedLanguages[parsedLanguages.length - 1].toLowerCase());
 
-		// Determine real changes in the input
-		if (!setHelper.areSetsEqual(currentInputSet, new Set(newLanguages))) {
-			currentInputSet = new Set(newLanguages);
-			determineInvalidLanguages();
+		// Compare with previous set (not current set)
+		const isSetChanged = !setHelper.areSetsEqual(previousInputSet, deduplicatedLanguagesSet);
 
-			// No input or only invalid input
-			if (currentInputSet.size == 0 || currentInputSet.size == invalidLanguages.length) {
-				cleanLanguageStore([]);
-				previousRequestSet = new Set();
-				previousInputSet = new Set();
-			}
+		// Now update the current set
+		currentInputSet = deduplicatedLanguagesSet;
+		determineInvalidLanguages();
+
+		// No input or only invalid input
+		if (currentInputSet.size == 0 || currentInputSet.size == invalidLanguages.length) {
+			cleanLanguageStore([]);
+			previousRequestSet = new Set();
+			previousInputSet = new Set();
+			return;
 		}
 
-		// Calculate difference but don't override realNewInput here
-		// This prevents the suggestions from disappearing
-		const difference = setHelper.difference(currentInputSet, previousInputSet);
-		const diffInput = difference.size > 0 ? [...difference][0] : '';
+		// Get valid languages
+		const validLanguages = Array.from(currentInputSet).filter((lang) =>
+			possibleLanguages.includes(lang.toLowerCase())
+		);
 
-		// If new valid input was given
-		if (diffInput !== '') {
-			let validLanguages = Array.from(currentInputSet).filter((lang) =>
-				possibleLanguages.includes(lang.toLowerCase())
-			);
-
-			// If valid languages that have not been processed
+		if (validLanguages.length > 0 && validLanguages.length > previousRequestSet.size) {
+			
+			let validSet = new Set(validLanguages);
+			
+			// unprocessed valid languages, call API
 			if (
-				validLanguages.length > 0 &&
-				!setHelper.areSetsEqual(new Set(validLanguages), previousRequestSet)
+				!setHelper.areSetsEqual(new Set(validSet), previousRequestSet) &&
+				(isSetChanged)
 			) {
 				debouncedFetchLanguageData(validLanguages);
-
-				// Format when we have valid languages that match our possible languages list
-				if (validLanguages.length >= 1) {
-					formatInput();
-				}
 			}
 
-			previousInputSet = currentInputSet;
-		} else {
+			previousInputSet = validSet;
+			formatValidInput();
+
+		} else if (validLanguages.length == previousRequestSet.size && lastInputedIsValidLanguage) {
+			formatValidInput();
+		}else {
 			cleanLanguageStore(Array.from(currentInputSet));
 		}
 	}
@@ -204,45 +204,18 @@
 	/**
 	 * Formats the input with comma separators while preserving cursor position
 	 */
-	function formatInput() {
-		
-		// Store cursor position
-		const cursorPos = inputRef?.selectionStart || 0;
-		const originalLength = inputValue.length;
-		let cursorOffset = 0;
-
-		// Get valid languages
+	function formatValidInput() {
+	
 		const validLanguages = Array.from(currentInputSet).filter(
 			(lang) => !invalidLanguages.includes(lang)
 		);
 
-		if (validLanguages.length > 0) {
-			
-			const formattedInput = formatLanguagesWithCommas(validLanguages);
-			if (formattedInput !== inputValue) {
-				inputValue = formattedInput;
-	
-				cursorOffset = inputValue.length - originalLength;
-
-				// Restore cursor position after formatting
-				setTimeout(() => {
-
-					if (inputRef && cursorOffset !== 0) {
-
-						if (cursorPos === originalLength) {
-							inputRef.selectionStart = inputRef.selectionEnd = inputValue.length;
-						} else {
-							const newPos = Math.min(inputValue.length, Math.max(0, cursorPos + cursorOffset));
-							inputRef.selectionStart = inputRef.selectionEnd = newPos;
-						}
-					}
-				}, 0);
-			}
-		}
+		inputValue = formatLanguagesWithCommas(validLanguages);
+		
 	}
 
 	/**
-	 * Update the language store to only keep languages whose names are in the passed  array.
+	 * Update the language store to only keep languages whose names are in the passed array.
 	 *
 	 * @param languageNames
 	 */
@@ -255,6 +228,7 @@
 			return filteredLanguages;
 		});
 	}
+
 	/**
 	 * Updates the input value and calls the debounced fetch function.
 	 *
@@ -262,10 +236,13 @@
 	 */
 	function onInput(event: Event): void {
 		let newInput = (event.target as HTMLInputElement).value;
-	
-		const isDeletingOperation = newInput.length < previousInputLength;
-		previousInputLength = newInput.length;
-		
+
+		// Store the raw value before any formatting
+		const rawInputLength = newInput.length;
+
+		// Detect deletion based on raw values, not formatted values
+		const isDeletingOperation = rawInputLength < previousInputLength;
+
 		// Clean invalid chars
 		const cleanedInput = newInput.replace(/[^\p{L}\s,-]/gu, '');
 		if (cleanedInput !== newInput) {
@@ -273,19 +250,25 @@
 			newInput = cleanedInput;
 		}
 
-		// Parse languages and update currentInputSet
-		const newLanguages = parseLanguageInput(newInput);
-		currentInputSet = new Set(newLanguages);
-		determineInvalidLanguages();
-		
+		// Extract the part being typed for suggestions
 		const parts = newInput.split(/,|\s+/);
 		realNewInput = parts[parts.length - 1].trim().toLowerCase();
 		dispatch('updateInputValue', realNewInput);
-		
-		// Skip formatting when deleting
-		if (!isDeletingOperation) {
-			processInputedLanguages(newInput);
+
+		// Skip processing on delete operations
+		if (isDeletingOperation) {
+			// Update the stored length AFTER determining deletion
+			previousInputLength = rawInputLength;
+			return;
 		}
+
+		// Process input normally for non-deletion operations
+		processInputedLanguages(newInput);
+
+		// Update previousInputLength AFTER all formatting is done
+		setTimeout(() => {
+			previousInputLength = inputValue.length;
+		}, 10);
 	}
 </script>
 
