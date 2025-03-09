@@ -13,6 +13,9 @@
 	// References to the SearchSuggestions component
 	let searchSuggestionsRef: SearchSuggestions;
 
+	// Language to be passed by the URL-Param /{langueage}
+	export let defaultLanguage: string = '';
+
 	/**
 	 * Fetch the available language names and sets a listener for the areas currently active
 	 */
@@ -20,6 +23,7 @@
 		const response = await fetch('/api/languages');
 		if (response.ok) {
 			possibleLanguages = await response.json();
+			selectedSuggestion = defaultLanguage;
 		} else {
 			console.error('Failed to fetch language names');
 		}

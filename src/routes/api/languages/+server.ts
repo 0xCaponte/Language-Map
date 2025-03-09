@@ -3,12 +3,8 @@
  */
 
 import type { RequestHandler } from '@sveltejs/kit';
-
 import type Language from '$lib/model/language';
-import { BASE_URL } from '$env/static/private';
-
-// Static pre-generated map with the language data
-const STATIC_LANGUAGE_DATA_URL = '/data/languageMap.json';
+import { loadLanguageMap } from '$lib/helpers/LanguageDataLoadingHelper';
 
 /**
  * Return the list of all the language names in the pre-processes data.
@@ -18,7 +14,7 @@ const STATIC_LANGUAGE_DATA_URL = '/data/languageMap.json';
  */
 export const GET: RequestHandler = async ({ url }) => {
     try {
-        const languageMap = await loadLanguageMap(url.origin);
+        const languageMap = await loadLanguageMap();
         const languageKeys = Array.from(languageMap.keys());
 
         return new Response(JSON.stringify(languageKeys), {
@@ -28,8 +24,7 @@ export const GET: RequestHandler = async ({ url }) => {
             }
         });
     } catch (error) {
-
-        return new Response(JSON.stringify({ error: 'no language adata available' }), {
+        return new Response(JSON.stringify({ error: 'no language data available' }), {
             status: 500,
             headers: {
                 'Content-Type': 'application/json'
@@ -37,7 +32,6 @@ export const GET: RequestHandler = async ({ url }) => {
         });
     }
 };
-
 
 /**
  * Return all the language data matching the valid languages names in the request
@@ -51,7 +45,7 @@ export const POST: RequestHandler = async ({ request, url }) => {
 	const sessionID = requestData.sessionID;
 
 	// Language data from pre-processes map
-	const languageMap = await loadLanguageMap(url.origin);
+	const languageMap = await loadLanguageMap();
 
 	let languages: Language[] = [];
 	let languageSet: Set<String> = new Set();
@@ -91,23 +85,5 @@ export const POST: RequestHandler = async ({ request, url }) => {
 		}
 	});
 };
-
-/**
- * Loads the pre-processes landuage data from the static files
- * 
- * @param baseUrl 
- * @returns 
- */
-async function loadLanguageMap(baseUrl: string): Promise<Map<string, any>> {
-
-	const isDev = import.meta.env.DEV;
-	const url = isDev ? BASE_URL : baseUrl;
-    const response = await fetch(`${url}${STATIC_LANGUAGE_DATA_URL}`);
-    if (!response.ok) {
-        throw new Error('Failed to load language map data');
-    }
-    const languageMapData = await response.json();
-    return new Map<string, any>(languageMapData);
-}
 
 
