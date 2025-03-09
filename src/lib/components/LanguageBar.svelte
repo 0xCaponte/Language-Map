@@ -25,6 +25,7 @@
 	let currentInputSet: Set<string> = new Set();
 	let previousRequestSet: Set<string> = new Set();
 	let invalidLanguages: string[];
+	let validLanguages: string[];
 	let previousInputLength: number = 0;
 
 	// Helpers
@@ -175,7 +176,7 @@
 		}
 
 		// Get valid languages
-		const validLanguages = Array.from(currentInputSet).filter((lang) =>
+		validLanguages = Array.from(currentInputSet).filter((lang) =>
 			possibleLanguages.includes(lang.toLowerCase())
 		);
 
@@ -184,34 +185,19 @@
 			let validSet = new Set(validLanguages);
 			
 			// unprocessed valid languages, call API
-			if (
-				!setHelper.areSetsEqual(new Set(validSet), previousRequestSet) &&
-				(isSetChanged)
-			) {
+			if (!setHelper.areSetsEqual(validSet, previousRequestSet) && (isSetChanged)) {
 				debouncedFetchLanguageData(validLanguages);
 			}
 
 			previousInputSet = validSet;
-			formatValidInput();
+			inputValue = formatLanguagesWithCommas(validLanguages);
 
 		} else if (validLanguages.length == previousRequestSet.size && lastInputedIsValidLanguage) {
-			formatValidInput();
+			inputValue = formatLanguagesWithCommas(validLanguages);
+
 		}else {
 			cleanLanguageStore(Array.from(currentInputSet));
 		}
-	}
-
-	/**
-	 * Formats the input with comma separators while preserving cursor position
-	 */
-	function formatValidInput() {
-	
-		const validLanguages = Array.from(currentInputSet).filter(
-			(lang) => !invalidLanguages.includes(lang)
-		);
-
-		inputValue = formatLanguagesWithCommas(validLanguages);
-		
 	}
 
 	/**
