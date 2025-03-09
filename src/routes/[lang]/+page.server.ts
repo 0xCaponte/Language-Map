@@ -6,7 +6,8 @@ export const prerender = true;
 
 // For static generation
 export async function entries() {
-    console.log('🔍 Starting generation of language pages...');
+    
+    console.log('Starting generation of language pages...');
 
     try {
         const languageNames = await getAllLanguageNames();
