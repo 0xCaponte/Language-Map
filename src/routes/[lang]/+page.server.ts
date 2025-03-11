@@ -1,19 +1,21 @@
+import { LanguageDataLoadingHelper } from '$lib/helpers/LanguageDataLoadingHelper';
 import type { ServerLoad } from '@sveltejs/kit';
-import { getAllLanguageNames } from '$lib/helpers/ServerLanguageHelper';
 import { redirect } from '@sveltejs/kit';
 
 export const prerender = true;
 
 // For static generation
 export async function entries() {
-    
     console.log('Starting generation of language pages...');
 
     try {
-        const languageNames = await getAllLanguageNames();
+        // Use the hardcoded list from LanguageDataLoadingHelper
+        const languages = LanguageDataLoadingHelper.DEFAULT_LANGUAGES;
+        const languageNames = languages.map(lang => lang.toLowerCase());
+
         console.log(`Found ${languageNames.length} languages to generate pages for`);
 
-        return languageNames.map(lang => {
+        return languageNames.map((lang: string) => {
             return { lang };
         });
 
@@ -24,12 +26,13 @@ export async function entries() {
 }
 
 export const load: ServerLoad = async ({ params }) => {
-
     const { lang } = params;
     console.log(`Server - Processing language page for: ${lang}`);
 
     try {
-        const validLanguages = await getAllLanguageNames();
+        // Use the hardcoded list here as well for consistency
+        const languages = LanguageDataLoadingHelper.DEFAULT_LANGUAGES;
+        const validLanguages = languages.map(lang => lang.toLowerCase());
 
         if (!lang || !validLanguages.includes(lang.toLowerCase())) {
             throw redirect(307, '/'); // Redirect to home page for invalid languages

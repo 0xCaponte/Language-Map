@@ -1,48 +1,193 @@
-import type Language from '$lib/model/language';
-import { BASE_URL } from '$env/static/private';
+export class LanguageDataLoadingHelper {
 
-// Static pre-generated map with the language data
-const STATIC_LANGUAGE_DATA_URL = '/data/languageMap.json';
+    // Hardcoded list of languages for the pre-rendering
+    static DEFAULT_LANGUAGES: String[] = [
+        "Arabic",
+        "Tigrinya",
+        "English",
+        "Samoan",
+        "Macedonian",
+        "Albanian",
+        "French",
+        "Somali",
+        "Afar",
+        "Urdu",
+        "Punjabi",
+        "Pashto",
+        "Sign_Language",
+        "Irish",
+        "Danish",
+        "Afrikaans",
+        "Oshiwambo",
+        "German",
+        "Herero",
+        "Khoekhoe",
+        "Kwangali",
+        "Akan",
+        "Ewe",
+        "Slovak",
+        "Czech",
+        "Romanian",
+        "Korean",
+        "Serbian",
+        "Seychellois-Creole",
+        "Armenian",
+        "Portuguese",
+        "Spanish",
+        "Umbundu",
+        "Russian",
+        "Tajik",
+        "Uzbek",
+        "Polish",
+        "Kituba",
+        "Lingala",
+        "Bosnian",
+        "Croatian",
+        "Italian",
+        "Mayan",
+        "Estonian",
+        "Finnish",
+        "Nepali",
+        "Maithali",
+        "Hindi",
+        "Tswana",
+        "Bisaya",
+        "Filipino",
+        "Kurdish",
+        "Aramaic",
+        "Turkish",
+        "Kirundi",
+        "Mongolian",
+        "Guarani",
+        "Berber",
+        "Dutch",
+        "Swedish",
+        "Hausa",
+        "Yoruba",
+        "Igbo",
+        "Palauan",
+        "Japanese",
+        "Swahili",
+        "Kazakh",
+        "Sinhala",
+        "Tamil",
+        "Burmese",
+        "Aymara",
+        "Quechua",
+        "Wolof",
+        "Kyrgyz",
+        "Chinese",
+        "Cantonese",
+        "Shanghainese",
+        "Dari",
+        "Ndebele",
+        "Sesotho",
+        "Sepedi",
+        "Swazi",
+        "Tsonga",
+        "Venda",
+        "Xhosa",
+        "Zulu",
+        "Maltese",
+        "Gilbertese",
+        "Kriolu",
+        "Icelandic",
+        "Mandinka",
+        "Pulaar",
+        "Bislama",
+        "Bengali",
+        "Marathi",
+        "Telugu",
+        "Lao",
+        "Comorian",
+        "Catalan",
+        "Basque",
+        "Galician",
+        "Dhivehi",
+        "Indonesian",
+        "Malay",
+        "Javanese",
+        "Sundanese",
+        "Vietnamese",
+        "Malagasy",
+        "Fijian",
+        "Norwegian",
+        "Sami",
+        "Greek",
+        "Hiri_Motu",
+        "Tok_Pisin",
+        "Kinyarwanda",
+        "Kikongo",
+        "Tshiluba",
+        "Lithuanian",
+        "Khmer",
+        "Luxembourgish",
+        "Mauritian-Creole",
+        "Ukrainian",
+        "Zarma",
+        "Fon",
+        "Patois",
+        "Tuvaluan",
+        "Tongan",
+        "Georgian",
+        "Oromo",
+        "Amharic",
+        "Vincentian-Creole",
+        "Belizean-Creole",
+        "Haitian-Creole",
+        "Moore",
+        "Peul",
+        "Dyula",
+        "Jamaican-Patois",
+        "Forro",
+        "Nahuatl",
+        "Chuukese",
+        "Pohnpeian",
+        "Turkmen",
+        "Sango",
+        "Montenegrin",
+        "Makhuwa",
+        "Latvian",
+        "Chewa",
+        "Lomwe",
+        "Yao",
+        "Bambara",
+        "Fula",
+        "Dogon",
+        "Latin",
+        "Bemba",
+        "Nyanja",
+        "Tonga",
+        "Pijin",
+        "Nauru",
+        "Upper-Guinea-Creole",
+        "Taiwanese_Hokkien",
+        "Taiwanese_Hakka",
+        "Chibarwe",
+        "Kalanga",
+        "Khoisan",
+        "Ndau",
+        "Shona",
+        "Sotho",
+        "Zimbabwean-Sign-Language",
+        "Slovene",
+        "Belarusian",
+        "Thai",
+        "Maori",
+        "Marshallese",
+        "Mende",
+        "Krio",
+        "Themne",
+        "Dzongkha",
+        "Swiss_German",
+        "Romansh",
+        "Hungarian",
+        "Hebrew",
+        "Bulgarian",
+        "Azerbaijani",
+        "Tetum",
+        "Persian",
+        "Farsi"
+    ];
 
-/**
- * Loads the pre-processes landuage data from the static files
-*/
-export async function loadLanguageMap(): Promise<Map<string, Language>> {
-    
-    const isDev = import.meta.env.DEV;
-	const url = isDev ? BASE_URL : STATIC_LANGUAGE_DATA_URL;
-    const response = await fetch(`${url}${STATIC_LANGUAGE_DATA_URL}`);
-    
-    if (!response.ok) {
-        throw new Error('Failed to load language map data');
-    }
-    
-    const languageMapData = await response.json();
-    return new Map<string, Language>(languageMapData);
-}
-
-/**
- * Client-safe: Gets all language names
- */
-export async function getAllLanguageNames(): Promise<string[]> {
-    try {
-        const languageMap = await loadLanguageMap();
-        return Array.from(languageMap.keys());
-    } catch (error) {
-        console.error("Error loading language names:", error);
-        return [];
-    }
-}
-
-/**
- * Client-safe: Gets language by name
- */
-export async function getLanguageByName(languageName: string): Promise<Language | null> {
-    try {
-        const languageMap = await loadLanguageMap();
-        return languageMap.get(languageName.toLowerCase()) || null;
-    } catch (error) {
-        console.error(`Error loading language ${languageName}:`, error);
-        return null;
-    }
 }
