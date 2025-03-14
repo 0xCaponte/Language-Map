@@ -15,8 +15,8 @@ export async function entries() {
 
         console.log(`Found ${languageNames.length} languages to generate pages for`);
 
-        return languageNames.map((lang: string) => {
-            return { lang };
+        return languageNames.map((language: string) => {
+            return { language };
         });
 
     } catch (error) {
