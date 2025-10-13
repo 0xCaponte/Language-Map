@@ -20,18 +20,22 @@
 	 * Fetch the available language names and sets a listener for the areas currently active
 	 */
 	onMount(async () => {
-		const response = await fetch('/api/languages');
-		if (response.ok) {
-			possibleLanguages = await response.json();
-			selectedSuggestion = defaultLanguage;
-		} else {
-			console.error('Failed to fetch language names');
-		}
+		if (browser) {
+			const response = await fetch('/api/languages');
+			if (response.ok) {
+				possibleLanguages = await response.json();
+				if (defaultLanguage) {
+					selectedSuggestion = defaultLanguage;
+				}
+			} else {
+				console.error('Failed to fetch language names');
+			}
 
-		// Event listener for detecting clicks outside input area
-		document.addEventListener('click', handleOutsideActivity);
-		document.addEventListener('touchend', handleOutsideActivity);
-		document.addEventListener('keydown', handleOutsideActivity);
+			// Event listener for detecting clicks outside input area
+			document.addEventListener('click', handleOutsideActivity);
+			document.addEventListener('touchend', handleOutsideActivity);
+			document.addEventListener('keydown', handleOutsideActivity);
+		}
 	});
 
 	/**

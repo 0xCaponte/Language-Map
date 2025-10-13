@@ -26,21 +26,21 @@ export async function entries() {
 }
 
 export const load: ServerLoad = async ({ params }) => {
-    const { lang } = params;
-    console.log(`Server - Processing language page for: ${lang}`);
+    const { language } = params;
+    console.log(`Server - Processing language page for: ${language}`);
 
     try {
         // Use the hardcoded list here as well for consistency
         const languages = LanguageDataLoadingHelper.DEFAULT_LANGUAGES;
         const validLanguages = languages.map(lang => lang.toLowerCase());
 
-        if (!lang || !validLanguages.includes(lang.toLowerCase())) {
+        if (!language || !validLanguages.includes(language.toLowerCase())) {
             throw redirect(307, '/'); // Redirect to home page for invalid languages
         }
 
-        return { languageName: lang };
+        return { languageName: language };
     } catch (err) {
-        console.error(`Server - Error in language page load for ${lang}:`, err);
+        console.error(`Server - Error in language page load for ${language}:`, err);
         throw err;
     }
 };
