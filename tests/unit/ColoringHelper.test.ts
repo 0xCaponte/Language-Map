@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeEach } from 'vitest';
 import { ColoringHelper } from '$lib/helpers/ColoringHelper';
-import { mockLanguages } from '../mockData';
+import { mockLanguages } from './mockData';
 import { get } from 'svelte/store';
 import { languageColors, countryColors } from '$lib/store';
 

@@ -1,6 +1,6 @@
 import { describe, test, expect } from 'vitest';
 import Statistics from '$lib/model/statistics';
-import { mockStatistics } from '../mockData';
+import { mockStatistics } from '../unit/mockData';
 
 describe('Statistics', () => {
     describe('Constructor', () => {

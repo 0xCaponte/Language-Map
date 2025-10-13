@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { mockLanguageMap } from '../mockData';
+import { mockLanguageMap } from '../unit/mockData';
 
 describe('Language', () => {
     describe('hasCountryById', () => {

@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeEach } from 'vitest';
-import { CountryDataHelper } from '../../src/lib/helpers/CountryDataHelper';
-import { mockLanguages } from '../mockData';
+import { CountryDataHelper } from '$lib/helpers/CountryDataHelper';
+import { mockLanguages } from './mockData';
 import type Language from '$lib/model/language';
 
 describe('CountryDataHelper', () => {

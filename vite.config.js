@@ -14,6 +14,21 @@ export default defineConfig({
     setupFiles: ['./tests/setup.js'],
     deps: {
       inline: [/svelte/]  // Important for Svelte component testing
+    },
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json-summary', 'json'],
+      include: ['src/lib/**/*.{js,ts}'],
+      exclude: [
+        'src/lib/model',
+        'src/lib/components',
+        'src/lib/server/cache.ts',
+        '**/node_modules/**',
+        '**/dist/**',
+        '**/.svelte-kit/**',
+        '**/build/**'
+      ],
+      reportOnFailure: true
     }
   },
   

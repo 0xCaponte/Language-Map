@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { SetHelper } from '../../src/lib/helpers/SetHelper';
+import { SetHelper } from '$lib/helpers/SetHelper';
 
 describe('SetHelper', () => {
   const setHelper = new SetHelper();

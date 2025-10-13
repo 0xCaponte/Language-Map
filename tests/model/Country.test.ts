@@ -1,6 +1,6 @@
 import { describe, test, expect } from 'vitest';
 import Country from '$lib/model/country';
-import { mockCountries } from '../mockData';
+import { mockCountries } from '../unit/mockData';
 
 describe('Country', () => {
 
