@@ -44,6 +44,7 @@ describe('RequestHelper', () => {
     });
 
     it('should return an empty array if the fetch fails', async () => {
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       const response = {
         ok: false,
       };
@@ -53,15 +54,20 @@ describe('RequestHelper', () => {
       const languages = await helper.fetchLanguageData(['English']);
 
       expect(languages).toEqual([]);
+      expect(consoleErrorSpy).toHaveBeenCalled();
+      consoleErrorSpy.mockRestore();
     });
 
     it('should return an empty array if an error occurs', async () => {
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       global.fetch.mockRejectedValue(new Error('Network error'));
 
       const helper = new RequestHelper();
       const languages = await helper.fetchLanguageData(['English']);
 
       expect(languages).toEqual([]);
+      expect(consoleErrorSpy).toHaveBeenCalled();
+      consoleErrorSpy.mockRestore();
     });
   });
 });

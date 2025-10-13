@@ -25,6 +25,7 @@ describe('API /api/world', () => {
     });
 
     it('should return 500 on fetch error', async () => {
+      const consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
       global.fetch.mockResolvedValue({ ok: false });
 
       const request = new Request('http://localhost/api/world');
@@ -32,6 +33,8 @@ describe('API /api/world', () => {
       const res = await GET(event);
 
       expect(res.status).toBe(500);
+      expect(consoleLogSpy).toHaveBeenCalled();
+      consoleLogSpy.mockRestore();
     });
   });
 });

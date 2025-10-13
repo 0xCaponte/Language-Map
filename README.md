@@ -19,6 +19,33 @@ First, clone the repository and install the dependencies:
     cd <your-project-directory>
     npm install
 
+## Testing
+
+This project uses [Vitest](https://vitest.dev/) for unit testing. The tests are centralized in the `/tests` directory and are configured to run automatically on every build pushed to Cloudflare Pages.
+
+You can also run the tests manually using the following commands:
+
+### Run tests in watch mode (for development)
+This command will start the test runner and watch for any file changes, re-running tests automatically.
+
+```bash
+npm test
+```
+
+### Run tests once (for CI/CD or pre-commit checks)
+This command runs the entire test suite once and exits. This is the same command used in the Cloudflare Pages build process.
+
+```bash
+npm run test:ci
+```
+
+### Check test coverage
+To run the tests and see a detailed coverage report in your terminal, use:
+
+```bash
+npx vitest run --coverage
+```
+
 ## Running Locally
 
 To run the project locally using the auto adapter, simply start the development server:
