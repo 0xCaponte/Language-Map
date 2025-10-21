@@ -107,5 +107,34 @@ describe('MapHelper', () => {
             const result = MapHelper.updateCountries(null, []);
             expect(result).toBeUndefined();
         });
+
+        it('recalculates fills for each provided country', () => {
+            const languages = [new Language('English', {}, [mockUsa])];
+            const colorSpy = vi
+                .spyOn(MapHelper, 'getCountryFillColor')
+                .mockImplementation((id) => (id === '840' ? '#primary' : '#fallback'));
+
+            const mapSpy = vi.fn((callback: (country: { id: string }) => { id: string; fill: string }) => {
+                const draftCountries = [
+                    { id: '840', name: 'United States' },
+                    { id: '156', name: 'China' }
+                ];
+                return draftCountries.map(callback);
+            });
+
+            MapHelper.updateCountries({ map: mapSpy } as any, languages);
+
+            expect(mapSpy).toHaveBeenCalledTimes(1);
+            const mappedCountries = mapSpy.mock.results[0]?.value;
+            expect(mappedCountries).toEqual([
+                { id: '840', name: 'United States', fill: '#primary' },
+                { id: '156', name: 'China', fill: '#fallback' }
+            ]);
+            expect(colorSpy).toHaveBeenCalledWith('840', languages);
+            expect(colorSpy).toHaveBeenCalledWith('156', languages);
+            expect(colorSpy).toHaveBeenCalledTimes(2);
+
+            colorSpy.mockRestore();
+        });
     });
 });
