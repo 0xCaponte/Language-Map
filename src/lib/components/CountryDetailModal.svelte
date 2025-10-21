@@ -3,8 +3,6 @@
         import { selectedCountry } from '$lib/store';
         import type Country from '$lib/model/country';
         import {
-                COUNTRY_MODAL_BODY_CLASS,
-                COUNTRY_MODAL_DIALOG_CLASS,
                 formatLanguagePercentage,
                 formatPopulation,
                 formatSpeakers,
@@ -14,10 +12,6 @@
 
         let open = false;
         let country: Country | null = null;
-
-        const modalDialogClass = COUNTRY_MODAL_DIALOG_CLASS;
-        const modalHeaderClass = 'flex justify-end p-3 sm:p-4 border-0';
-        const modalBodyClass = COUNTRY_MODAL_BODY_CLASS;
 
         $: country = $selectedCountry;
         $: open = Boolean(country);
@@ -55,13 +49,11 @@
 <Modal
         bind:open
         title=""
-        size="md"
+        size="sm"
         on:close={handleClose}
         outsideclose
-        classDialog={modalDialogClass}
-        classHeader={modalHeaderClass}
-        classBody={modalBodyClass}
         aria-labelledby="country-modal-title"
+        placement="center"
 >
         <svelte:fragment slot="header">
                 <h2 id="country-modal-title" class="sr-only">{modalHeading}</h2>
@@ -87,10 +79,10 @@
                                 <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
                                         <p class="flex items-baseline gap-2 text-gray-700">
                                                 <span aria-hidden="true" class="text-lg leading-none">👥</span>
-                                                <span class="font-medium text-gray-900">Population</span>
-                                        </p>
-                                        <div class="ml-auto flex flex-wrap items-center justify-end gap-3 text-right">
+                                                <span class="font-medium text-gray-900">Population:</span>
                                                 <span class="font-semibold text-gray-900">{formattedPopulation}</span>
+                                        </p>
+                                        <div class="ml-auto flex flex-wrap items-center justify-end gap-3 text-right"> 
                                                 <span
                                                         class="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-blue-700"
                                                         role="status"

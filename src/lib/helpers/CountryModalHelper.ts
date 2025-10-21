@@ -4,11 +4,6 @@ const defaultStringHelper = new StringHelper();
 
 const browserLocale = (): string => (typeof navigator !== 'undefined' ? navigator.language : 'en-US');
 
-export const COUNTRY_MODAL_DIALOG_CLASS =
-        'fixed top-0 start-0 end-0 z-50 w-full h-modal md:inset-0 md:h-full p-2 sm:p-4 flex items-center justify-center max-w-[92vw] sm:max-w-[56ch]';
-
-export const COUNTRY_MODAL_BODY_CLASS = 'p-4 sm:p-6 space-y-6 max-h-[70vh] overflow-y-auto';
-
 export function formatPopulation(population: number, helper: StringHelper = defaultStringHelper): string {
         return helper.formatNumber(population);
 }
