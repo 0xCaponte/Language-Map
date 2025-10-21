@@ -90,6 +90,9 @@
 
         function onCountryClick(event: MouseEvent, countryId: string | undefined) {
                 event.stopPropagation();
+                if (event.currentTarget instanceof SVGPathElement) {
+                        event.currentTarget.focus();
+                }
                 handleCountrySelection(countryId);
         }
 
@@ -107,11 +110,15 @@
 			<!-- Globe outline with transparent fill -->
 			<path d={path(sphere)} fill="rgba(0,0,0,0)" stroke="#000" class="globe-path" />
 
-			<!--Countries -->
+                        <!--Countries -->
                         {#each countries as country}
+                                {@const fillColor = MapHelper.getCountryFillColor(country.id, languages)}
+                                {@const isDefaultFill = !fillColor || fillColor === 'none'}
                                 <path
                                         d={path(country)}
-                                        fill={MapHelper.getCountryFillColor(country.id, languages)}
+                                        fill={isDefaultFill ? '#ffffff' : fillColor}
+                                        fill-opacity={isDefaultFill ? 0.01 : 1}
+                                        pointer-events="fill"
                                         stroke={activeCountryId === country.id ? '#1d4ed8' : '#000'}
                                         stroke-width={activeCountryId === country.id ? 2 : 1}
                                         class="country-path"
@@ -168,6 +175,7 @@
                 cursor: pointer;
                 transition: stroke-width 0.2s ease, filter 0.2s ease;
                 touch-action: manipulation;
+                pointer-events: fill;
         }
 
         .country-path:hover {

@@ -63,7 +63,13 @@ export class CountryLookupHelper {
                                         entries.forEach(([, rawCountry]) => {
                                                 if (!rawCountry?.countryId) return;
 
-                                                map.set(rawCountry.countryId, new Country({ ...rawCountry }));
+                                                map.set(
+                                                        rawCountry.countryId,
+                                                        new Country({
+                                                                ...rawCountry,
+                                                                flag: this.ensureFlagEmoji(rawCountry)
+                                                        })
+                                                );
                                         });
 
                                         this.countryMap = map;
@@ -77,6 +83,56 @@ export class CountryLookupHelper {
                 }
 
                 return this.loadingPromise;
+        }
+
+        public static toFlagEmoji(flag: string | undefined, cca2: string | undefined): string {
+                if (this.isFlagEmoji(flag)) {
+                        return flag ?? '';
+                }
+
+                return this.cca2ToFlag(cca2) ?? '';
+        }
+
+        private static ensureFlagEmoji(country: RawCountryData): string | undefined {
+                const emoji = this.toFlagEmoji(country.flag, country.cca2);
+                return emoji || undefined;
+        }
+
+        private static isFlagEmoji(flag: string | undefined): boolean {
+                if (!flag) {
+                        return false;
+                }
+
+                const characters = Array.from(flag);
+
+                if (characters.length === 0) {
+                        return false;
+                }
+
+                const regionalIndicatorRangeStart = 0x1f1e6;
+                const regionalIndicatorRangeEnd = 0x1f1ff;
+
+                return characters.every((char) => {
+                        const codePoint = char.codePointAt(0);
+
+                        return (
+                                !!codePoint &&
+                                codePoint >= regionalIndicatorRangeStart &&
+                                codePoint <= regionalIndicatorRangeEnd
+                        );
+                });
+        }
+
+        private static cca2ToFlag(cca2: string | undefined): string | undefined {
+                if (!cca2) {
+                        return undefined;
+                }
+
+                const base = 0x1f1e6 - 'A'.charCodeAt(0);
+
+                return Array.from(cca2.toUpperCase())
+                        .map((char) => String.fromCodePoint(base + char.charCodeAt(0)))
+                        .join('');
         }
 }
 

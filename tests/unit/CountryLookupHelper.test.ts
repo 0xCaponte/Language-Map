@@ -37,6 +37,31 @@ describe('CountryLookupHelper', () => {
                 expect(country?.languages[0].language).toBe('Testish');
         });
 
+        it('normalises flags to emoji when response is not already an emoji', async () => {
+                const response = [
+                        [
+                                'Taiwan',
+                                {
+                                        commonName: 'Chinese Taipei',
+                                        population: 23568000,
+                                        languages: [],
+                                        countryId: '158',
+                                        cca2: 'TW',
+                                        flag: 'TW',
+                                        unMember: false
+                                }
+                        ]
+                ];
+
+                const fetchMock = vi.fn().mockResolvedValue({ ok: true, json: async () => response });
+                // @ts-expect-error - allow assigning mock fetch
+                global.fetch = fetchMock;
+
+                const country = await CountryLookupHelper.getCountryById('158');
+
+                expect(country?.flag).toBe('🇹🇼');
+        });
+
         it('returns null when id is missing', async () => {
                 const fetchMock = vi.fn();
                 // @ts-expect-error

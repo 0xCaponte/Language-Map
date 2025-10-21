@@ -4,22 +4,29 @@ const usaSelector = 'path[data-country-id="840"]';
 const englishLanguage = 'english ';
 
 test.describe('Country details modal', () => {
-        test('opens and closes when clicking a country', async ({ page }) => {
+        test('opens and closes when clicking inside a country', async ({ page }) => {
                 await page.goto('/');
                 const usa = page.locator(usaSelector);
                 await usa.waitFor();
 
-                await usa.click();
+                const box = await usa.boundingBox();
+                if (!box) throw new Error('Unable to locate United States path');
+                await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
 
                 const modal = page.getByRole('dialog', { name: /United States/ });
                 await expect(modal).toBeVisible();
-                await expect(modal.getByText(/UN status/i)).toContainText('UN member');
-                await expect(modal.getByText(/Population/i)).toBeVisible();
-                await expect(modal.getByText('English')).toBeVisible();
+                await expect(modal.getByRole('heading', { name: /United States/ })).toBeVisible();
+                await expect(modal.getByRole('status', { name: 'UN Member' })).toBeVisible();
+                await expect(modal.getByText(/Population/)).toBeVisible();
+                await expect(modal.getByRole('list')).toContainText('English:');
+
+                const modalBox = await modal.boundingBox();
+                expect(modalBox?.width ?? 0).toBeLessThanOrEqual(560);
 
                 await modal.getByRole('button', { name: /close modal/i }).click();
                 await expect(modal).toBeHidden();
                 await expect(usa).not.toHaveClass(/selected-country/);
+                await expect(usa).toBeFocused();
         });
 
         test('maintains language highlight when a country is selected', async ({ page }) => {
@@ -35,6 +42,7 @@ test.describe('Country details modal', () => {
                 await usa.waitFor();
 
                 const fillBeforeSelection = await usa.getAttribute('fill');
+                expect(fillBeforeSelection).not.toBeNull();
                 expect(fillBeforeSelection).not.toBe('none');
 
                 await usa.click();
@@ -47,6 +55,7 @@ test.describe('Country details modal', () => {
 
                 await modal.getByRole('button', { name: /close modal/i }).click();
                 await expect(modal).toBeHidden();
+                await expect(usa).toBeFocused();
                 expect(await usa.getAttribute('fill')).toBe(fillBeforeSelection);
         });
 
@@ -79,7 +88,7 @@ test.describe('Country details modal on mobile', () => {
                 const modal = page.getByRole('dialog', { name: /United States/ });
                 await expect(modal).toBeVisible();
 
-                const firstLanguage = modal.getByRole('listitem').first();
+                const firstLanguage = modal.getByRole('listitem').first().locator('div').first();
                 const flexDirection = await firstLanguage.evaluate((element) =>
                         getComputedStyle(element).flexDirection
                 );
