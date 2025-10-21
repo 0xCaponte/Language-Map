@@ -7,7 +7,8 @@
 	import { selectedLanguages } from '$lib/store';
 	import { Spinner } from 'flowbite-svelte';
 	import { MapHelper } from '$lib/helpers/MapHelper';
-	import { fade } from 'svelte/transition';
+        import { fade } from 'svelte/transition';
+        import CountryDetailModal from '$lib/components/CountryDetailModal.svelte';
 
 	// Screensize flag
 	let isLargeScreen = writable(false);
@@ -67,7 +68,9 @@
 		<Spinner color="blue" />
 	</div>
 {:else if $isLargeScreen}
-	<GlobeMapComponent {worldData} {languages} />
+        <GlobeMapComponent {worldData} {languages} />
 {:else}
-	<FlatMapComponent {worldData} {languages} />
+        <FlatMapComponent {worldData} {languages} />
 {/if}
+
+<CountryDetailModal />

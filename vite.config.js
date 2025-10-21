@@ -9,7 +9,11 @@ export default defineConfig({
   test: {
 	name: 'Language-map Tests',
 	environment: 'jsdom',
-    include: ['tests/**/*.{test,spec}.{js,ts}'],
+    include: [
+      'tests/model/**/*.{test,spec}.{js,ts}',
+      'tests/unit/**/*.{test,spec}.{js,ts}',
+      'tests/endpoints/**/*.{test,spec}.{js,ts}'
+    ],
     globals: true,
     setupFiles: ['./tests/setup.js'],
     deps: {
