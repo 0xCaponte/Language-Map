@@ -16,8 +16,7 @@
         let country: Country | null = null;
 
         const modalDialogClass = COUNTRY_MODAL_DIALOG_CLASS;
-        const modalHeaderClass =
-                'flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 p-4 sm:p-6 border-b border-gray-200';
+        const modalHeaderClass = 'flex justify-end p-3 sm:p-4 border-0';
         const modalBodyClass = COUNTRY_MODAL_BODY_CLASS;
 
         $: country = $selectedCountry;
@@ -50,51 +49,55 @@
                 lastActiveElement = null;
         }
 
-        $: modalTitle = country
-                ? `${displayFlag ? `${displayFlag} ` : ''}${country.commonName}`.trim()
-                : 'Country details';
+        $: modalHeading = country ? `${country.commonName} details` : 'Country details';
 </script>
 
 <Modal
         bind:open
-        title={modalTitle}
+        title=""
         size="md"
         on:close={handleClose}
         outsideclose
         classDialog={modalDialogClass}
         classHeader={modalHeaderClass}
         classBody={modalBodyClass}
+        aria-labelledby="country-modal-title"
 >
+        <svelte:fragment slot="header">
+                <h2 id="country-modal-title" class="sr-only">{modalHeading}</h2>
+        </svelte:fragment>
         {#if country}
-                <div class="space-y-6 text-gray-700" aria-live="polite">
-                        <section class="space-y-4 text-sm sm:text-base" aria-label="Country overview">
-                                <div class="flex items-start gap-3">
-                                        {#if displayFlag}
+                <div class="space-y-8 text-gray-700 mt-4 sm:mt-6" aria-live="polite">
+                        <section class="space-y-4 text-center" aria-label="Country identity">
+                                {#if displayFlag}
+                                        <span
+                                                class="emoji-flag text-3xl sm:text-4xl leading-none block"
+                                                style="font-family: 'FlagEmoji';"
+                                                aria-hidden="true"
+                                        >
+                                                {displayFlag}
+                                        </span>
+                                {/if}
+                                <h3 class="text-3xl sm:text-4xl font-semibold text-gray-900 break-words">
+                                        {country.commonName}
+                                </h3>
+                        </section>
+
+                        <section class="space-y-3 text-sm sm:text-base" aria-label="Country overview">
+                                <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
+                                        <p class="flex items-baseline gap-2 text-gray-700">
+                                                <span aria-hidden="true" class="text-lg leading-none">👥</span>
+                                                <span class="font-medium text-gray-900">Population</span>
+                                        </p>
+                                        <div class="ml-auto flex flex-wrap items-center justify-end gap-3 text-right">
+                                                <span class="font-semibold text-gray-900">{formattedPopulation}</span>
                                                 <span
-                                                        class="text-4xl sm:text-5xl leading-none emoji-flag"
-                                                        style="font-family: 'FlagEmoji';"
-                                                        aria-hidden="true"
-                                                >
-                                                        {displayFlag}
-                                                </span>
-                                        {/if}
-                                        <div class="flex-1 space-y-3">
-                                                <h3 class="text-xl font-semibold text-gray-900 sm:text-2xl flex flex-wrap items-center gap-2">
-                                                        {country.commonName}
-                                                </h3>
-                                                <span
-                                                        class="inline-flex items-center gap-1 rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-blue-700"
+                                                        class="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-blue-700"
                                                         role="status"
                                                         aria-label={unBadgeLabel}
                                                 >
-                                                        <span aria-hidden="true">🇺🇳</span>
                                                         {unBadgeLabel}
                                                 </span>
-                                                <p class="flex items-baseline gap-2 text-sm text-gray-700 sm:text-base">
-                                                        <span aria-hidden="true" class="text-lg leading-none">👥</span>
-                                                        <span class="font-medium text-gray-900">Population</span>
-                                                        <span>{formattedPopulation}</span>
-                                                </p>
                                         </div>
                                 </div>
                         </section>
@@ -113,12 +116,12 @@
                                                                 class="border-b border-gray-200 pb-4 last:border-none text-sm sm:text-base"
                                                         >
                                                                 <div
-                                                                        class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between sm:gap-4"
+                                                                        class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between sm:gap-6"
                                                                 >
                                                                         <span class="font-medium text-gray-900">
                                                                                 {language.language}:
                                                                         </span>
-                                                                        <span class="pl-5 sm:pl-0 text-gray-700">
+                                                                        <span class="pl-5 sm:pl-0 sm:text-right text-gray-700">
                                                                                 {formatSpeakers(language.percentage, country.population)}
                                                                                 <span class="text-gray-500">
                                                                                         ({formatLanguagePercentage(language.percentage)}%)
