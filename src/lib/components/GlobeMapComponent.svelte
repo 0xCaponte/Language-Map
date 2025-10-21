@@ -148,24 +148,22 @@
 </div>
 
 <style>
-	.container {
-		position: relative; /* This makes it a reference for absolutely positioned children */
-		overflow: hidden;
-	}
+        .container {
+                position: relative; /* This makes it a reference for absolutely positioned children */
+                overflow: hidden;
+        }
 
-	.icons {
-		position: absolute;
-		left: 0;
-		right: 0;
-		bottom: 40%;
-		display: flex;
-		justify-content: space-between;
-		padding: 0 50;
-		pointer-events: none !important;
-	}
-</style>
+        .icons {
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: 40%;
+                display: flex;
+                justify-content: space-between;
+                padding: 0 50;
+                pointer-events: none !important;
+        }
 
-<style>
         .country-path {
                 cursor: pointer;
                 transition: stroke-width 0.2s ease, filter 0.2s ease;
