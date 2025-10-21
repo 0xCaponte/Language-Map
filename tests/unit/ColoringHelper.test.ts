@@ -4,6 +4,11 @@ import { mockLanguages } from './mockData';
 import { get } from 'svelte/store';
 import { languageColors, countryColors } from '$lib/store';
 
+type MinimalLanguage = {
+        name: string;
+        countries: { countryId: string }[];
+};
+
 describe('ColoringHelper', () => {
 	beforeEach(() => {
 		// Reset the Svelte stores before each test
@@ -11,10 +16,10 @@ describe('ColoringHelper', () => {
 		countryColors.set(new Map());
 	});
 
-	describe('assignColors', () => {
-		test('should assign colors from baseColors to languages and countries', () => {
-			// Call the method we're testing
-			ColoringHelper.assignColors(mockLanguages);
+        describe('assignColors', () => {
+                test('should assign colors from baseColors to languages and countries', () => {
+                        // Call the method we're testing
+                        ColoringHelper.assignColors(mockLanguages);
 
 			// Get the current values from the stores
 			const currentLanguageColors = get(languageColors);
@@ -41,18 +46,55 @@ describe('ColoringHelper', () => {
 			expect(currentCountryColors.get('158')).toBe('#D32F2F'); // Taiwan
 		});
 
-		test('should handle empty language array', () => {
-			// Call with empty array
-			ColoringHelper.assignColors([]);
+                test('should handle empty language array', () => {
+                        // Call with empty array
+                        ColoringHelper.assignColors([]);
 
-			// Verify stores are empty
-			const currentLanguageColors = get(languageColors);
-			const currentCountryColors = get(countryColors);
+                        // Verify stores are empty
+                        const currentLanguageColors = get(languageColors);
+                        const currentCountryColors = get(countryColors);
 
-			expect(currentLanguageColors.size).toBe(0);
-			expect(currentCountryColors.size).toBe(0);
-		});
-	});
+                        expect(currentLanguageColors.size).toBe(0);
+                        expect(currentCountryColors.size).toBe(0);
+                });
+
+                test('should reuse palette colors predictably when languages exceed the base list', () => {
+                        const extendedLanguages: MinimalLanguage[] = Array.from({ length: 18 }, (_, index) => ({
+                                name: `language-${index}`,
+                                countries: [{ countryId: `${1000 + index}` }]
+                        }));
+
+                        ColoringHelper.assignColors(extendedLanguages as any);
+
+                        const currentLanguageColors = get(languageColors);
+                        const currentCountryColors = get(countryColors);
+
+                        expect(currentLanguageColors.size).toBe(18);
+                        expect(currentCountryColors.size).toBe(18);
+                        const firstColor = currentLanguageColors.get('language-0');
+                        const seventeenthColor = currentLanguageColors.get('language-16');
+                        expect(firstColor).toBeDefined();
+                        expect(seventeenthColor).toBe(firstColor);
+                });
+
+                test('should replace previous assignments when called multiple times', () => {
+                        const extendedLanguages: MinimalLanguage[] = Array.from({ length: 5 }, (_, index) => ({
+                                name: `temporary-${index}`,
+                                countries: [{ countryId: `${900 + index}` }]
+                        }));
+
+                        ColoringHelper.assignColors(extendedLanguages as any);
+                        ColoringHelper.assignColors(mockLanguages);
+
+                        const currentLanguageColors = get(languageColors);
+                        const currentCountryColors = get(countryColors);
+
+                        expect(currentLanguageColors.size).toBe(3);
+                        expect(currentLanguageColors.has('temporary-0')).toBe(false);
+                        expect(currentCountryColors.size).toBe(5);
+                        expect(currentCountryColors.has('900')).toBe(false);
+                });
+        });
 
 	describe('getColorByLanguageName', () => {
 		test('should return correct color for existing languages', () => {
