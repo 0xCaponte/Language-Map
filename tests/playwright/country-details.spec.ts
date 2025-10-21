@@ -65,3 +65,28 @@ test.describe('Country details modal', () => {
                 await expect(modal).toBeHidden();
         });
 });
+
+test.describe('Country details modal on mobile', () => {
+        test.use({ viewport: { width: 375, height: 812 } });
+
+        test('stacks language details for narrow screens', async ({ page }) => {
+                await page.goto('/');
+
+                const usa = page.locator(usaSelector);
+                await usa.waitFor();
+                await usa.click();
+
+                const modal = page.getByRole('dialog', { name: /United States/ });
+                await expect(modal).toBeVisible();
+
+                const firstLanguage = modal.getByRole('listitem').first();
+                const flexDirection = await firstLanguage.evaluate((element) =>
+                        getComputedStyle(element).flexDirection
+                );
+
+                expect(flexDirection).toBe('column');
+
+                const boundingBox = await modal.boundingBox();
+                expect(boundingBox?.width ?? 0).toBeLessThanOrEqual(375);
+        });
+});

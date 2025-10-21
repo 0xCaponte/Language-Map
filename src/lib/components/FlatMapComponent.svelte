@@ -71,6 +71,7 @@
         .country-path {
                 cursor: pointer;
                 transition: stroke-width 0.2s ease, filter 0.2s ease;
+                touch-action: manipulation;
         }
 
         .country-path:hover {
