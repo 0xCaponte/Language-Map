@@ -66,8 +66,33 @@ describe('Statistics', () => {
         test('should handle zero speakers', () => {
             const stats = new Statistics(mockStatistics.zeros);
             const percentage = stats.getWorldPercentage(false);
-            
+
             expect(percentage).toBe(0);
+        });
+
+        test('should preserve numeric output even when speakers are negative', () => {
+            const stats = new Statistics({
+                totalUNSpeakers: -1000,
+                numberOfUNCountries: 1,
+                totalSpeakers: -5000,
+                numberOfCountries: 2
+            });
+
+            const negativePercentage = stats.getWorldPercentage(false);
+            expect(Number.isFinite(negativePercentage)).toBe(true);
+            expect(negativePercentage).toBeLessThan(0);
+        });
+
+        test('should exceed 100 percent when provided with impossibly large totals', () => {
+            const stats = new Statistics({
+                totalUNSpeakers: 9000000000,
+                numberOfUNCountries: 200,
+                totalSpeakers: 9000000000,
+                numberOfCountries: 200
+            });
+
+            const percentage = stats.getWorldPercentage(false);
+            expect(percentage).toBeGreaterThan(100);
         });
     });
     
@@ -106,7 +131,7 @@ describe('Statistics', () => {
     describe('hasNonUNCountries', () => {
         test('should return true when there are non-UN countries', () => {
             const stats = new Statistics(mockStatistics.complete);
-            
+
             expect(stats.hasNonUNCountries()).toBe(true);
         });
         
@@ -118,7 +143,18 @@ describe('Statistics', () => {
         
         test('should return false when there are no countries at all', () => {
             const stats = new Statistics(mockStatistics.zeros);
-            
+
+            expect(stats.hasNonUNCountries()).toBe(false);
+        });
+
+        test('should return false when UN countries exceed reported total countries', () => {
+            const stats = new Statistics({
+                totalUNSpeakers: 100,
+                numberOfUNCountries: 5,
+                totalSpeakers: 90,
+                numberOfCountries: 4
+            });
+
             expect(stats.hasNonUNCountries()).toBe(false);
         });
     });
