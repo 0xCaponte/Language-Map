@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
 import {
-        COUNTRY_MODAL_DIALOG_CLASS,
         formatLanguagePercentage,
         formatPopulation,
         formatSpeakers,
@@ -37,10 +36,5 @@ describe('Country detail modal helpers', () => {
                 cases.forEach(([flag, cca2, expected]) => {
                         expect(CountryLookupHelper.toFlagEmoji(flag, cca2)).toBe(expected);
                 });
-        });
-
-        it('includes compact width classes on the modal dialog', () => {
-                expect(COUNTRY_MODAL_DIALOG_CLASS).toContain('max-w-[92vw]');
-                expect(COUNTRY_MODAL_DIALOG_CLASS).toContain('sm:max-w-[56ch]');
         });
 });

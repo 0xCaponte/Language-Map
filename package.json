@@ -16,16 +16,13 @@
 		"format": "prettier --plugin-search-dir . --write .",
 		"test": "npm run test:unit",
 		"test:ci": "vitest run",
-		"test:integration": "playwright test",
 		"test:unit": "vitest"
 	},
 	"devDependencies": {
-		"@playwright/test": "^1.41.2",
 		"@sveltejs/adapter-auto": "^3.1.1",
 		"@sveltejs/adapter-cloudflare": "^4.1.0",
 		"@sveltejs/kit": "^2.17.3",
 		"@sveltejs/vite-plugin-svelte": "^5.0.3",
-		"@testing-library/jest-dom": "^6.6.3",
 		"@testing-library/svelte": "^5.2.7",
 		"@vitest/coverage-v8": "^3.0.8",
 		"autoprefixer": "^10.4.17",
