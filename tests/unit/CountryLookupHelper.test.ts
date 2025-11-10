@@ -15,6 +15,20 @@ const mockResponse = [
                         independent: true,
                         unMember: true
                 }
+        ],
+        [
+                'New Test Republic',
+                {
+                        commonName: 'New Test Republic',
+                        officialName: 'The Federation of New Test Republic',
+                        flag: '🏴',
+                        population: 2000,
+                        languages: [{ language: 'Republican', percentage: 0.75, notes: '' }],
+                        countryId: '002',
+                        cca2: 'NR',
+                        independent: true,
+                        unMember: true
+                }
         ]
 ];
 
@@ -60,6 +74,17 @@ describe('CountryLookupHelper', () => {
                 const country = await CountryLookupHelper.getCountryById('158');
 
                 expect(country?.flag).toBe('🇹🇼');
+        });
+
+        it('returns a country by its slug', async () => {
+                const fetchMock = vi.fn().mockResolvedValue({ ok: true, json: async () => mockResponse });
+                // @ts-expect-error - allow assigning mock fetch
+                global.fetch = fetchMock;
+
+                const country = await CountryLookupHelper.getCountryBySlug('new-test-republic');
+
+                expect(fetchMock).toHaveBeenCalledTimes(1);
+                expect(country?.commonName).toBe('New Test Republic');
         });
 
         it('returns null when id is missing', async () => {

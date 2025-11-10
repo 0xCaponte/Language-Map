@@ -3,6 +3,7 @@
  */
 
 import Country from '$lib/model/country';
+import { normalizeCountrySlug, toCountrySlug } from '$lib/helpers/CountrySlugHelper';
 
 interface RawCountryData {
         commonName: string;
@@ -20,6 +21,7 @@ type RawCountryEntry = [string, RawCountryData];
 
 export class CountryLookupHelper {
         private static countryMap: Map<string, Country> | null = null;
+        private static countrySlugMap: Map<string, Country> | null = null;
         private static loadingPromise: Promise<Map<string, Country>> | null = null;
 
         /**
@@ -27,6 +29,7 @@ export class CountryLookupHelper {
          */
         public static clearCache(): void {
                 this.countryMap = null;
+                this.countrySlugMap = null;
                 this.loadingPromise = null;
         }
 
@@ -44,8 +47,23 @@ export class CountryLookupHelper {
                 return map.get(countryId) ?? null;
         }
 
+        /**
+         * Retrieves a country by its slugified common name.
+         *
+         * @param slug - Country slug as it appears in the URL.
+         */
+        public static async getCountryBySlug(slug: string | undefined): Promise<Country | null> {
+                const normalizedSlug = normalizeCountrySlug(slug);
+                if (!normalizedSlug) {
+                        return null;
+                }
+
+                await this.loadCountryMap();
+                return this.countrySlugMap?.get(normalizedSlug) ?? null;
+        }
+
         private static async loadCountryMap(): Promise<Map<string, Country>> {
-                if (this.countryMap) {
+                if (this.countryMap && this.countrySlugMap) {
                         return this.countryMap;
                 }
 
@@ -59,25 +77,32 @@ export class CountryLookupHelper {
                                 })
                                 .then((entries) => {
                                         const map = new Map<string, Country>();
+                                        const slugMap = new Map<string, Country>();
 
                                         entries.forEach(([, rawCountry]) => {
                                                 if (!rawCountry?.countryId) return;
 
-                                                map.set(
-                                                        rawCountry.countryId,
-                                                        new Country({
-                                                                ...rawCountry,
-                                                                flag: this.ensureFlagEmoji(rawCountry)
-                                                        })
-                                                );
+                                                const country = new Country({
+                                                        ...rawCountry,
+                                                        flag: this.ensureFlagEmoji(rawCountry)
+                                                });
+
+                                                map.set(rawCountry.countryId, country);
+
+                                                const slug = toCountrySlug(rawCountry.commonName);
+                                                if (slug) {
+                                                        slugMap.set(slug, country);
+                                                }
                                         });
 
                                         this.countryMap = map;
+                                        this.countrySlugMap = slugMap;
                                         return map;
                                 })
                                 .catch((error) => {
                                         console.error('Unable to load country data', error);
                                         this.countryMap = new Map();
+                                        this.countrySlugMap = new Map();
                                         return this.countryMap;
                                 });
                 }

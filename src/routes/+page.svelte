@@ -5,6 +5,8 @@
 	import WorldMap from '$lib/components/WorldMap.svelte';
 	import { onDestroy, onMount } from 'svelte';
 	import { browser } from '$app/environment';
+	import { selectedCountry } from '$lib/store';
+	import CountryLookupHelper from '$lib/helpers/CountryLookupHelper';
 
 	let possibleLanguages: string[] = [];
 	let selectedSuggestion: string = '';
@@ -15,6 +17,9 @@
 
 	// Language to be passed by the URL-Param /{langueage}
 	export let defaultLanguage: string = '';
+	export let defaultCountrySlug: string = '';
+
+	let lastAppliedCountrySlug: string | null = null;
 
 	/**
 	 * Fetch the available language names and sets a listener for the areas currently active
@@ -75,6 +80,27 @@
 		if (outside) {
 			searchSuggestionsRef.clearSuggestions();
 		}
+	}
+
+	async function applyDefaultCountrySelection(slug: string) {
+		if (!browser || !slug) {
+			return;
+		}
+
+		const country = await CountryLookupHelper.getCountryBySlug(slug);
+		if (country) {
+			selectedCountry.set(country);
+			lastAppliedCountrySlug = slug;
+		}
+	}
+
+	$: if (browser && defaultCountrySlug && defaultCountrySlug !== lastAppliedCountrySlug) {
+		void applyDefaultCountrySelection(defaultCountrySlug);
+	}
+
+	$: if (browser && !defaultCountrySlug && lastAppliedCountrySlug) {
+		selectedCountry.set(null);
+		lastAppliedCountrySlug = null;
 	}
 </script>
 
